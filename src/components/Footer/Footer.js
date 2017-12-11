@@ -14,12 +14,12 @@ class Footer extends Component {
             <a href="#">Get in touch</a>
           </div>
           <div className="footer-icons">
-            <i class="fab fa-twitter" />
-            <i class="fab fa-github" />
-            <i class="fab fa-rocketchat" />
-            <i class="fab fa-reddit" />
-            <i class="fab fa-facebook" />
-            <i class="far fa-comment" />
+            <i className="fab fa-twitter" />
+            <i className="fab fa-github" />
+            <i className="fab fa-rocketchat" />
+            <i className="fab fa-reddit" />
+            <i className="fab fa-facebook" />
+            <i className="far fa-comment" />
           </div>
         </div>
         <div className="footer-bottom">

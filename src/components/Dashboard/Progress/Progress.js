@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Metric from "./Metric";
 import Bar from "./Bar";
+import { colors } from "utils";
 import "./Progress.css";
 
 const contract = {
@@ -27,30 +28,26 @@ class Progress extends Component {
     const vestedPercentage = 75;
     const totalPercentage = 100;
 
-    const releasedColor = "#4db1dd";
-    const vestedColor = "#7fd135";
-    const totalColor = "#222222";
-
     return (
       <div className="progress">
-        <Metric label="Released" percentage={releasedPercentage} amount={releasableAmount} color={releasedColor} />
+        <Metric label="Released" percentage={releasedPercentage} amount={releasableAmount} color={colors.lightBlue} />
         <Metric
           label="Vested"
           percentage={vestedPercentage}
           amount={vestedAmount}
-          color={vestedColor}
+          color={colors.green}
           style={{ bottom: 0, left: vestedPercentage < 20 ? 0 : `calc(${vestedPercentage}% - 90px)` }}
         />
         <Metric
           label="Total vesting"
           percentage={100}
           amount={releasableAmount}
-          color={totalColor}
+          color={colors.darkGray}
           style={{ right: 0 }}
         />
-        <Bar percentage={totalPercentage} color={totalColor} />
-        <Bar percentage={vestedPercentage} color={vestedColor} />
-        <Bar percentage={releasedPercentage} color={releasedColor} />
+        <Bar percentage={totalPercentage} color={colors.darkGray} />
+        <Bar percentage={vestedPercentage} color={colors.green} />
+        <Bar percentage={releasedPercentage} color={colors.lightBlue} />
       </div>
     );
   }
