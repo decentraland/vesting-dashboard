@@ -1,5 +1,14 @@
 .details {
   flex: 0.7 0 auto;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.release-btn {
+  margin-left: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--light-blue);
 }
