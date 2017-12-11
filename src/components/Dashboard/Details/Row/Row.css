@@ -11,4 +11,7 @@
 .details-value {
   width: 70%;
   color: var(--light-gray);
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
 }

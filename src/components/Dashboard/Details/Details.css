@@ -1,9 +1,13 @@
 .details {
-  flex: 0.7 0 auto;
+  height: 60%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-around;
   margin-bottom: 20px;
+}
+
+.details h3 {
+  margin-top: 0px;
 }
 
 .release-btn {

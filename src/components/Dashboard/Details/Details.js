@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import moment from "moment";
-import numeral from "numeral";
 import Row from "./Row";
+import { toDate, toMANA } from "utils";
+import Blockie from "./Blockie";
 import "./Details.css";
 
 const contract = {
@@ -20,11 +20,6 @@ const contract = {
   token: "0x0f5d2fb29fb7d3cfee444a200298f468908cc942"
 };
 
-const toDate = s => moment(s * 1000).format("dddd, MMM Do, YYYY");
-const toMANA = n => {
-  return `${numeral(n / 1000000000000000000).format("0,0.00")} MANA`;
-};
-
 class Details extends Component {
   render() {
     const { beneficiary, start, cliff, duration, releasableAmount, revocable } = contract;
@@ -33,7 +28,8 @@ class Details extends Component {
         <h3>Details</h3>
 
         <Row label="Beneficiary">
-          {beneficiary.slice(0, 4)}...{beneficiary.slice(-4)}
+          <Blockie seed={beneficiary} />
+          &nbsp;&nbsp;{beneficiary.slice(0, 4)}...{beneficiary.slice(-4)}
         </Row>
         <Row label="Start date">{toDate(start)}</Row>
         <Row label="Cliff">{toDate(cliff)}</Row>
