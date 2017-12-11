@@ -14,7 +14,7 @@ export default function configureStore(history, initialState) {
   // middleware
   const api = new API();
   const router = routerMiddleware(history);
-  const middleware = applyMiddleware(thunk.withExtraArgument({ api }), router);
+  const middleware = applyMiddleware(thunk.withExtraArgument(api), router);
 
   // enhancer
   const devtools = window.devToolsExtension ? window.devToolsExtension() : f => f;
