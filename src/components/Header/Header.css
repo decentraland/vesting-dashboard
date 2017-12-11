@@ -1,0 +1,48 @@
+.header {
+  height: 100px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--dark-gray);
+}
+
+.header-left {
+  width: 300px;
+  height: 52px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.header-icon {
+  display: inline-block;
+  width: 52px;
+  height: 52px;
+  background-position: 0 0;
+  background-image: url(https://decentraland.org/images/icons-dd0be5997a.svg);
+}
+
+.header-title {
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.header-right {
+  height: 100px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+}
+
+.header-description {
+  font-weight: 400;
+}
+
+.header-contract-address {
+  color: var(--light-gray);
+  font-size: 12px;
+}
