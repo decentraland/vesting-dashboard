@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Route } from "react-router";
 import "./Header.css";
 
 class Header extends Component {
   render() {
-    const { name, goAbout } = this.props;
     return (
       <div className="header">
         <div className="header-left">
