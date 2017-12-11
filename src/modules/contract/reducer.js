@@ -1,5 +1,3 @@
-import { SET_FIRST_NAME, SET_LAST_NAME } from "./actions";
-
 export const initialState = {
   data: {
     duration: 94747086,

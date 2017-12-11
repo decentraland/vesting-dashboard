@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import { Route } from "react-router";
 import Header from "components/Header";
+import Footer from "components/Footer";
 import "./App.css";
 
-const Home = () => "Home";
 class App extends Component {
   render() {
-    const { name, goAbout } = this.props;
     return (
-      <div className="App">
+      <div className="app">
         <Header />
+        <Footer />
       </div>
     );
   }
