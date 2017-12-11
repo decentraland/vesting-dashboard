@@ -1,0 +1,14 @@
+.details-row {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 12px;
+}
+
+.details-label {
+  width: 30%;
+}
+
+.details-value {
+  width: 70%;
+  color: var(--light-gray);
+}
