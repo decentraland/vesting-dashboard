@@ -1,0 +1,23 @@
+.metric {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+  position: absolute;
+}
+
+.metric-label {
+  font-size: 12px;
+}
+
+.metric-amount {
+  margin-top: 4px;
+  font-size: 9px;
+  color: var(--light-gray);
+}
+
+.metric-percentage {
+  margin-top: 5px;
+  padding: 3px;
+  border-radius: 5px;
+  font-size: 8px;
+}
