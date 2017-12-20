@@ -17,3 +17,7 @@ circle.recharts-dot.recharts-line-dot {
   font-size: 10px;
   padding: 0px 5px;
 }
+
+.recharts-cartesian-axis-tick-value {
+    font-size: 12px;
+}
