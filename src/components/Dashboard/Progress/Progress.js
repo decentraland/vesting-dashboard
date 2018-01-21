@@ -11,7 +11,9 @@ class Progress extends Component {
   };
   render() {
     const { contract } = this.props;
-    const { released, vestedAmount, total } = contract;
+    const { released, vestedAmount, balance } = contract;
+
+    const total = balance + released;
 
     const releasedPercentage = (released / total * 100) | 0;
     const vestedPercentage = (vestedAmount / total * 100) | 0;
@@ -19,13 +21,14 @@ class Progress extends Component {
 
     return (
       <div className="progress">
-        <Metric label="Released" percentage={releasedPercentage} amount={released} color={colors.lightBlue} />
+        <Metric label="Released" percentage={releasedPercentage} amount={released} color={colors.lightBlue} alt />
         <Metric
           label="Vested"
           percentage={vestedPercentage}
           amount={vestedAmount}
           color={colors.green}
           style={{ bottom: 0, left: vestedPercentage < 20 ? 0 : `calc(${vestedPercentage}% - 90px)` }}
+          alt
         />
         <Metric label="Total vesting" percentage={100} amount={total} color={colors.darkGray} style={{ right: 0 }} />
         <Bar percentage={totalPercentage} color={colors.darkGray} />
