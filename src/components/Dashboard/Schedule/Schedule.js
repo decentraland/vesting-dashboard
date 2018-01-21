@@ -16,7 +16,7 @@ const labelStyle = {
 
 class YAxisTick extends React.PureComponent {
   render() {
-    const { x, y, stroke, payload } = this.props;
+    const { x, y, payload } = this.props;
 
     return (
       <g transform={`translate(${x},${y})`}>
@@ -56,7 +56,7 @@ class Schedule extends Component {
   }
 
   renderX = props => {
-    const { x, y, stroke, payload } = props;
+    const { x, y, payload } = props;
     const { schedule } = this.props;
     return (
       <g transform={`translate(${x},${y})`}>
