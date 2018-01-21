@@ -8,7 +8,7 @@ class Metric extends Component {
     return (
       <div className="metric" style={style}>
         <div className="metric-label">{label}</div>
-        <div className="metric-amount">{toMANA(amount)}</div>
+        <div className="metric-amount">{amount}</div>
         <div style={{ backgroundColor: color }} className="metric-percentage">
           {percentage}%
         </div>

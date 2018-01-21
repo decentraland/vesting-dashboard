@@ -3,6 +3,7 @@
   flex-flow: column nowrap;
   align-items: flex-end;
   position: absolute;
+  min-width: 55px;
 }
 
 .metric-label {

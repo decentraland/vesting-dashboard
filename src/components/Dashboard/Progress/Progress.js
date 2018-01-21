@@ -2,35 +2,24 @@ import React, { Component } from "react";
 import Metric from "./Metric";
 import Bar from "./Bar";
 import { colors } from "utils";
+import { ContractType } from "components/types";
 import "./Progress.css";
 
-const contract = {
-  duration: 94747086,
-  cliff: 1502961714 + 60 * 60 * 24 * 365,
-  beneficiary: "0xd11a019a70986bd607cbc1c1f9ae221c78581f49",
-  terraformReserve: "0xcca95e580bbbd04851ebfb85f77fd46c9b91f11c",
-  returnVesting: "0x79c1fdaba012b9a094c495a86ce5c6199cf86368",
-  vestedAmount: 2543057747586010191384672,
-  releasableAmount: 85832527982390930735327,
-  revoked: false,
-  revocable: false,
-  owner: "0x55ed2910cc807e4596024266ebdf7b1753405a11",
-  released: 2457225219603619260649345,
-  start: 1502961714,
-  token: "0x0f5d2fb29fb7d3cfee444a200298f468908cc942"
-};
-
 class Progress extends Component {
+  static propTypes = {
+    contract: ContractType.isRequired
+  };
   render() {
-    const { releasableAmount, vestedAmount } = contract;
+    const { contract } = this.props;
+    const { released, vestedAmount, total } = contract;
 
-    const releasedPercentage = 20;
-    const vestedPercentage = 75;
+    const releasedPercentage = (released / total * 100) | 0;
+    const vestedPercentage = (vestedAmount / total * 100) | 0;
     const totalPercentage = 100;
 
     return (
       <div className="progress">
-        <Metric label="Released" percentage={releasedPercentage} amount={releasableAmount} color={colors.lightBlue} />
+        <Metric label="Released" percentage={releasedPercentage} amount={released} color={colors.lightBlue} />
         <Metric
           label="Vested"
           percentage={vestedPercentage}
@@ -38,13 +27,7 @@ class Progress extends Component {
           color={colors.green}
           style={{ bottom: 0, left: vestedPercentage < 20 ? 0 : `calc(${vestedPercentage}% - 90px)` }}
         />
-        <Metric
-          label="Total vesting"
-          percentage={100}
-          amount={releasableAmount}
-          color={colors.darkGray}
-          style={{ right: 0 }}
-        />
+        <Metric label="Total vesting" percentage={100} amount={total} color={colors.darkGray} style={{ right: 0 }} />
         <Bar percentage={totalPercentage} color={colors.darkGray} />
         <Bar percentage={vestedPercentage} color={colors.green} />
         <Bar percentage={releasedPercentage} color={colors.lightBlue} />
