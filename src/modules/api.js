@@ -18,7 +18,7 @@ export default class API {
     mana = new MANAToken();
     vesting = new DecentralandVesting(address);
 
-    const connected = await eth.reconnect([mana, vesting]);
+    const connected = await eth.reconnect({ contracts: [mana, vesting] });
     if (!connected) {
       throw new Error("Could not connect to Ethereum");
     }

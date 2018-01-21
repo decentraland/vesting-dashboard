@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "decentraland-commons": "git+https://github.com/decentraland/commons.git#release",
-    "decentraland-contracts": "git+https://github.com/decentraland/contracts.git#release",
+    "decentraland-commons": "git+https://github.com/decentraland/commons.git#7b0a84b3e3",
+    "decentraland-contracts": "git+https://github.com/decentraland/contracts.git#ed59ece3a7",
     "ethereum-blockies": "^0.1.1",
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",
