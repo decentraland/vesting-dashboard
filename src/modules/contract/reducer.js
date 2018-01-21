@@ -1,7 +1,7 @@
 import { FETCH_CONTRACT_REQUEST, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILURE } from "./actions";
 
 export const INITIAL_STATE = {
-  data: {},
+  data: null,
   loading: false,
   error: null
 };

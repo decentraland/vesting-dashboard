@@ -1,2 +1,2 @@
-import Progress from "./Progress";
+import Progress from "./Progress.container";
 export default Progress;

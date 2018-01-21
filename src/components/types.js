@@ -1,0 +1,16 @@
+import { shape, string, number, bool } from "prop-types";
+
+export const ContractType = shape({
+  address: string.isRequired,
+  total: number.isRequired,
+  duration: number.isRequired,
+  cliff: number.isRequired,
+  beneficiary: string.isRequired,
+  vestedAmount: number.isRequired,
+  releasableAmount: number.isRequired,
+  revoked: bool.isRequired,
+  revocable: bool.isRequired,
+  owner: string.isRequired,
+  released: number.isRequired,
+  start: number.isRequired
+});

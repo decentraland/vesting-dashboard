@@ -9,6 +9,7 @@ class App extends Component {
   static propTypes = {
     loadingMessage: PropTypes.string,
     errorMessage: PropTypes.string,
+    isLoaded: PropTypes.bool,
     onConnect: PropTypes.func.isRequired
   };
 
@@ -17,12 +18,16 @@ class App extends Component {
     onConnect();
   }
   render() {
-    const { loadingMessage, errorMessage } = this.props;
+    const { loadingMessage, errorMessage, isLoaded } = this.props;
     if (loadingMessage) {
       return <div className="app loading">{loadingMessage}&hellip;</div>;
     }
     if (errorMessage) {
       return <div className="app error">{errorMessage}</div>;
+    }
+
+    if (!isLoaded) {
+      return null;
     }
     return (
       <div className="app">
