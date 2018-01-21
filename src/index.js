@@ -8,7 +8,7 @@ import configureStore from "./modules/store";
 
 import "./index.css";
 import App from "./components/App";
-import registerServiceWorker from "./registerServiceWorker";
+import unregisterServiceWorker from "./registerServiceWorker";
 
 const history = createHistory();
 const store = configureStore(history);
@@ -17,4 +17,4 @@ const router = <ConnectedRouter history={history}>{app}</ConnectedRouter>;
 const provider = <Provider store={store}>{router}</Provider>;
 
 ReactDOM.render(provider, document.getElementById("root"));
-registerServiceWorker();
+unregisterServiceWorker();
