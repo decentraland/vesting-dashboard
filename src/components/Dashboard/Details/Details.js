@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import Row from "./Row";
 import { toDate, toMANA } from "utils";
 import { ContractType } from "components/types";
@@ -8,7 +9,8 @@ import "./Details.css";
 
 class Details extends Component {
   static propTypes = {
-    contract: ContractType.isRequired
+    contract: ContractType.isRequired,
+    isBeneficiary: PropTypes.bool
   };
   handleRelease = () => {
     const { contract, onRelease } = this.props;
@@ -20,8 +22,16 @@ class Details extends Component {
     }
   };
   render() {
-    const { contract, onRelease } = this.props;
+    const { contract, isBeneficiary, onRelease } = this.props;
     const { beneficiary, start, cliff, duration, releasableAmount, revocable, revoked } = contract;
+    let releaseButton = null;
+    if (isBeneficiary) {
+      releaseButton = (
+        <span className="release-btn" onClick={this.handleRelease}>
+          Release
+        </span>
+      );
+    }
     return (
       <div className="details">
         <h3>Details</h3>
@@ -34,10 +44,7 @@ class Details extends Component {
         <Row label="Cliff">{toDate(cliff)}</Row>
         <Row label="End date">{toDate(start + duration)}</Row>
         <Row label="Relesable">
-          {numeral(releasableAmount).format("0,0")} MANA{" "}
-          <span className="release-btn" onClick={this.handleRelease}>
-            Release
-          </span>
+          {numeral(releasableAmount).format("0,0")} MANA {releaseButton}
         </Row>
         <Row label="Revokable">{revocable ? "Yes" : "No"}</Row>
         <Row label="Revoked">{revoked ? "Yes" : "No"}</Row>
