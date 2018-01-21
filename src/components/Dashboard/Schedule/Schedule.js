@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Tooltip, LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Tooltip, LineChart, Line, XAxis, YAxis } from "recharts";
 import { colors } from "utils";
 import "./Schedule.css";
 
