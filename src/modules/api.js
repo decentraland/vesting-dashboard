@@ -30,7 +30,7 @@ export default class API {
     const address = getAddress(state);
 
     const [
-      total,
+      balance,
       duration,
       cliff,
       beneficiary,
@@ -57,7 +57,7 @@ export default class API {
 
     const contract = {
       address,
-      total,
+      balance,
       duration,
       cliff,
       beneficiary,
@@ -71,5 +71,9 @@ export default class API {
     };
 
     return contract;
+  }
+
+  release() {
+    return vesting.release();
   }
 }

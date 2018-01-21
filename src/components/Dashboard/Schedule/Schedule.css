@@ -9,15 +9,28 @@
 }
 
 circle.recharts-dot.recharts-line-dot {
-    display: none;
+  display: none;
 }
 
 .recharts-tooltip-item {
-  color: white!important;
+  color: white !important;
   font-size: 10px;
   padding: 0px 5px;
 }
 
 .recharts-cartesian-axis-tick-value {
-    font-size: 12px;
+  font-size: 12px;
+}
+
+.recharts-layer.recharts-cartesian-axis-tick text {
+  font-size: 12px;
+}
+
+.yAxis .recharts-cartesian-axis-tick:nth-child(1) {
+  display: none;
+}
+
+.recharts-tooltip-label {
+  font-size: 12px;
+  padding-left: 5px;
 }

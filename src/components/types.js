@@ -2,7 +2,7 @@ import { shape, string, number, bool } from "prop-types";
 
 export const ContractType = shape({
   address: string.isRequired,
-  total: number.isRequired,
+  balance: number.isRequired,
   duration: number.isRequired,
   cliff: number.isRequired,
   beneficiary: string.isRequired,

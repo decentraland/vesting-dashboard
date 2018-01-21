@@ -18,7 +18,7 @@ export const mapState = state => {
   } else if (isFetchingContract(state)) {
     loadingMessage = "Loading data";
   }
-  console.log(isFetchingContract(state));
+
   return {
     loadingMessage,
     errorMessage,

@@ -14,7 +14,7 @@
 
 .footer-foundation {
   -webkit-font-smoothing: antialiased;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 .footer-links {
@@ -29,6 +29,10 @@
 
 .footer-icons {
   display: inline-block;
+}
+
+.footer-icons a {
+  color: white !important;
 }
 
 .footer-icons svg {

@@ -1,2 +1,2 @@
-import Schedule from "./Schedule";
+import Schedule from "./Schedule.container";
 export default Schedule;

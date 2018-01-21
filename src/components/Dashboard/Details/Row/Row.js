@@ -8,9 +8,9 @@ const propTypes = {
 
 class Row extends Component {
   render() {
-    const { label, children } = this.props;
+    const { label, children, title } = this.props;
     return (
-      <span className="details-row">
+      <span className="details-row" title={title}>
         <label className="details-label">{label}</label>
         <span className="details-value">{children}</span>
       </span>
