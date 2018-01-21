@@ -14,9 +14,13 @@ export const mapState = state => {
   const contract = getContract(state);
 
   if (isConnecting(state)) {
-    loadingMessage = "Connecting";
+    loadingMessage = "Connecting...";
   } else if (isFetchingContract(state)) {
-    loadingMessage = "Loading data";
+    loadingMessage = "Loading data...";
+  }
+
+  if (contract && contract.beneficiary === "0x") {
+    errorMessage = "Invalid address";
   }
 
   return {

@@ -20,7 +20,7 @@ class App extends Component {
   render() {
     const { loadingMessage, errorMessage, isLoaded } = this.props;
     if (loadingMessage) {
-      return <div className="app loading">{loadingMessage}&hellip;</div>;
+      return <div className="app loading">{loadingMessage}</div>;
     }
     if (errorMessage) {
       return <div className="app error">{errorMessage}</div>;
