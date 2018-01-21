@@ -4,3 +4,13 @@
   height: 100%;
 }
 
+.app.loading,
+.app.error {
+  justify-content: center;
+  align-items: center;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.app.error {
+  color: red;
+}

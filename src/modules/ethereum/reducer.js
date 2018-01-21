@@ -1,29 +1,34 @@
-import { FETCH_CONTRACT_REQUEST, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILURE } from "./actions";
+import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE } from "./actions";
 
 export const INITIAL_STATE = {
-  data: {},
+  data: {
+    address: null
+  },
   loading: false,
   error: null
 };
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
-    case FETCH_CONTRACT_REQUEST: {
+    case CONNECT_REQUEST: {
       return {
         ...state,
         error: null,
         loading: true
       };
     }
-    case FETCH_CONTRACT_SUCCESS: {
+    case CONNECT_SUCCESS: {
       return {
         ...state,
         error: null,
         loading: false,
-        data: action.contract
+        data: {
+          ...state.data,
+          address: action.address
+        }
       };
     }
-    case FETCH_CONTRACT_FAILURE: {
+    case CONNECT_FAILURE: {
       return {
         ...state,
         loading: false,
