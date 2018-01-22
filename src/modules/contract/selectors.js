@@ -1,5 +1,4 @@
 import { createSelector } from "reselect";
-import * as numeral from "numeral";
 import moment from "moment";
 
 export const getState = state => state.app.contract;
@@ -10,7 +9,6 @@ export const getAddress = state => (state.routing.location ? state.routing.locat
 export const getSchedule = createSelector(getContract, contract => {
   const total = contract.balance + contract.released;
   const data = [];
-  let cliffed = false;
   const startDate = new Date(contract.start * 1000);
   const currentDate = moment(contract.start * 1000)
     .subtract(1, "month")

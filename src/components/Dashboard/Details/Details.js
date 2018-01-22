@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Row from "./Row";
-import { toDate, toMANA } from "utils";
+import { toDate } from "utils";
 import { ContractType } from "components/types";
 import * as numeral from "numeral";
 import Blockie from "./Blockie";
@@ -22,7 +22,7 @@ class Details extends Component {
     }
   };
   render() {
-    const { contract, isBeneficiary, onRelease } = this.props;
+    const { contract, isBeneficiary } = this.props;
     const { beneficiary, start, cliff, duration, releasableAmount, revocable, revoked } = contract;
     let releaseButton = null;
     if (isBeneficiary) {
