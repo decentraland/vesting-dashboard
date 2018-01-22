@@ -30,8 +30,6 @@ class YAxisTick extends React.PureComponent {
   }
 }
 
-class XAxisTick extends React.PureComponent {}
-
 class Schedule extends Component {
   constructor(props) {
     super(props);
