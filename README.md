@@ -16,4 +16,4 @@ You will need a browser with [Metamask](http://metamask.io/) in order to access 
 http://localhost:3000/#/0x92f08...6fb12
 ```
 
-If you want to see a vesting contract deployed to ropsten you will have to change the addresses of `REACT_APP_MANA_TOKEN_CONTRACT_ADDRESS` and `REACT_APP_TERRAFORM_RESERVE_CONTRACT_ADDRESS` in the `.env` file to the [ropsten addresses](https://contracts.decentraland.org/addresses.json)
+If you want to see a vesting contract deployed to ropsten you will have to change the addresses of `REACT_APP_MANA_TOKEN_CONTRACT_ADDRESS` and `REACT_APP_TERRAFORM_RESERVE_CONTRACT_ADDRESS` in the `.env` file to the [ropsten addresses](https://contracts.decentraland.org/addresses.json).
