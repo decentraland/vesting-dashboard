@@ -1,4 +1,4 @@
-import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE } from "./actions";
+import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE } from './actions'
 
 export const INITIAL_STATE = {
   data: {
@@ -6,7 +6,7 @@ export const INITIAL_STATE = {
   },
   loading: false,
   error: null
-};
+}
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
@@ -15,7 +15,7 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         error: null,
         loading: true
-      };
+      }
     }
     case CONNECT_SUCCESS: {
       return {
@@ -26,16 +26,16 @@ export default function reducer(state = INITIAL_STATE, action) {
           ...state.data,
           address: action.address.toLowerCase()
         }
-      };
+      }
     }
     case CONNECT_FAILURE: {
       return {
         ...state,
         loading: false,
         error: action.error
-      };
+      }
     }
     default:
-      return state;
+      return state
   }
 }
