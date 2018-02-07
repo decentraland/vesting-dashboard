@@ -32,5 +32,9 @@ circle.recharts-dot.recharts-line-dot {
 
 .recharts-tooltip-label {
   font-size: 12px;
-  padding-left: 5px;
+  padding: 5px;
+}
+
+.recharts-tooltip-item-list li:last-child {
+  display: none !important;
 }
