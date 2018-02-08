@@ -81,7 +81,7 @@ class Schedule extends Component {
           <YAxis stroke={colors.darkGray} tick={<YAxisTick />} />
           <Line dataKey="MANA" />
           <Line dataKey="USD" />
-          <Line dataKey="amount" stroke={colors.green} />
+          <Line dataKey="amount" stroke={colors.green} strokeWidth={2} />
           <Tooltip wrapperStyle={wrapperStyle} labelStyle={labelStyle} />
           <ReferenceLine x={getToday()} stroke={colors.lightBlue} />
         </LineChart>

@@ -13,7 +13,7 @@
 .metric-amount {
   margin-top: 4px;
   font-size: 11px;
-  color: var(--light-gray);
+  color: var(--gray);
 }
 
 .metric-percentage {

@@ -2,19 +2,20 @@
   display: flex;
   flex-flow: column nowrap;
   margin-bottom: 20px;
+  color: var(--gray);
 }
 
 .footer-top {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-  border-top: 1px solid var(--dark-gray);
+  border-top: 1px solid var(--light-gray);
   padding-top: 30px;
 }
 
 .footer-foundation {
   -webkit-font-smoothing: antialiased;
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 .footer-links {
@@ -23,7 +24,7 @@
 
 .footer-links a {
   font-size: 12px;
-  color: var(--light-gray);
+  color: var(--gray);
   margin-left: 15px;
 }
 
@@ -32,7 +33,7 @@
 }
 
 .footer-icons a {
-  color: white !important;
+  color: var(--gray) !important;
 }
 
 .footer-icons svg {
