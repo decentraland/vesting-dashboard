@@ -6,7 +6,7 @@
 
 .schedule h3 {
   margin-left: 50px;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 circle.recharts-dot.recharts-line-dot {
@@ -14,7 +14,7 @@ circle.recharts-dot.recharts-line-dot {
 }
 
 .recharts-tooltip-item {
-  color: white !important;
+  color: var(--gray) !important;
   font-size: 10px;
   padding: 0px 5px;
 }
@@ -34,8 +34,19 @@ circle.recharts-dot.recharts-line-dot {
 .recharts-tooltip-label {
   font-size: 12px;
   padding: 5px;
+  color: black !important;
 }
 
 .recharts-tooltip-item-list li:last-child {
   display: none !important;
+}
+
+.recharts-default-tooltip {
+  background-color: white !important;
+  border: 1px solid var(--light-gray) !important;
+}
+
+.recharts-tooltip-wrapper {
+  border: none !important;
+  padding: 0px !important;
 }
