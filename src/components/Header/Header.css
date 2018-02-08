@@ -4,7 +4,7 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--dark-gray);
+  border-bottom: 1px solid var(--light-gray);
 }
 
 .header-left {
@@ -39,10 +39,9 @@
 }
 
 .header-description {
-
 }
 
 .header-contract-address {
-  color: var(--light-gray);
+  color: var(--gray);
   font-size: 12px;
 }

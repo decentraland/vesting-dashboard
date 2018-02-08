@@ -45,8 +45,7 @@ class Details extends Component {
         <Row label="Relesable">
           {toMANA(releasableAmount)} MANA / {toUSD(releasableAmount, ticker)} USD{releaseButton}
         </Row>
-        <Row label="Revokable">{revocable ? 'Yes' : 'No'}</Row>
-        <Row label="Revoked">{revoked ? 'Yes' : 'No'}</Row>
+        <Row label={revoked ? 'Revoked' : 'Revocable'}>{revoked ? 'Yes' : revocable ? 'Yes' : 'No'}</Row>
       </div>
     )
   }

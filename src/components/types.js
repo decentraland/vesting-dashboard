@@ -1,4 +1,4 @@
-import { shape, string, number, bool } from "prop-types";
+import { shape, string, number, bool } from 'prop-types'
 
 export const ContractType = shape({
   address: string.isRequired,
@@ -13,4 +13,4 @@ export const ContractType = shape({
   owner: string.isRequired,
   released: number.isRequired,
   start: number.isRequired
-});
+})

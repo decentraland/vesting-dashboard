@@ -1,37 +1,42 @@
-import { connect } from "react-redux";
-import { connect as connectToEthereum } from "modules/ethereum/actions";
-import { isLoading as isConnecting, getError as getConnectionError } from "modules/ethereum/selectors";
+import { connect } from 'react-redux'
+import { connect as connectToEthereum } from 'modules/ethereum/actions'
+import { getAddress, isLoading as isConnecting, getError as getConnectionError } from 'modules/ethereum/selectors'
 import {
   isLoading as isFetchingContract,
   getError as getFetchContractError,
   getContract
-} from "modules/contract/selectors";
-import App from "./App";
+} from 'modules/contract/selectors'
+import App from './App'
 
 export const mapState = state => {
-  let loadingMessage = null;
-  let errorMessage = getConnectionError(state) || getFetchContractError(state);
-  const contract = getContract(state);
+  let loadingMessage = null
+  let connectionError = getConnectionError(state)
+  let contractError = getFetchContractError(state)
+  const contract = getContract(state)
+
+  let isBlank = !getAddress(state)
 
   if (isConnecting(state)) {
-    loadingMessage = "Connecting...";
+    loadingMessage = 'Connecting...'
   } else if (isFetchingContract(state)) {
-    loadingMessage = "Loading data...";
+    loadingMessage = 'Loading data...'
   }
 
-  if (contract && contract.beneficiary === "0x") {
-    errorMessage = "Invalid address";
+  if (contract && contract.beneficiary === '0x') {
+    isBlank = true
   }
 
   return {
     loadingMessage,
-    errorMessage,
+    connectionError,
+    contractError,
+    isBlank,
     isLoaded: !!contract
-  };
-};
+  }
+}
 
 export const mapDispatch = dispatch => ({
   onConnect: () => dispatch(connectToEthereum())
-});
+})
 
-export default connect(mapState, mapDispatch)(App);
+export default connect(mapState, mapDispatch)(App)

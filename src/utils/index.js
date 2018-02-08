@@ -7,8 +7,10 @@ export const toMANA = amount => numeral(amount).format('0,0')
 
 export const colors = {
   lightBlue: '#4db1dd',
-  green: '#7fd135',
-  darkGray: '#222222'
+  darkPurple: '#5d5890',
+  green: '#30d7a9',
+  darkGray: '#222222',
+  lightGray: '#d3d3d3'
 }
 
 export function getToday() {

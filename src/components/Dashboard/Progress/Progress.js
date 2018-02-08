@@ -42,11 +42,11 @@ class Progress extends Component {
           label="Total vesting"
           percentage={100}
           amount={total}
-          color={colors.darkGray}
+          color={colors.lightGray}
           style={{ right: 0 }}
           ticker={ticker}
         />
-        <Bar percentage={totalPercentage} color={colors.darkGray} />
+        <Bar percentage={totalPercentage} color={colors.lightGray} />
         <Bar percentage={vestedPercentage} color={colors.green} />
         <Bar percentage={releasedPercentage} color={colors.lightBlue} />
       </div>
