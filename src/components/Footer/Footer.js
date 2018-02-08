@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./Footer.css";
+import React, { Component } from 'react'
+import './Footer.css'
 
 class Footer extends Component {
   render() {
@@ -40,11 +40,11 @@ class Footer extends Component {
           </div>
         </div>
         <div className="footer-bottom">
-          <span className="footer-copyright">Copyright 2017 Decentraland. All rights reserved.</span>
+          <span className="footer-copyright">Copyright 2018 Decentraland. All rights reserved.</span>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Footer;
+export default Footer

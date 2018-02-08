@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "decentraland-commons": "^2.3.5",
     "ethereum-blockies": "^0.1.1",
     "history": "^4.7.2",
     "isomorphic-fetch": "^2.2.1",
