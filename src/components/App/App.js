@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Header from 'components/Header'
 import Dashboard from 'components/Dashboard'
 import Footer from 'components/Footer'
+import Input from 'components/Input'
+import ChangeBeneficiaryModal from 'components/ChangeBeneficiaryModal'
 import { isValidAddress } from 'utils'
 import './App.css'
 
@@ -75,7 +77,7 @@ class App extends Component {
         <div className="container">
           <div className="decentraland-logo" />
           <h3>Contract Address</h3>
-          <input value={this.state.address} placeholder="0x..." onChange={this.handleAddressChange} />
+          <Input value={this.state.address} placeholder="0x..." onChange={this.handleAddressChange} />
           <p className="help">{helpText}</p>
         </div>
       </div>
@@ -142,6 +144,7 @@ class App extends Component {
         <Header />
         <Dashboard />
         <Footer />
+        <ChangeBeneficiaryModal />
       </div>
     )
   }

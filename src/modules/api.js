@@ -77,6 +77,10 @@ export default class API {
     return vesting.release()
   }
 
+  changeBeneficiary(address) {
+    return vesting.changeBeneficiary(address)
+  }
+
   async fetchTicker(ticker = 'decentraland') {
     const resp = await fetch(`https://api.coinmarketcap.com/v1/ticker/${ticker}/`, { mode: 'cors' })
     const json = await resp.json()

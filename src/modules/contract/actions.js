@@ -6,6 +6,10 @@ export const RELEASE_REQUEST = '[Request] Release'
 export const RELEASE_SUCCESS = '[Success] Release'
 export const RELEASE_FAILURE = '[Failure] Release'
 
+export const CHANGE_BENEFICIARY_REQUEST = '[Request] Change Beneficiary'
+export const CHANGE_BENEFICIARY_SUCCESS = '[Success] Change Beneficiary'
+export const CHANGE_BENEFICIARY_FAILURE = '[Failure] Change Beneficiary'
+
 export function fetchContractRequest() {
   return {
     type: FETCH_CONTRACT_REQUEST
@@ -39,37 +43,69 @@ export function fetchContract() {
   }
 }
 
-export function releaseRequest(amount) {
+export function releaseRequest() {
   return {
-    type: RELEASE_REQUEST,
-    amount
+    type: RELEASE_REQUEST
   }
 }
 
-export function releaseSuccess(amount) {
+export function releaseSuccess() {
   return {
-    type: RELEASE_SUCCESS,
-    amount
+    type: RELEASE_SUCCESS
   }
 }
 
-export function releaseFailure(amount, error) {
+export function releaseFailure(error) {
   return {
     type: RELEASE_FAILURE,
-    amount,
     error
   }
 }
 
-export function release(amount) {
+export function release() {
   return async (dispatch, getState, api) => {
-    dispatch(releaseRequest(amount))
+    dispatch(releaseRequest())
     try {
-      await api.release(amount)
-      dispatch(releaseSuccess(amount))
-      return amount
+      await api.release()
+      dispatch(releaseSuccess())
+      return
     } catch (e) {
-      dispatch(releaseFailure(amount, e.message))
+      dispatch(releaseFailure(e.message))
+    }
+  }
+}
+
+export function changeBeneficiaryRequest(address) {
+  return {
+    type: CHANGE_BENEFICIARY_REQUEST,
+    address
+  }
+}
+
+export function changeBeneficiarySuccess(address) {
+  return {
+    type: CHANGE_BENEFICIARY_SUCCESS,
+    address
+  }
+}
+
+export function changeBeneficiaryFailure(address, error) {
+  return {
+    type: CHANGE_BENEFICIARY_FAILURE,
+    address,
+    error
+  }
+}
+
+export function changeBeneficiary(address) {
+  return async (dispatch, getState, api) => {
+    dispatch(changeBeneficiaryRequest(address))
+    try {
+      await api.changeBeneficiary(address)
+      dispatch(changeBeneficiarySuccess(address))
+      return address
+    } catch (e) {
+      dispatch(changeBeneficiaryFailure(address, e.message))
     }
   }
 }
