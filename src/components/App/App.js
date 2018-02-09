@@ -32,7 +32,7 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.address != this.props.address) {
+    if (nextProps.address !== this.props.address) {
       const { onConnect } = this.props
       onConnect()
     }
@@ -92,7 +92,7 @@ class App extends Component {
       errorText = (
         <p className="error">
           Make sure you have{' '}
-          <a href="https://metamask.io" target="_blank" ref="noreferrer noopener">
+          <a href="https://metamask.io" target="_blank" rel="noreferrer noopener">
             MetaMask
           </a>{' '}
           installed and your account is unlocked.
