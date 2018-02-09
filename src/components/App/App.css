@@ -4,13 +4,61 @@
   height: 100%;
 }
 
-.app.loading,
-.app.error {
-  justify-content: center;
-  align-items: center;
-  font-family: "Source Sans Pro", sans-serif;
+.app .decentraland-logo {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background-position: 0 0;
+  background-image: url(/static/media/logo.b7751b3e.svg);
+  background-size: cover;
+  margin-bottom: 50px;
 }
 
-.app.error {
-  color: red;
+.app .error {
+  color: gray;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.app .error a {
+  color: var(--green);
+  text-decoration: none;
+}
+
+.app .container .error {
+  height: 40px;
+}
+.app .container .loading-message {
+  height: 105px;
+  color: gray;
+}
+
+.app .container {
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.app .container h3 {
+  font-size: 20px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.app .container input {
+  width: 70%;
+  max-width: 300px;
+  padding: 10px;
+  -webkit-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  border: none;
+  display: block;
+  outline: none;
+  color: gray;
+}
+
+.app .container .help {
+  color: gray;
+  font-size: 12px;
 }

@@ -1,9 +1,14 @@
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 import { connect as connectToEthereum } from 'modules/ethereum/actions'
-import { getAddress, isLoading as isConnecting, getError as getConnectionError } from 'modules/ethereum/selectors'
+import { fetchContract } from 'modules/contract/actions'
+import { fetchTicker } from 'modules/ticker/actions'
+import { isLoading as isConnecting, getError as getConnectionError, getNetwork } from 'modules/ethereum/selectors'
 import {
   isLoading as isFetchingContract,
-  getError as getFetchContractError,
+  getError as getContractError,
+  getAddress,
   getContract
 } from 'modules/contract/selectors'
 import App from './App'
@@ -11,10 +16,13 @@ import App from './App'
 export const mapState = state => {
   let loadingMessage = null
   let connectionError = getConnectionError(state)
-  let contractError = getFetchContractError(state)
+  let contractError = getContractError(state)
   const contract = getContract(state)
+  const network = getNetwork(state)
+  const address = getAddress(state)
 
-  let isBlank = !getAddress(state)
+  const isNotFound = contract && contract.beneficiary === '0x'
+  const showPrompt = isNotFound || !address
 
   if (isConnecting(state)) {
     loadingMessage = 'Connecting...'
@@ -22,21 +30,21 @@ export const mapState = state => {
     loadingMessage = 'Loading data...'
   }
 
-  if (contract && contract.beneficiary === '0x') {
-    isBlank = true
-  }
-
   return {
+    address,
     loadingMessage,
     connectionError,
     contractError,
-    isBlank,
-    isLoaded: !!contract
+    showPrompt,
+    isNotFound,
+    isLoaded: !!contract,
+    network
   }
 }
 
 export const mapDispatch = dispatch => ({
-  onConnect: () => dispatch(connectToEthereum())
+  onConnect: () => dispatch(connectToEthereum()),
+  onAccess: address => dispatch(push(address))
 })
 
-export default connect(mapState, mapDispatch)(App)
+export default withRouter(connect(mapState, mapDispatch)(App))
