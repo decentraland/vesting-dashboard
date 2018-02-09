@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "decentraland-commons": "^2.5.0",
+    "decentraland-commons": "^2.7.2",
     "ethereum-blockies": "^0.1.1",
     "history": "^4.7.2",
     "husky": "^0.14.3",
