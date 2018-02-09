@@ -82,4 +82,8 @@ export default class API {
     const json = await resp.json()
     return json[0]
   }
+
+  async getNetwork() {
+    return eth.getNetwork()
+  }
 }

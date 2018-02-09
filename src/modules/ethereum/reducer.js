@@ -24,7 +24,8 @@ export default function reducer(state = INITIAL_STATE, action) {
         loading: false,
         data: {
           ...state.data,
-          address: action.address.toLowerCase()
+          address: action.address.toLowerCase(),
+          network: action.network
         }
       }
     }
@@ -33,6 +34,12 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         loading: false,
         error: action.error
+      }
+    }
+    case '@@router/LOCATION_CHANGE': {
+      return {
+        ...state,
+        error: null
       }
     }
     default:
