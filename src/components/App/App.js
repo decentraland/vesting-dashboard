@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import Header from 'components/Header'
 import Dashboard from 'components/Dashboard'
 import Footer from 'components/Footer'
+import Input from 'components/Input'
+import ChangeBeneficiaryModal from 'components/ChangeBeneficiaryModal'
 import { isValidAddress } from 'utils'
 import './App.css'
 
@@ -32,7 +34,7 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.address != this.props.address) {
+    if (nextProps.address !== this.props.address) {
       const { onConnect } = this.props
       onConnect()
     }
@@ -75,7 +77,7 @@ class App extends Component {
         <div className="container">
           <div className="decentraland-logo" />
           <h3>Contract Address</h3>
-          <input value={this.state.address} placeholder="0x..." onChange={this.handleAddressChange} />
+          <Input value={this.state.address} placeholder="0x..." onChange={this.handleAddressChange} />
           <p className="help">{helpText}</p>
         </div>
       </div>
@@ -92,7 +94,7 @@ class App extends Component {
       errorText = (
         <p className="error">
           Make sure you have{' '}
-          <a href="https://metamask.io" target="_blank" ref="noreferrer noopener">
+          <a href="https://metamask.io" target="_blank" rel="noreferrer noopener">
             MetaMask
           </a>{' '}
           installed and your account is unlocked.
@@ -142,6 +144,7 @@ class App extends Component {
         <Header />
         <Dashboard />
         <Footer />
+        <ChangeBeneficiaryModal />
       </div>
     )
   }
