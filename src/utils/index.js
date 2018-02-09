@@ -20,3 +20,7 @@ export function getToday() {
     .add(1, 'days')
     .format('MMM Do, YYYY')
 }
+
+export function isValidAddress(address) {
+  return /^(0x)?[0-9a-f]{40}$/i.test(address)
+}
