@@ -4,6 +4,11 @@
 
 [Decentraland](https://decentraland.org)'s MANA Token Vesting Dashboard
 
+This dashboard should work with any vesting contract based on [OpenZeppelin's TokenVesting](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC20/TokenVesting.sol) for any ERC20 token just by [tweaking this file](https://github.com/decentraland/vesting-dashboard/blob/master/src/modules/api.js).
+
+<img width="1251" alt="screen shot 2018-02-16 at 3 17 34 pm" src="https://user-images.githubusercontent.com/2781777/36322604-b1ef1926-132c-11e8-997e-b93d4f4851df.png">
+
+
 ## Running the project
 
 * `npm install`
