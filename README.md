@@ -2,7 +2,7 @@
 
 # Vesting Dashboard
 
-[Decentraland](https://decentraland.org)'s MANA Token Vesting Dashboard
+[Decentraland](https://decentraland.org)'s [MANA Token Vesting Dashboard](https://vesting.decentraland.org)
 
 This web UI works with any vesting contract based on [OpenZeppelin's TokenVesting](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC20/TokenVesting.sol) for any ERC20 token just by [tweaking this file](https://github.com/decentraland/vesting-dashboard/blob/master/src/modules/api.js).
 
