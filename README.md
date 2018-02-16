@@ -15,7 +15,7 @@ This web UI works with any vesting contract based on [OpenZeppelin's TokenVestin
 
 * `npm start`
 
-You will need a browser with [Metamask](http://metamask.io/) in order to access the page, and you will have to provide the vesting contract's address in the url, like:
+You will need a browser with [MetaMask](http://metamask.io/) in order to access the page, and you will have to provide the vesting contract's address in the url, like:
 
 ```
 http://localhost:3000/#/0x92f08...6fb12
