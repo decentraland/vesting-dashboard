@@ -3,18 +3,30 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { ConnectedRouter } from "react-router-redux";
-import createHistory from "history/createHashHistory";
+import { createHashHistory } from "history";
 import configureStore from "./modules/store";
 
 import "./index.css";
 import App from "./components/App";
 import unregisterServiceWorker from "./registerServiceWorker";
+import { Router, Route } from "react-router";
 
-const history = createHistory();
-const store = configureStore(history);
-const app = <App />;
-const router = <ConnectedRouter history={history}>{app}</ConnectedRouter>;
-const provider = <Provider store={store}>{router}</Provider>;
-
-ReactDOM.render(provider, document.getElementById("root"));
-unregisterServiceWorker();
+window.ethereum.enable().then(() => {
+  const history = createHashHistory(window.history);
+  console.log(history);
+  const store = configureStore(history);
+  ReactDOM.render(
+    <Provider store={store}>
+      <ConnectedRouter store={store} history={history}>
+        <Router history={history}>
+          <Route path="*">
+            <App />
+          </Route>
+        </Router>
+      </ConnectedRouter>
+      ;
+    </Provider>,
+    document.getElementById("root")
+  );
+  unregisterServiceWorker();
+});
