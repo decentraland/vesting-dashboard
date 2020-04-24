@@ -1,33 +1,34 @@
-import { getAddress } from "modules/contract/selectors";
-import Web3 from "web3";
-import manaAbi from "../abi/mana.json";
-import vestingAbi from "../abi/vesting.json";
+import { getAddress } from 'modules/contract/selectors'
+import { getAddress as getFrom } from 'modules/ethereum/selectors'
+import Web3 from 'web3'
+import manaAbi from '../abi/mana.json'
+import vestingAbi from '../abi/vesting.json'
 
-let mana, vesting;
+let mana, vesting
 
 export default class API {
-  store = null;
+  store = null
 
   setStore(store) {
-    this.store = store;
+    this.store = store
   }
 
   async connect() {
-    const state = this.store.getState();
-    const address = getAddress(state);
+    const state = this.store.getState()
+    const address = getAddress(state)
 
-    const localWallet = (await window.ethereum.enable())[0];
-    const web3 = new Web3(window.web3);
+    const localWallet = (await window.ethereum.enable())[0]
+    const web3 = new Web3(window.web3)
 
-    mana = new web3.eth.Contract(manaAbi, "0x0F5D2fB29fb7d3CFeE444a200298f468908cC942");
-    vesting = new web3.eth.Contract(vestingAbi, address);
+    mana = new web3.eth.Contract(manaAbi, '0x0F5D2fB29fb7d3CFeE444a200298f468908cC942')
+    vesting = new web3.eth.Contract(vestingAbi, address)
 
-    return localWallet;
+    return localWallet
   }
 
   async fetchContract() {
-    const state = this.store.getState();
-    const address = getAddress(state);
+    const state = this.store.getState()
+    const address = getAddress(state)
 
     const [
       balance,
@@ -40,7 +41,7 @@ export default class API {
       revocable,
       owner,
       released,
-      start
+      start,
     ] = await Promise.all([
       mana.methods.balanceOf(address).call(),
       vesting.methods.duration().call(),
@@ -52,8 +53,8 @@ export default class API {
       vesting.methods.revocable().call(),
       vesting.methods.owner().call(),
       vesting.methods.released().call(),
-      vesting.methods.start().call()
-    ]);
+      vesting.methods.start().call(),
+    ])
 
     const contract = {
       address,
@@ -67,28 +68,39 @@ export default class API {
       revocable,
       owner,
       released: parseInt(released, 10) / 1e18,
-      start: parseInt(start, 10)
-    };
+      start: parseInt(start, 10),
+    }
 
-    return contract;
+    return contract
   }
 
   release() {
-    return vesting.methods.release().call();
+    const state = this.store.getState()
+    const from = getFrom(state)
+    return vesting.methods.release().send({ from })
   }
 
   changeBeneficiary(address) {
-    return vesting.methods.changeBeneficiary(address).call();
+    const state = this.store.getState()
+    const from = getFrom(state)
+    return vesting.methods.changeBeneficiary(address).send({ from })
   }
 
-  async fetchTicker(ticker = "decentraland") {
-    const resp = await fetch(`https://api.coinmarketcap.com/v1/ticker/${ticker}/`, { mode: "cors" });
-    const json = await resp.json();
-    return json[0];
+  async fetchTicker(ticker = 'decentraland') {
+    try {
+      const resp = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ticker}&vs_currencies=usd`, {
+        mode: 'cors',
+      })
+      const json = await resp.json()
+      const { usd } = json[ticker]
+      return usd
+    } catch (e) {
+      return 0
+    }
   }
 
   async getNetwork() {
-    await window.ethereum.enable();
-    return window.web3;
+    await window.ethereum.enable()
+    return window.web3
   }
 }
