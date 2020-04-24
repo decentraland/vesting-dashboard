@@ -9,7 +9,7 @@ export const CONNECT_FAILURE = '[Failure] Connect'
 
 export function connectRequest() {
   return {
-    type: CONNECT_REQUEST
+    type: CONNECT_REQUEST,
   }
 }
 
@@ -17,14 +17,14 @@ export function connectSuccess(address, network) {
   return {
     type: CONNECT_SUCCESS,
     address,
-    network
+    network,
   }
 }
 
 export function connectFailure(error) {
   return {
     type: CONNECT_FAILURE,
-    error
+    error,
   }
 }
 
@@ -36,6 +36,7 @@ export function connect() {
     }
     dispatch(connectRequest())
     try {
+      debugger
       const address = await api.connect()
       const network = await api.getNetwork()
       dispatch(connectSuccess(address, network))

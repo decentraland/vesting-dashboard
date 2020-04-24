@@ -7,11 +7,11 @@ import './Schedule.css'
 const wrapperStyle = {
   backgroundColor: 'black',
   padding: 2,
-  borderColor: colors.darkGray
+  borderColor: colors.darkGray,
 }
 
 const labelStyle = {
-  color: 'white'
+  color: 'white',
 }
 
 class YAxisTick extends React.PureComponent {
@@ -21,9 +21,7 @@ class YAxisTick extends React.PureComponent {
     return (
       <g transform={`translate(${x},${y})`}>
         <text x={0} y={0} dy={16} textAnchor="end" fill="#666">
-          {numeral(payload.value)
-            .format('0,0.0a')
-            .toUpperCase()}{' '}
+          {numeral(payload.value).format('0,0.0a').toUpperCase()}{' '}
         </text>
       </g>
     )
@@ -36,7 +34,7 @@ class Schedule extends Component {
 
     this.state = {
       width: 0,
-      height: 0
+      height: 0,
     }
 
     this.refContainer = this.refContainer.bind(this)
@@ -48,13 +46,13 @@ class Schedule extends Component {
       if (this.state.width !== rect.width || this.state.height !== rect.height) {
         this.setState({
           width: rect.width,
-          height: rect.height
+          height: rect.height,
         })
       }
     }
   }
 
-  renderX = props => {
+  renderX = (props) => {
     const { x, y, payload } = props
     const { schedule } = this.props
     return (

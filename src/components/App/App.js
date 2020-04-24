@@ -1,54 +1,54 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import Header from "components/Header";
-import Dashboard from "components/Dashboard";
-import Footer from "components/Footer";
-import Input from "components/Input";
-import ChangeBeneficiaryModal from "components/ChangeBeneficiaryModal";
-import { isValidAddress } from "utils";
-import "./App.css";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import Header from 'components/Header'
+import Dashboard from 'components/Dashboard'
+import Footer from 'components/Footer'
+import Input from 'components/Input'
+import ChangeBeneficiaryModal from 'components/ChangeBeneficiaryModal'
+import { isValidAddress } from 'utils'
+import './App.css'
 
 class App extends Component {
   static propTypes = {
     loadingMessage: PropTypes.string,
     errorMessage: PropTypes.string,
     isLoaded: PropTypes.bool,
-    onConnect: PropTypes.func.isRequired
-  };
+    onConnect: PropTypes.func.isRequired,
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      address: this.props.address || localStorage.getItem("address") || null
-    };
+      address: this.props.address || localStorage.getItem('address') || null,
+    }
   }
 
   componentWillMount() {
-    const { onConnect } = this.props;
-    onConnect();
-    document.addEventListener("keydown", this.handleKeyDown);
+    const { onConnect } = this.props
+    onConnect()
+    document.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.address !== this.props.address) {
-      const { onConnect } = this.props;
-      onConnect();
+      const { onConnect } = this.props
+      onConnect()
     }
   }
 
-  handleAddressChange = e => {
-    const address = e.target.value.trim();
-    localStorage.setItem("address", address);
-    this.setState({ address });
-  };
+  handleAddressChange = (e) => {
+    const address = e.target.value.trim()
+    localStorage.setItem('address', address)
+    this.setState({ address })
+  }
 
-  handleKeyDown = e => {
-    const isEnterKey = e.which === 13 || e.which === 32;
-    const { onAccess, showPrompt, address } = this.props;
+  handleKeyDown = (e) => {
+    const isEnterKey = e.which === 13 || e.which === 32
+    const { onAccess, showPrompt, address } = this.props
     if (
       isEnterKey &&
       showPrompt &&
@@ -56,21 +56,21 @@ class App extends Component {
       isValidAddress(this.state.address) &&
       this.state.address !== address
     ) {
-      onAccess(this.state.address);
+      onAccess(this.state.address)
     }
-  };
+  }
 
   renderPrompt() {
-    const { isNotFound, address, network } = this.props;
-    let helpText = "Press enter to continue";
+    const { isNotFound, address, network } = this.props
+    let helpText = 'Press enter to continue'
     if (!this.state.address) {
-      helpText = "Please provide a vesting contract address";
+      helpText = 'Please provide a vesting contract address'
     } else if (!isValidAddress(this.state.address)) {
-      helpText = "That's not a valid Ethereum address";
+      helpText = "That's not a valid Ethereum address"
     } else if (isNotFound && this.state.address === address) {
       helpText =
         "There's no vesting contract on that address..." +
-        (network && network.name !== "mainnet" ? "\nMaybe it's because you are on " + network.label + "?" : "");
+        (network && network.name !== 'mainnet' ? "\nMaybe it's because you are on " + network.label + '?' : '')
     }
     return (
       <div className="app">
@@ -81,26 +81,25 @@ class App extends Component {
           <p className="help">{helpText}</p>
         </div>
       </div>
-    );
+    )
   }
 
   renderError() {
-    debugger;
-    const { connectionError } = this.props;
-    let errorText = "So this happened: " + connectionError;
-    if (connectionError.indexOf("Failed to fetch") !== -1) {
-      errorText = <p className="error">Make sure you are connected to the internet.</p>;
+    const { connectionError } = this.props
+    let errorText = 'So this happened: ' + connectionError
+    if (connectionError.indexOf('Failed to fetch') !== -1) {
+      errorText = <p className="error">Make sure you are connected to the internet.</p>
     }
-    if (connectionError.indexOf("Ethereum") !== -1) {
+    if (connectionError.indexOf('Ethereum') !== -1) {
       errorText = (
         <p className="error">
-          Make sure you have{" "}
+          Make sure you have{' '}
           <a href="https://metamask.io" target="_blank" rel="noreferrer noopener">
             MetaMask
-          </a>{" "}
+          </a>{' '}
           installed and your account is unlocked.
         </p>
-      );
+      )
     }
     return (
       <div className="app">
@@ -110,11 +109,11 @@ class App extends Component {
           {errorText}
         </div>
       </div>
-    );
+    )
   }
 
   renderLoading() {
-    const { loadingMessage } = this.props;
+    const { loadingMessage } = this.props
     return (
       <div className="app">
         <div className="container">
@@ -122,23 +121,23 @@ class App extends Component {
           <p className="loading-message">{loadingMessage}</p>
         </div>
       </div>
-    );
+    )
   }
 
   render() {
-    const { loadingMessage, connectionError, contractError, showPrompt, isLoaded } = this.props;
+    const { loadingMessage, connectionError, contractError, showPrompt, isLoaded } = this.props
     if (loadingMessage) {
-      return this.renderLoading();
+      return this.renderLoading()
     }
     if (connectionError || contractError) {
-      return this.renderError();
+      return this.renderError()
     }
     if (showPrompt) {
-      return this.renderPrompt();
+      return this.renderPrompt()
     }
 
     if (!isLoaded) {
-      return null;
+      return null
     }
     return (
       <div className="app">
@@ -147,8 +146,8 @@ class App extends Component {
         <Footer />
         <ChangeBeneficiaryModal />
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
