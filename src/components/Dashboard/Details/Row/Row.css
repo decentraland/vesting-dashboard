@@ -16,3 +16,7 @@
   flex-flow: row nowrap;
   align-items: center;
 }
+
+.details-value canvas {
+  border-radius: 4px;
+}

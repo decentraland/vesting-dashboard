@@ -32,7 +32,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rimraf docs && mv build docs",
+    "build": "react-scripts build && rimraf docs && mv build docs && cp CNAME docs/CNAME",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "prepush": "npm run build && (git add . && git commit -m'build' || true)"

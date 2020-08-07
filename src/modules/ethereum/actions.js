@@ -36,7 +36,6 @@ export function connect() {
     }
     dispatch(connectRequest())
     try {
-      debugger
       const address = await api.connect()
       const network = await api.getNetwork()
       dispatch(connectSuccess(address, network))

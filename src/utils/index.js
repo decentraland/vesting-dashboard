@@ -6,9 +6,9 @@ export const toUSD = (amount, ticker) => (ticker ? '$' + numeral(amount * ticker
 export const toMANA = (amount) => numeral(amount).format('0,0')
 
 export const colors = {
-  lightBlue: '#4db1dd',
-  darkPurple: '#5d5890',
-  green: '#30d7a9',
+  lightBlue: '#ff2d55',
+  darkPurple: '#16141a',
+  green: '#c640cd',
   darkGray: '#222222',
   lightGray: '#d3d3d3',
 }
