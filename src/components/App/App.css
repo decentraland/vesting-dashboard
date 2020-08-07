@@ -9,14 +9,14 @@
   width: 100px;
   height: 100px;
   background-position: 0 0;
-  background-image: url(/static/media/logo.b7751b3e.svg);
+  background-image: url(../../images/logo.svg);
   background-size: cover;
   margin-bottom: 50px;
 }
 
 .app .error {
   color: gray;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .app .error a {
@@ -42,7 +42,7 @@
 
 .app .container h3 {
   font-size: 20px;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .app .container input {

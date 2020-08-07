@@ -87,10 +87,10 @@ class App extends Component {
   renderError() {
     const { connectionError } = this.props
     let errorText = 'So this happened: ' + connectionError
-    if (connectionError.indexOf('Failed to fetch') !== -1) {
+    if (connectionError && connectionError.indexOf('Failed to fetch') !== -1) {
       errorText = <p className="error">Make sure you are connected to the internet.</p>
     }
-    if (connectionError.indexOf('Ethereum') !== -1) {
+    if (connectionError && connectionError.indexOf('Ethereum') !== -1) {
       errorText = (
         <p className="error">
           Make sure you have{' '}

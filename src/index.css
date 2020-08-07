@@ -15,7 +15,7 @@ body {
 }
 
 h3 {
-  color: #5d5890;
+  color: #16141a;
 }
 
 #root {
@@ -26,9 +26,9 @@ h3 {
   --light-gray: #d3d3d3;
   --gray: #4f4f4f;
   --dark-gray: #222222;
-  --green: #30d7a9;
-  --light-blue: #4db1dd;
-  --dark-purple: #5d5890;
+  --green: #c640cd;
+  --light-blue: #ff2d55;
+  --dark-purple: #16141a;
 }
 
 h1,

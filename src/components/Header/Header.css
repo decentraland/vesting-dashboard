@@ -14,15 +14,16 @@
   flex-flow: row nowrap;
   align-items: center;
   -webkit-font-smoothing: antialiased;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 .header-icon {
   display: inline-block;
   width: 52px;
   height: 52px;
-  background-position: 0 0;
+  background-position: center;
   background-image: url(../../images/logo.svg);
+  background-size: cover;
 }
 
 .header-title {
@@ -36,9 +37,6 @@
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-end;
-}
-
-.header-description {
 }
 
 .header-contract-address {

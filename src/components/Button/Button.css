@@ -12,7 +12,7 @@
 }
 
 .Button.btn-primary {
-  background-color: #30d7a9;
+  background-color: #ff2d55;
 }
 
 .Button.btn-secondary {
@@ -21,8 +21,7 @@
 
 .Button.btn-primary:hover,
 .Button.btn-primary:visited {
-  background-color: #30d7a9;
-  box-shadow: 0 8px 30px rgba(48, 215, 169, 0.5);
+  background-color: #ff2d55;
   color: #fff;
 }
 
