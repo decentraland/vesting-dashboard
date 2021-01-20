@@ -70,7 +70,7 @@ class App extends Component {
     } else if (isNotFound && this.state.address === address) {
       helpText =
         "There's no vesting contract on that address..." +
-        (network && network.name !== 'mainnet' ? "\nMaybe it's because you are on " + network.label + '?' : '')
+        (network && network.name !== 'mainnet' ? "\nMaybe it's because you are on " + network.name + '?' : '')
     }
     return (
       <div className="app">
