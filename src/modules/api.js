@@ -17,9 +17,11 @@ export default class API {
     const state = this.store.getState()
     const address = getAddress(state)
 
-    const localWallet = (await window.ethereum.enable())[0]
-    const web3 = new Web3(window.web3)
+    const ethereum = window.ethereum
+    const accounts = await ethereum.request({ method: 'eth_accounts' })
+    const localWallet = accounts[0]
 
+    const web3 = new Web3(ethereum)
     mana = new web3.eth.Contract(manaAbi, '0x0F5D2fB29fb7d3CFeE444a200298f468908cC942')
     vesting = new web3.eth.Contract(vestingAbi, address)
 
@@ -100,7 +102,8 @@ export default class API {
   }
 
   async getNetwork() {
-    await window.ethereum.enable()
-    return window.web3
+    const web3 = new Web3(window.ethereum)
+    const chainId = await web3.eth.getChainId()
+    return { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }
   }
 }
