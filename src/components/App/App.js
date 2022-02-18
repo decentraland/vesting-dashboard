@@ -6,7 +6,7 @@ import Footer from 'components/Footer'
 import Input from 'components/Input'
 import ChangeBeneficiaryModal from 'components/ChangeBeneficiaryModal'
 import { isValidAddress } from 'utils'
-import './App.css'
+import "./App.css";
 
 class App extends Component {
   static propTypes = {

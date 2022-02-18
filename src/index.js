@@ -6,10 +6,11 @@ import { ConnectedRouter } from 'react-router-redux'
 import { createHashHistory } from 'history'
 import configureStore from './modules/store'
 
-import './index.css'
-import App from './components/App'
-import unregisterServiceWorker from './registerServiceWorker'
-import { Router, Route } from 'react-router'
+import App from "./components/App";
+import unregisterServiceWorker from "./registerServiceWorker";
+import { Router, Route } from "react-router";
+
+import "./index.css";
 
 window.ethereum.enable().then(() => {
   const history = createHashHistory(window.history)
