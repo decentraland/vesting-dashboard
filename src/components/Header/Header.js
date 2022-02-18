@@ -2,6 +2,7 @@ import React, { Component } from "react";
 // import PropTypes from "prop-types";
 import "./Header.css";
 import { Button } from "decentraland-ui";
+import { FormattedMessage } from "react-intl";
 
 // class Header extends Component {
 //   static propTypes = {
@@ -31,6 +32,7 @@ class Header extends Component {
           <div className="header-icon" />
           <h1 className="header-title">Decentraland</h1>
         </div>
+        <FormattedMessage id="test" />
         <Button primary>Test</Button>
         {/* <div className="header-right">
           <h3 className="header-description">Decentraland's MANA Token Vesting</h3>
