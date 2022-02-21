@@ -1,3 +1,7 @@
 {
-  "test": "testing"
+  "global.copied": "Copied!",
+  "global.month": "month",
+  "global.month.pl": "months",
+  "overview.title": "MANA Vesting Contract",
+  "overview.details": "This is a contract for {mana} MANA to be vested in {months} {monthsPl}, after a {cliff}-{monthsCliffPl} cliff."
 }

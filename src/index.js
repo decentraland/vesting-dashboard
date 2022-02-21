@@ -13,6 +13,7 @@ import { IntlProvider } from "react-intl";
 import i18n_en from "./i18n/en.json";
 
 import "./index.css";
+import "semantic-ui-css/semantic.min.css";
 
 window.ethereum.enable().then(() => {
   const history = createHashHistory(window.history);

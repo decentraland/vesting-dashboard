@@ -1,43 +1,23 @@
+import { Logo } from "decentraland-ui";
 import React, { Component } from "react";
-// import PropTypes from "prop-types";
+import { Container, Grid } from "semantic-ui-react";
 import "./Header.css";
-import { Button } from "decentraland-ui";
-import { FormattedMessage } from "react-intl";
-
-// class Header extends Component {
-//   static propTypes = {
-//     address: PropTypes.string.isRequired
-//   };
-//   render() {
-//     const { address } = this.props;
-//     return (
-//       <div className="header">
-//         <div className="header-left">
-//           <div className="header-icon" />
-//           <h1 className="header-title">Decentraland</h1>
-//         </div>
-//         <div className="header-right">
-//           <h3 className="header-description">Decentraland's MANA Token Vesting</h3>
-//           <div className="header-contract-address">{address}</div>
-//         </div>
-//       </div>
-//     );
-//   }
-// }
 class Header extends Component {
   render() {
     return (
       <div className="header">
-        <div className="header-left">
-          <div className="header-icon" />
-          <h1 className="header-title">Decentraland</h1>
-        </div>
-        <FormattedMessage id="test" />
-        <Button primary>Test</Button>
-        {/* <div className="header-right">
-          <h3 className="header-description">Decentraland's MANA Token Vesting</h3>
-          <div className="header-contract-address">{address}</div>
-        </div> */}
+        <Container style={{ height: "auto", alignItems: "flex-start" }}>
+          <Grid verticalAlign="middle">
+            <Grid.Row>
+              <Grid.Column style={{ width: "fit-content" }}>
+                <Logo />
+              </Grid.Column>
+              <Grid.Column style={{ padding: 0 }}>
+                <h1 className="header-title">Decentraland</h1>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Container>
       </div>
     );
   }
