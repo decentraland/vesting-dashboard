@@ -3,5 +3,8 @@
   "global.month": "month",
   "global.month.pl": "months",
   "overview.title": "MANA Vesting Contract",
-  "overview.details": "This is a contract for {mana} MANA to be vested in {months} {monthsPl}, after a {cliff}-{monthsCliffPl} cliff."
+  "overview.details": "This is a contract for {mana} MANA to be vested in {months} {monthsPl}, after a {cliff}-{monthsCliffPl} cliff.",
+  "beneficiary.title": "Grant beneficiary",
+  "beneficiary.subtitle": "Enabled by the community participating in the Decentraland DAO",
+  "beneficiary.button": "View dao proposal"
 }

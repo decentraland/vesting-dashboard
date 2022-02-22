@@ -3,10 +3,6 @@
   margin: 3% 0;
 }
 
-.ui.grid.overview > .row > .column {
-  width: fit-content;
-}
-
 .ui.grid.overview .contract .header {
   margin: 0;
   margin-bottom: 2%;
