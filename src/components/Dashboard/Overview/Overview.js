@@ -1,22 +1,24 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Grid } from "semantic-ui-react";
 import { Header, Popup } from "decentraland-ui";
 import { FormattedMessage, FormattedPlural } from "react-intl";
+import { getMonthDiff } from "utils";
+import ManaWidget from "../../ManaWidget";
 import Copy from "../../../images/copy.svg";
 
 import "./Overview.css";
 
-Overview.propTypes = {
-  address: PropTypes.string.isRequired,
-};
-
 export default function Overview(props) {
-  const { address } = { ...props };
+  const { address, contract } = { ...props };
 
   const copyAddress = () => {
     navigator.clipboard.writeText(address);
   };
+
+  const { released, balance, start, cliff, duration } = contract;
+  const total = balance + released;
+  const vestingMonths = getMonthDiff(start, start + duration);
+  const vestingCliff = getMonthDiff(start, cliff);
 
   return (
     <Grid columns={2} className="overview">
@@ -32,7 +34,7 @@ export default function Overview(props) {
                 content={<FormattedMessage id="global.copied" />}
                 position="bottom center"
                 trigger={<img src={Copy} onClick={copyAddress} />}
-                on="Click"
+                on="click"
               />
             </Header>
           </div>
@@ -40,19 +42,19 @@ export default function Overview(props) {
             <FormattedMessage
               id="overview.details"
               values={{
-                mana: 100,
-                months: 2,
+                mana: Math.floor(total),
+                months: vestingMonths,
                 monthsPl: (
                   <FormattedPlural
-                    value={2}
+                    value={vestingMonths}
                     one={<FormattedMessage id="global.month" />}
                     other={<FormattedMessage id="global.month.pl" />}
                   />
                 ),
-                cliff: 1,
+                cliff: vestingCliff,
                 monthsCliffPl: (
                   <FormattedPlural
-                    value={1}
+                    value={vestingCliff}
                     one={<FormattedMessage id="global.month" />}
                     other={<FormattedMessage id="global.month.pl" />}
                   />
@@ -62,8 +64,7 @@ export default function Overview(props) {
           </Header>
         </Grid.Column>
         <Grid.Column floated="right">
-          <div>aaa</div>
-          <div>bbb</div>
+          <ManaWidget />
         </Grid.Column>
       </Grid.Row>
     </Grid>

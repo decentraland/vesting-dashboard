@@ -1,0 +1,24 @@
+#beneficiary {
+  background: rgba(84, 96, 156, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 10px 15px;
+}
+
+#beneficiary .header {
+  margin: 0;
+  text-transform: none;
+}
+
+#beneficiary .column {
+  padding-right: 0;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}

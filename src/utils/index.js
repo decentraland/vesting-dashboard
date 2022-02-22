@@ -20,3 +20,8 @@ export function getToday() {
 export function isValidAddress(address) {
   return /^(0x)?[0-9a-f]{40}$/i.test(address)
 }
+
+export function getMonthDiff(start, finish) {
+  const getDate = (date) => moment(date * 1000).startOf("month");
+  return Math.abs(getDate(finish).diff(getDate(start), "months"));
+}

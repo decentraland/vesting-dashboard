@@ -5,12 +5,14 @@ import Schedule from "./Schedule";
 import "./Dashboard.css";
 import { Container } from "semantic-ui-react";
 import Overview from "./Overview";
+import Beneficiary from "./Beneficiary";
 
 class Dashboard extends Component {
   render() {
     return (
       <Container className="dashboard">
         <Overview />
+        <Beneficiary />
       </Container>
       // <div className="dashboard">
       //   <div className="dashboard-left">

@@ -29,8 +29,10 @@ export default class API {
   }
 
   async fetchContract() {
-    const state = this.store.getState()
-    const address = getAddress(state)
+    const state = this.store.getState();
+    const address = getAddress(state);
+
+    // await vesting.methods.token().call() // Returns token address of the vesting contract
 
     const [
       balance,
@@ -56,7 +58,7 @@ export default class API {
       vesting.methods.owner().call(),
       vesting.methods.released().call(),
       vesting.methods.start().call(),
-    ])
+    ]);
 
     const contract = {
       address,
@@ -71,9 +73,9 @@ export default class API {
       owner,
       released: parseInt(released, 10) / 1e18,
       start: parseInt(start, 10),
-    }
+    };
 
-    return contract
+    return contract;
   }
 
   release() {
