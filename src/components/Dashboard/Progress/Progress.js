@@ -1,56 +1,56 @@
-import React, { Component } from 'react'
-import Metric from './Metric'
-import Bar from './Bar'
-import { colors } from 'utils'
-import { ContractType } from 'components/types'
-import './Progress.css'
+import React from "react";
+import { Grid } from "semantic-ui-react";
+import { Header } from "decentraland-ui";
+import Bar from "./Bar/Bar";
+import { FormattedMessage, FormattedNumber } from "react-intl";
+import Info from "../../Info/Info";
 
-class Progress extends Component {
-  static propTypes = {
-    contract: ContractType.isRequired,
-  }
-  render() {
-    const { contract, ticker } = this.props
-    const { released, vestedAmount, balance } = contract
+import "./Progress.css";
 
-    const total = balance + released
+function Progress(props) {
+  const { contract } = props;
+  const vestedPercentage = Math.round((contract.releasableAmount / contract.balance) * 100);
+  const releasedPercentage = Math.round((contract.released / contract.balance) * 100);
 
-    const releasedPercentage = ((released / total) * 100) | 0
-    const vestedPercentage = ((vestedAmount / total) * 100) | 0
-    const totalPercentage = 100
-
-    return (
-      <div className="progress">
-        <Metric
-          label="Released"
-          percentage={releasedPercentage}
-          amount={released}
-          color={colors.lightBlue}
-          ticker={ticker}
+  return (
+    <div id="progress">
+      <Grid>
+        <Grid.Column floated="left">
+          <Header sub>
+            <FormattedMessage id="progress.vested" />
+            <Info message={<FormattedMessage id="helper.vesting_so_far" />} position="right center" />
+          </Header>
+          <div className="amount">
+            <Header style={{ display: "inline-block" }}>
+              <FormattedNumber value={Math.round(contract.releasableAmount)} /> {contract.symbol}
+            </Header>
+            <span className="percentage vested">{vestedPercentage}%</span>
+          </div>
+        </Grid.Column>
+        <Grid.Column floated="right" textAlign="right">
+          <Header sub>
+            <Info message={<FormattedMessage id="helper.total_vesting" />} position="left center" />
+            <FormattedMessage id="progress.total" />
+          </Header>
+          <Header style={{ display: "inline-block" }}>
+            <FormattedNumber value={Math.round(contract.balance)} /> {contract.symbol}
+          </Header>
+        </Grid.Column>
+      </Grid>
+      <Bar vested={vestedPercentage} released={releasedPercentage} />
+      <div>
+        <FormattedMessage
+          id="progress.released"
+          values={{
+            b: (chunks) => <b>{chunks}</b>,
+            amount: <FormattedNumber value={Math.round(contract.released)} />,
+            token: contract.symbol,
+          }}
         />
-        <Metric
-          label="Vested"
-          percentage={vestedPercentage}
-          amount={vestedAmount}
-          color={colors.green}
-          style={{ bottom: 0, left: vestedPercentage < 20 ? 0 : `calc(${vestedPercentage}% - 90px)` }}
-          ticker={ticker}
-        />
-        <Metric
-          label="Total vesting"
-          percentage={100}
-          amount={total}
-          color={colors.lightGray}
-          style={{ right: 0 }}
-          ticker={ticker}
-          alt
-        />
-        <Bar percentage={totalPercentage} color={colors.lightGray} />
-        <Bar percentage={vestedPercentage} color={colors.green} />
-        <Bar percentage={releasedPercentage} color={colors.lightBlue} />
+        <span className="percentage released">{releasedPercentage}%</span>
       </div>
-    )
-  }
+    </div>
+  );
 }
 
-export default Progress
+export default Progress;

@@ -3,9 +3,20 @@
   "global.month": "month",
   "global.month.pl": "months",
   "error.dao_proposal_url": "DAO Proposal URL not found",
+  "helper.total_vesting": "Total amount of the grant nominated in the currency/token the grant was issued. This is the total budget the grants beneficiaries will have to execute their project.",
+  "helper.vesting_so_far": "The amount of money that is available to be used by the grant beneficiaries. Since the total amount of the grant will be.",
+  "helper.releasable": "The amount of money that is available to be transferred from the Grant's smart contract to the beneficiary address but hasn't been transferred yet.",
+  "helper.released": "The amount of money that has been transferred from the Grant's smart contract to the beneficiary address.",
+  "helper.beneficiary": "The authorized address where the Grant's smart contract will transfer the money.",
+  "helper.cliff_period": "The time lapse between the grant stars and the first available funds are vested. This strategy is used as a secure period where the Grant owners will start making progress without receiving the money. It is also used by the DAO and the DAO Committee to have the chance to revoke a Grant without compromising DAO funds.",
+  "helper.smart_contract_address": "The address where the details of the grant are stored and the money will be transferred from the DAO treasury. From this smart contract the money will be transferred to the beneficiary address.",
+  "helper.vesting_schedule": "The timeframe where the funds are going to be vested and available to be released. It can be considered as the time during which the beneficiaries are going to be making progress to the project while the Grant is active.",
   "overview.title": "{token} Vesting Contract",
   "overview.details": "This is a contract for {amount} {token} to be vested in {months} {monthsPl}, after a {cliff}-{monthsCliffPl} cliff.",
   "beneficiary.title": "Grant beneficiary",
   "beneficiary.subtitle": "Enabled by the community participating in the Decentraland DAO",
-  "beneficiary.button": "View dao proposal"
+  "beneficiary.button": "View dao proposal",
+  "progress.total": "Total vesting",
+  "progress.vested": "Vested so far",
+  "progress.released": "<b>{amount} {token}</b> released"
 }

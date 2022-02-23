@@ -3,12 +3,13 @@ h3 {
 }
 
 :root {
-  --light-gray: #d3d3d3;
+  --light-gray: #dadce5;
   --gray: #4f4f4f;
   --dark-gray: #222222;
-  --green: #c640cd;
   --light-blue: #ff2d55;
   --dark-purple: #16141a;
+  --green: #44B600;
+  --orange: #FF7439;
 }
 
 h1,
