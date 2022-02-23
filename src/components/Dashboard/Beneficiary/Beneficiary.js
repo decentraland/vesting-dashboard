@@ -4,9 +4,9 @@ import { Grid } from "semantic-ui-react";
 import Icon from "../../../images/grant_icon.svg";
 import ButtonIcon from "../../../images/proposal_button_icon.svg";
 import { Header, Button, Loader } from "decentraland-ui";
+import { FormattedMessage } from "react-intl";
 
 import "./Beneficiary.css";
-import { FormattedMessage } from "react-intl";
 
 function Beneficiary(props) {
   const { address } = { ...props };
@@ -20,9 +20,10 @@ function Beneficiary(props) {
   };
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_GRANT_PROPOSALS_URL)
+    fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)
       .then((resp) => resp.json())
-      .then((resp) => setProposals(resp.data));
+      .then((resp) => setProposals(resp.data))
+      .catch((err) => console.log(err));
   }, []);
 
   useEffect(() => {
@@ -30,10 +31,14 @@ function Beneficiary(props) {
       let proposal = proposals.filter((p) => areSameAddress(p["vesting_address"], address));
       if (proposal.length === 1) {
         proposal = proposal[0];
-        setDaoProposal(proposal["snapshot_proposal"]["body"].match(/\bhttps?:\/\/\S+[^\)\*]/gi)[0]);
+        const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL);
+        proposalUrl.searchParams.append("id", proposal.id);
+        setDaoProposal(proposalUrl);
+      } else {
+        throw new Error(<FormattedMessage id="error.dao_proposal_url" />);
       }
     }
-  }, [proposals]);
+  }, [proposals, address]);
 
   return (
     <div id="beneficiary">
@@ -56,7 +61,7 @@ function Beneficiary(props) {
               <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
             </Button>
           ) : (
-            <Button primary disabled>
+            <Button primary disabled size="large">
               <Loader active size="mini" />
             </Button>
           )}
