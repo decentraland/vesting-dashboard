@@ -1,7 +1,32 @@
-.progress {
-  height: 50%;
-  display: flex;
-  flex-flow: row nowrap;
-  position: relative;
-  margin: 10px 30px 20px 0px;
+#progress {
+  width: 100%;
+  margin: 30px 0;
+}
+
+#progress .ui.grid .column {
+  width: fit-content;
+}
+
+#progress .header {
+  margin: 0;
+}
+
+#progress .amount {
+ display: flex;
+ align-items: center;
+}
+
+#progress .percentage {
+ margin-left: 5px;
+ color: white;
+ padding: 0 5px;
+ border-radius: 4px;
+}
+
+#progress .percentage.vested {
+  background-color: var(--green);
+}
+
+#progress .percentage.released {
+  background-color: var(--orange);
 }

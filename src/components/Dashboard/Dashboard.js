@@ -13,6 +13,7 @@ class Dashboard extends Component {
       <Container className="dashboard">
         <Overview />
         <Beneficiary />
+        <Progress />
       </Container>
       // <div className="dashboard">
       //   <div className="dashboard-left">
