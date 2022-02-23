@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid } from "semantic-ui-react";
 import { Header, Popup } from "decentraland-ui";
-import { FormattedMessage, FormattedPlural } from "react-intl";
+import { FormattedMessage, FormattedPlural, FormattedNumber } from "react-intl";
 import { getMonthDiff } from "utils";
 import ManaWidget from "../../ManaWidget";
 import Copy from "../../../images/copy.svg";
@@ -26,7 +26,7 @@ export default function Overview(props) {
         <Grid.Column floated="left">
           <div className="contract">
             <Header size="large">
-              <FormattedMessage id="overview.title" />
+              <FormattedMessage id="overview.title" values={{ token: contract.symbol }} />
             </Header>
             <Header sub>
               {address}{" "}
@@ -42,7 +42,8 @@ export default function Overview(props) {
             <FormattedMessage
               id="overview.details"
               values={{
-                mana: Math.floor(total),
+                amount: <FormattedNumber value={Math.floor(total)} />,
+                token: contract.symbol,
                 months: vestingMonths,
                 monthsPl: (
                   <FormattedPlural
