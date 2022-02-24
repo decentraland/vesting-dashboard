@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.26.0",
+    "big.js": "^6.1.1",
     "decentraland-commons": "^5.1.0",
     "decentraland-ui": "^3.19.0",
     "ethereum-blockies": "^0.1.1",
