@@ -5,10 +5,19 @@
 
 .timeline ul {
   list-style: none;
+  margin: 0;
 }
 
 .timeline ul li {
   position: relative;
+}
+
+.timeline ul li.more .ui.header {
+  color: var(--green);
+}
+
+.timeline ul li.future .ui.header {
+  color: var(--future-color);
 }
 
 .timeline ul li::before {
@@ -65,4 +74,11 @@ ul li:last-child {
   display: inline-table;
   vertical-align: middle;
   margin-top: 10px;
+}
+
+.ui.header > img.Future__Icon {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  margin-bottom: 4px;
 }

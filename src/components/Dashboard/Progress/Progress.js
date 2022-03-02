@@ -13,8 +13,6 @@ function Progress(props) {
   const vestedPercentage = Math.round((contract.vestedAmount / total) * 100);
   const releasedPercentage = Math.round((contract.released / total) * 100);
 
-  console.log(contract.releaseLogs);
-
   return (
     <div id="progress">
       <Grid>
