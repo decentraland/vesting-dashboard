@@ -6,6 +6,7 @@ import "./Dashboard.css";
 import { Container } from "semantic-ui-react";
 import Overview from "./Overview";
 import Beneficiary from "./Beneficiary";
+import Schedule from "./Schedule";
 
 class Dashboard extends Component {
   render() {
@@ -14,7 +15,7 @@ class Dashboard extends Component {
         <Overview />
         <Beneficiary />
         <Progress />
-        <Graph />
+        <Schedule />
       </Container>
       // <div className="dashboard">
       //   <div className="dashboard-left">

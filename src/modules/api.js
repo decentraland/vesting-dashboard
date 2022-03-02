@@ -6,7 +6,7 @@ import daiAbi from "../abi/dai.json";
 import usdtAbi from "../abi/usdt.json";
 import usdcAbi from "../abi/usdc.json";
 import vestingAbi from "../abi/vesting.json";
-import { TokenAddress } from "../components/types";
+import { TokenAddress, Topic } from "./constants";
 import Big from "big.js";
 
 let vesting, tokenContracts, eth;
@@ -107,6 +107,7 @@ export default class API {
 
     const web3Logs = await eth.getPastLogs({
       address: address,
+      topic: Topic.RELEASE,
       fromBlock: 0,
       toBlock: "latest",
     });
@@ -121,6 +122,7 @@ export default class API {
       cumulativeData = cumulativeData.add(currentData);
       logs.push({
         amount: currentData.toNumber(),
+        acum: data.toNumber(),
         timestamp: blocks[idx].timestamp,
       });
     }

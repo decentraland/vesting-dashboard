@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Tooltip, LineChart, Line, XAxis, YAxis, ReferenceLine } from "recharts";
 import * as numeral from "numeral";
 import { colors, getToday } from "utils";
-import "./Schedule.css";
+import "./Graph.css";
 
 const wrapperStyle = {
   backgroundColor: "black",
@@ -70,7 +70,7 @@ class Graph extends Component {
     const { schedule } = this.props;
     return (
       <div className="schedule" ref={this.refContainer}>
-        <h3>Schedule</h3>
+        <h3>Graph</h3>
         <LineChart
           width={this.state.width}
           height={this.state.height - 50}
