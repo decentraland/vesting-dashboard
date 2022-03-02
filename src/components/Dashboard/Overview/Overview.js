@@ -42,7 +42,7 @@ export default function Overview(props) {
             <FormattedMessage
               id="overview.details"
               values={{
-                amount: <FormattedNumber value={Math.floor(total)} />,
+                amount: <FormattedNumber value={Math.round(total)} />,
                 token: contract.symbol,
                 months: vestingMonths,
                 monthsPl: (
