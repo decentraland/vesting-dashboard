@@ -1,7 +1,7 @@
 {
   "global.copied": "Copied!",
   "global.month": "month",
-  "global.month.pl": "months",
+  "global.month.plural": "months",
   "error.dao_proposal_url": "DAO Proposal URL not found",
   "helper.total_vesting": "Total amount of the grant nominated in the currency/token the grant was issued. This is the total budget the grants beneficiaries will have to execute their project.",
   "helper.vesting_so_far": "The amount of money that is available to be used by the grant beneficiaries. Since the total amount of the grant will be.",
