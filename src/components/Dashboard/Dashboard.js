@@ -1,12 +1,12 @@
+import "./Dashboard.css";
 import React, { Component } from "react";
 import Progress from "./Progress";
 import Details from "./Details";
-import Graph from "./Graph";
-import "./Dashboard.css";
 import { Container } from "semantic-ui-react";
 import Overview from "./Overview";
 import Beneficiary from "./Beneficiary";
 import Schedule from "./Schedule";
+import Chart from "./Chart";
 
 class Dashboard extends Component {
   render() {
@@ -15,6 +15,7 @@ class Dashboard extends Component {
         <Overview />
         <Beneficiary />
         <Progress />
+        <Chart />
         <Schedule />
       </Container>
       // <div className="dashboard">
