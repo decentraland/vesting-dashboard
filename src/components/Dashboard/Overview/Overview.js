@@ -49,7 +49,7 @@ export default function Overview(props) {
                   <FormattedPlural
                     value={vestingMonths}
                     one={<FormattedMessage id="global.month" />}
-                    other={<FormattedMessage id="global.month.pl" />}
+                    other={<FormattedMessage id="global.month.plural" />}
                   />
                 ),
                 cliff: vestingCliff,
@@ -57,7 +57,7 @@ export default function Overview(props) {
                   <FormattedPlural
                     value={vestingCliff}
                     one={<FormattedMessage id="global.month" />}
-                    other={<FormattedMessage id="global.month.pl" />}
+                    other={<FormattedMessage id="global.month.plural" />}
                   />
                 ),
               }}
