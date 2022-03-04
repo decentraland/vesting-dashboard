@@ -11,7 +11,7 @@ import {
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
-import { SVGRenderer } from "echarts/renderers";
+import { CanvasRenderer } from "echarts/renderers";
 import "./Chart.css";
 import { useIntl } from "react-intl";
 
@@ -92,7 +92,7 @@ function Chart(props) {
       GridComponent,
       LegendComponent,
       LineChart,
-      SVGRenderer,
+      CanvasRenderer,
       UniversalTransition,
       VisualMapComponent,
       MarkLineComponent,

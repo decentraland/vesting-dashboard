@@ -1,11 +1,9 @@
 import React from "react";
-import { getMonthDiff, toUSD } from "utils";
+import { getMonthDiff } from "utils";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
 
 function Summary(props) {
   const { address, contract, ticker } = props;
-  console.log(contract);
-  console.log(ticker);
   const { symbol, released, balance, start, cliff, vestedAmount } = contract;
   const percentage = Math.round((released / vestedAmount) * 100);
   const total = balance + released;
@@ -19,7 +17,7 @@ function Summary(props) {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: "justify" }}>
       <FormattedMessage
         id="summary.text"
         values={{

@@ -4,6 +4,7 @@
   box-sizing: border-box;
   border-radius: 8px;
   padding: 10px 15px;
+  margin-bottom: 30px;
 }
 
 #beneficiary .header {
