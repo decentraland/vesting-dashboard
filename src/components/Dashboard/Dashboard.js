@@ -7,6 +7,7 @@ import Overview from "./Overview";
 import Beneficiary from "./Beneficiary";
 import Schedule from "./Schedule";
 import Chart from "./Chart";
+import Summary from "./Summary";
 
 class Dashboard extends Component {
   render() {
@@ -16,6 +17,7 @@ class Dashboard extends Component {
         <Beneficiary />
         <Progress />
         <Chart />
+        <Summary />
         <Schedule />
       </Container>
       // <div className="dashboard">
