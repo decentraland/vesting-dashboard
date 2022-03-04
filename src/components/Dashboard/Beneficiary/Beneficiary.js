@@ -40,7 +40,7 @@ function Beneficiary(props) {
     }
   }, [proposals, address]);
 
-  return (
+  return !!daoProposal ? (
     <div id="beneficiary">
       <Grid verticalAlign="middle">
         <Grid.Column style={{ width: "fit-content" }}>
@@ -55,19 +55,15 @@ function Beneficiary(props) {
           </Header>
         </Grid.Column>
         <Grid.Column style={{ width: "fit-content", paddingRight: "14px" }} floated="right" textAlign="right">
-          {!!daoProposal ? (
-            <Button primary onClick={handleClick} href={daoProposal}>
-              <FormattedMessage id="beneficiary.button" />
-              <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
-            </Button>
-          ) : (
-            <Button primary disabled size="large">
-              <Loader active size="mini" />
-            </Button>
-          )}
+          <Button primary onClick={handleClick} href={daoProposal}>
+            <FormattedMessage id="beneficiary.button" />
+            <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
+          </Button>
         </Grid.Column>
       </Grid>
     </div>
+  ) : (
+    <></>
   );
 }
 

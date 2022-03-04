@@ -5,6 +5,9 @@ import { FormattedMessage, FormattedPlural, FormattedNumber } from "react-intl";
 import { getMonthDiff } from "utils";
 import ManaWidget from "../../ManaWidget";
 import Copy from "../../../images/copy.svg";
+import DaiLogo from "../../../images/dai_logo.svg";
+import UsdtLogo from "../../../images/usdt_logo.svg";
+import UsdcLogo from "../../../images/usdc_logo.svg";
 
 import "./Overview.css";
 
@@ -15,35 +18,48 @@ export default function Overview(props) {
     navigator.clipboard.writeText(address);
   };
 
-  const { released, balance, start, cliff, duration } = contract;
+  const { symbol, released, balance, start, cliff, duration } = contract;
   const total = balance + released;
   const vestingMonths = getMonthDiff(start, start + duration);
   const vestingCliff = getMonthDiff(start, cliff);
 
+  const logo = {
+    DAI: DaiLogo,
+    USDT: UsdtLogo,
+    USDC: UsdcLogo,
+  };
+
   return (
-    <Grid columns={2} className="overview">
+    <Grid columns={symbol === "MANA" ? 2 : 1} className="overview">
       <Grid.Row stretched>
-        <Grid.Column floated="left">
-          <div className="contract">
-            <Header size="large">
-              <FormattedMessage id="overview.title" values={{ token: contract.symbol }} />
-            </Header>
-            <Header sub>
-              {address}{" "}
-              <Popup
-                content={<FormattedMessage id="global.copied" />}
-                position="bottom center"
-                trigger={<img src={Copy} onClick={copyAddress} />}
-                on="click"
-              />
-            </Header>
-          </div>
-          <Header style={{ maxWidth: "500px" }}>
+        <Grid.Column floated="left" style={{ padding: 0 }}>
+          <Grid className="contract" style={{ width: "100%" }}>
+            {symbol !== "MANA" && (
+              <Grid.Column className="TokenLogo">
+                <img src={logo[symbol]} style={{ width: "72px" }} />
+              </Grid.Column>
+            )}
+            <Grid.Column style={{ width: "fit-content" }}>
+              <Header size="large">
+                <FormattedMessage id="overview.title" values={{ token: symbol }} />
+              </Header>
+              <Header sub>
+                {address}{" "}
+                <Popup
+                  content={<FormattedMessage id="global.copied" />}
+                  position="bottom center"
+                  trigger={<img src={Copy} onClick={copyAddress} />}
+                  on="click"
+                />
+              </Header>
+            </Grid.Column>
+          </Grid>
+          <Header style={symbol === "MANA" ? { maxWidth: "500px" } : {}}>
             <FormattedMessage
               id="overview.details"
               values={{
                 amount: <FormattedNumber value={Math.round(total)} />,
-                token: contract.symbol,
+                token: symbol,
                 months: vestingMonths,
                 monthsPl: (
                   <FormattedPlural
@@ -64,9 +80,11 @@ export default function Overview(props) {
             />
           </Header>
         </Grid.Column>
-        <Grid.Column floated="right">
-          <ManaWidget />
-        </Grid.Column>
+        {symbol === "MANA" && (
+          <Grid.Column floated="right">
+            <ManaWidget />
+          </Grid.Column>
+        )}
       </Grid.Row>
     </Grid>
   );

@@ -1,11 +1,13 @@
 .timeline {
   width: 100%;
-  --future-color: rgba(115, 110, 125, 0.5)
+  --future-color: rgba(115, 110, 125, 0.5);
+  margin-bottom: 30px;
 }
 
 .timeline ul {
   list-style: none;
   margin: 0;
+  padding-left: 30px;
 }
 
 .timeline ul li {

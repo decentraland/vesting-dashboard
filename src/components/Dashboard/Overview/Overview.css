@@ -13,3 +13,9 @@
   margin: 0;
   cursor: pointer;
 }
+
+.ui.grid.ui.grid.overview .TokenLogo {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+}
