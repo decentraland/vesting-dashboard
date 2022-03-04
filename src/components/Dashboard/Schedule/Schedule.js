@@ -21,7 +21,7 @@ function Schedule(props) {
       <ScheduleEvent
         message={<FormattedMessage id={"shedule.contract_started"} />}
         timestamp={start}
-        key="contract_started"
+        elementKey="contract_started"
       />
     );
     eventList.push(
@@ -42,19 +42,23 @@ function Schedule(props) {
           />
         }
         timestamp={start}
-        key={"cliff_started"}
+        elementKey={"cliff_started"}
       />
     );
 
     if (new Date(cliff * 1000) < new Date()) {
       eventList.push(
-        <ScheduleEvent message={<FormattedMessage id="shedule.cliff_ended" />} timestamp={cliff} key="cliff_ended" />
+        <ScheduleEvent
+          message={<FormattedMessage id="shedule.cliff_ended" />}
+          timestamp={cliff}
+          elementKey="cliff_ended"
+        />
       );
       eventList.push(
         <ScheduleEvent
           message={<FormattedMessage id="shedule.vesting_begins" />}
           timestamp={cliff}
-          key="vesting_begins"
+          elementKey="vesting_begins"
         />
       );
     }
@@ -65,14 +69,14 @@ function Schedule(props) {
 
     if (releaseLogs.length > 0) {
       if (releaseLogs.length > 1 && !fullShow) {
-
         eventList.push(<ShowMore onClick={() => scheduleEventsSetpUp(true)} />);
         const latestRelease = releaseLogs[releaseLogs.length - 1];
+        const { timestamp } = latestRelease;
 
-        if (new Date(latestRelease.timestamp * 1000) > endContractDate) {
+        if (new Date(timestamp * 1000) > endContractDate) {
           fulfilledFlag = true;
         }
-        
+
         eventList.push(
           <ScheduleEvent
             message={
@@ -81,19 +85,20 @@ function Schedule(props) {
                 values={{ amount: <FormattedNumber value={Math.round(latestRelease.amount)} />, token: symbol }}
               />
             }
-            timestamp={latestRelease.timestamp}
-            key={latestRelease.timestamp}
+            timestamp={timestamp}
+            elementKey={timestamp}
           />
         );
       } else {
         for (const log of releaseLogs) {
-          if (!fulfilledFlag && new Date(log.timestamp * 1000) > endContractDate) {
+          const { timestamp, amount } = log;
+          if (!fulfilledFlag && new Date(timestamp * 1000) > endContractDate) {
             fulfilledFlag = true;
             eventList.push(
               <ScheduleEvent
                 message={<FormattedMessage id="shedule.fulfilled" />}
                 timestamp={endContractTs}
-                key="fulfilled"
+                elementKey="fulfilled"
               />
             );
           }
@@ -103,11 +108,11 @@ function Schedule(props) {
               message={
                 <FormattedMessage
                   id="shedule.released"
-                  values={{ amount: <FormattedNumber value={Math.round(log.amount)} />, token: symbol }}
+                  values={{ amount: <FormattedNumber value={Math.round(amount)} />, token: symbol }}
                 />
               }
-              timestamp={log.timestamp}
-              key={log.timestamp}
+              timestamp={timestamp}
+              elementKey={timestamp}
             />
           );
         }
@@ -120,14 +125,16 @@ function Schedule(props) {
           <scheduleEvents
             message={<FormattedMessage id="shedule.fulfilled" />}
             timestamp={endContractTs}
-            key="fulfilled"
+            elementKey="fulfilled"
           />
         );
       } else {
         eventList.push(
-          <ScheduleEvent message={<img src={FutureIcon} className="Future__Icon" />} key="Future__Icon" future />
+          <ScheduleEvent message={<img src={FutureIcon} className="Future__Icon" />} elementKey="Future__Icon" future />
         );
-        eventList.push(<ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} key="fulfilled" future />);
+        eventList.push(
+          <ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} elementKey="fulfilled" future />
+        );
       }
     }
 
@@ -144,7 +151,7 @@ function Schedule(props) {
         <FormattedMessage id="shedule.title" />
         <Info message={<FormattedMessage id="helper.vesting_schedule" />} position="top center" />
       </Header>
-      <ul>{scheduleEvents}</ul>
+      <ul key={"timeline"}>{scheduleEvents}</ul>
     </div>
   );
 }

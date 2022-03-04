@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as echarts from "echarts/core";
 import {
   TitleComponent,
@@ -7,10 +7,11 @@ import {
   GridComponent,
   LegendComponent,
   VisualMapComponent,
+  MarkLineComponent,
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
-import { CanvasRenderer } from "echarts/renderers";
+import { SVGRenderer } from "echarts/renderers";
 import "./Chart.css";
 import { useIntl } from "react-intl";
 
@@ -37,7 +38,9 @@ function getVestingData(start, cliff, duration, total) {
   const vestedPerDay = total / vestingDays;
 
   const vestingData = new Array(cliffEndDay).fill(0);
-  return vestingData.concat(Array.from(new Array(vestingDays), (x, i) => vestedPerDay * (cliffEndDay + i + 1)));
+  return vestingData.concat(
+    Array.from(new Array(vestingDays), (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+  );
 }
 
 function getReleaseData(start, cliff, releaseLogs) {
@@ -53,15 +56,18 @@ function getReleaseData(start, cliff, releaseLogs) {
     releaseData = releaseData.concat(Array.from(new Array(releaseDays[0] - cliffEndDay + 1), (x, i) => 0));
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1];
-      releaseData = releaseData.concat(Array.from(new Array(releaseDays[i] - releaseDays[i - 1] + 1), (x, i) => acum));
+      releaseData = releaseData.concat(
+        Array.from(new Array(releaseDays[i] - releaseDays[i - 1]), (x, i) => Math.round(acum * 100) / 100)
+      );
     }
 
     const { acum } = releaseLogs[releaseLogs.length - 1];
     releaseData = releaseData.concat(
-      Array.from(new Array(getDaysFromStart(start) - releaseDays[releaseDays.length - 1] - 1), (x, i) => acum)
+      Array.from(
+        new Array(getDaysFromStart(start) - releaseDays[releaseDays.length - 1]),
+        (x, i) => Math.round(acum * 100) / 100
+      )
     );
-
-    console.log(releaseData);
     return releaseData;
   }
 
@@ -70,16 +76,15 @@ function getReleaseData(start, cliff, releaseLogs) {
 
 function Chart(props) {
   const { contract } = props;
-  const { released, balance, start, cliff, duration, releaseLogs } = contract;
+  const { symbol, released, balance, start, cliff, duration, releaseLogs } = contract;
   const total = balance + released;
   const daysFromStart = getDaysFromStart(start);
-  console.log(contract);
 
   getReleaseData(start, cliff, releaseLogs);
 
   const [locale, setLocale] = useState(useIntl().defaultLocale);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     echarts.use([
       TitleComponent,
       ToolboxComponent,
@@ -87,20 +92,21 @@ function Chart(props) {
       GridComponent,
       LegendComponent,
       LineChart,
-      CanvasRenderer,
+      SVGRenderer,
       UniversalTransition,
       VisualMapComponent,
+      MarkLineComponent,
     ]);
     const option = {
       title: {
-        text: "Stacked Line",
+        text: "FUNDS OVER TIME",
       },
       color: ["#44B600", "#FF7439"],
       tooltip: {
         trigger: "axis",
       },
       legend: {
-        data: ["Email", "Union Ads"],
+        data: ["Vested", "Released"],
       },
       grid: {
         left: "3%",
@@ -120,6 +126,9 @@ function Chart(props) {
       },
       yAxis: {
         type: "value",
+        axisLabel: {
+          formatter: `{value} ${symbol}`,
+        },
       },
       visualMap: {
         type: "piecewise",
@@ -140,13 +149,38 @@ function Chart(props) {
       },
       series: [
         {
-          name: "Email",
+          name: "Vested",
           type: "line",
           data: getVestingData(start, cliff, duration, total),
           symbol: "none",
+          markLine: {
+            symbol: "none",
+            data: [
+              {
+                name: "TODAY",
+                xAxis: getDaysFromStart(start),
+                label: {
+                  normal: {
+                    formatter: "{b}",
+                    show: true,
+                    color: "white",
+                    backgroundColor: "#ff2d55",
+                    padding: [3, 6],
+                    borderRadius: 5,
+                  },
+                },
+                lineStyle: {
+                  normal: {
+                    type: "solid",
+                    color: "#ff2d55",
+                  },
+                },
+              },
+            ],
+          },
         },
         {
-          name: "Union Ads",
+          name: "Released",
           type: "line",
           data: getReleaseData(start, cliff, releaseLogs),
           symbol: "none",

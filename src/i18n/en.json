@@ -26,5 +26,7 @@
   "shedule.vesting_begins": "Vesting begins",
   "shedule.show_more": "Show more",
   "shedule.released": "{amount} {token} released",
-  "shedule.fulfilled": "Contract fulfilled"
+  "shedule.fulfilled": "Contract fulfilled",
+  "summary.text": "<b>Because of the {cliff}-{monthPl} cliff, no funds were vested before {cliffEnd}.</b>{br}{br}Vesting is <b>real-time</b> and the beneficiary is able to release funds as they are vested. The beneficiary has <b>released</b> from said funds, nearly {percentage}% of what is currently vested.{br}{br}By the end of this contract, the beneficiary will have banked, at the current rate, aprox. <b>${amount} USD</b>{br}{br}",
+  "summary.review_contract": "Review smart contract"
 }
