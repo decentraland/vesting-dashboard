@@ -1,6 +1,7 @@
-.action-btn {
-  margin-left: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  color: var(--light-blue);
+#details .ui.header:not(.sub) {
+  font-size: 15px;
+}
+
+#details .ui.sub.header {
+  margin: 0;
 }
