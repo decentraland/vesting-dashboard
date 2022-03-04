@@ -1,60 +1,96 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import Row from './Row'
-import { toDate, toMANA, toUSD } from 'utils'
-import { ContractType } from 'components/types'
-import Blockie from './Blockie'
-import Card from 'components/Card'
-import './Details.css'
+import React from "react";
+import { Header, Popup } from "decentraland-ui";
+import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
+import { getMonthDiff } from "utils";
+import Info from "../../Info/Info";
+import "./Details.css";
 
-class Details extends Component {
-  static propTypes = {
-    contract: ContractType.isRequired,
-    isBeneficiary: PropTypes.bool
-  }
-  handleRelease = () => {
-    const { contract, onRelease } = this.props
-    const { releasableAmount } = contract
-    if (releasableAmount > 0) {
-      onRelease()
-    } else {
-      alert("You don't have any MANA to release")
-    }
-  }
-  render() {
-    const { contract, ticker, isBeneficiary, onChangeBeneficiary } = this.props
-    const { beneficiary, start, cliff, duration, releasableAmount, revocable, revoked } = contract
-    let releaseButton = null
-    let changeBeneficiaryButton = null
-    if (isBeneficiary) {
-      releaseButton = (
-        <span className="action-btn" onClick={this.handleRelease}>
-          Release
-        </span>
-      )
-      changeBeneficiaryButton = (
-        <span className="action-btn" onClick={onChangeBeneficiary}>
-          Change
-        </span>
-      )
-    }
-    return (
-      <Card title="Details">
-        <Row label="Beneficiary" title={beneficiary}>
-          <Blockie seed={beneficiary} />
-          &nbsp;&nbsp;{beneficiary.slice(0, 6)}...{beneficiary.slice(-4)}
-          {changeBeneficiaryButton}
-        </Row>
-        <Row label="Start date">{toDate(start)}</Row>
-        <Row label="Cliff">{toDate(cliff)}</Row>
-        <Row label="End date">{toDate(start + duration)}</Row>
-        <Row label="Relesable">
-          {toMANA(releasableAmount)} MANA / {toUSD(releasableAmount, ticker)} USD{releaseButton}
-        </Row>
-        <Row label={revoked ? 'Revoked' : 'Revocable'}>{revoked ? 'Yes' : revocable ? 'Yes' : 'No'}</Row>
-      </Card>
-    )
-  }
+function addressShortener(address) {
+  return address.substring(0, 6) + "..." + address.substring(38, 42);
 }
 
-export default Details
+function Details(props) {
+  const { contract } = props;
+  const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
+  const vestingCliff = getMonthDiff(start, cliff);
+  console.log(contract);
+
+  const copyAddress = () => {
+    navigator.clipboard.writeText(contract.beneficiary);
+  };
+
+  return (
+    <div id="details">
+      <Header sub>
+        <FormattedMessage id="details.beneficiary" />
+      </Header>
+      <Header onClick={copyAddress} style={{ cursor: "pointer" }}>
+        <Popup
+          content={<FormattedMessage id="global.copied" />}
+          position="bottom center"
+          trigger={<span>{addressShortener(contract.beneficiary)}</span>}
+          on="click"
+        />
+        <Info message={<FormattedMessage id="helper.beneficiary" />} position="top center" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.start" />
+      </Header>
+      <Header>
+        <FormattedDate value={new Date(start * 1000)} year="numeric" month="long" day="numeric" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.end" />
+      </Header>
+      <Header>
+        <FormattedDate value={new Date((start + duration) * 1000)} year="numeric" month="long" day="numeric" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.cliff_period" />
+      </Header>
+      <Header>
+        <FormattedMessage
+          id="details.cliff_period.time"
+          values={{
+            cliff: vestingCliff,
+            monthPl: (
+              <FormattedPlural
+                value={vestingCliff}
+                one={<FormattedMessage id="global.month" />}
+                other={<FormattedMessage id="global.month.plural" />}
+              />
+            ),
+          }}
+        />
+        <Info message={<FormattedMessage id="helper.cliff_period" />} position="top center" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.total_vesting" />
+      </Header>
+      <Header>
+        <FormattedNumber value={balance + released} /> {symbol}
+        <Info message={<FormattedMessage id="helper.total_vesting" />} position="top center" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.released" />
+      </Header>
+      <Header>
+        <FormattedNumber value={released} /> {symbol}
+        <Info message={<FormattedMessage id="helper.released" />} position="top center" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.releasable" />
+      </Header>
+      <Header>
+        <FormattedNumber value={releasableAmount} /> {symbol}
+        <Info message={<FormattedMessage id="helper.releasable" />} position="top center" />
+      </Header>
+      <Header sub>
+        <FormattedMessage id="details.revocable" />
+      </Header>
+      <Header>{revocable ? <FormattedMessage id="global.yes" /> : <FormattedMessage id="global.no" />}</Header>
+    </div>
+  );
+}
+
+export default React.memo(Details);

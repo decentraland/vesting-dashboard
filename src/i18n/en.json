@@ -2,6 +2,8 @@
   "global.copied": "Copied!",
   "global.month": "month",
   "global.month.plural": "months",
+  "global.yes": "Yes",
+  "global.no": "No",
   "error.dao_proposal_url": "DAO Proposal URL not found",
   "helper.total_vesting": "Total amount of the grant nominated in the currency/token the grant was issued. This is the total budget the grants beneficiaries will have to execute their project.",
   "helper.vesting_so_far": "The amount of money that is available to be used by the grant beneficiaries. Since the total amount of the grant will be.",
@@ -28,5 +30,14 @@
   "shedule.released": "{amount} {token} released",
   "shedule.fulfilled": "Contract fulfilled",
   "summary.text": "<b>Because of the {cliff}-{monthPl} cliff, no funds were vested before {cliffEnd}.</b>{br}{br}Vesting is <b>real-time</b> and the beneficiary is able to release funds as they are vested. The beneficiary has <b>released</b> from said funds, nearly {percentage}% of what is currently vested.{br}{br}By the end of this contract, the beneficiary will have banked, at the current rate, aprox. <b>${amount} USD</b>{br}{br}",
-  "summary.review_contract": "Review smart contract"
+  "summary.review_contract": "Review smart contract",
+  "details.beneficiary": "Beneficiary",
+  "details.start": "Start",
+  "details.end": "End",
+  "details.cliff_period": "Cliff period",
+  "details.cliff_period.time": "{cliff} {monthPl}",
+  "details.total_vesting": "Total vesting",
+  "details.released": "Released",
+  "details.releasable": "Releasable",
+  "details.revocable": "Revocable"
 }

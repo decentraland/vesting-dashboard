@@ -1,22 +1,19 @@
 import { connect } from 'react-redux'
 import { release } from 'modules/contract/actions'
 import { getContract } from 'modules/contract/selectors'
-import { getAddress } from 'modules/ethereum/selectors'
-import { getTicker } from 'modules/ticker/selectors'
-import { openChangeBeneficiaryModal } from 'modules/ui/actions'
-import { areSameAddress } from 'modules/ethereum/utils'
-import Details from './Details'
+import { getAddress } from "modules/ethereum/selectors";
+import { openChangeBeneficiaryModal } from "modules/ui/actions";
+import { areSameAddress } from "modules/ethereum/utils";
+import Details from "./Details";
 
 export const mapState = (state) => {
-  const contract = getContract(state)
-  const address = getAddress(state)
-  const ticker = getTicker(state)
+  const contract = getContract(state);
+  const address = getAddress(state);
   return {
     contract,
-    ticker,
     isBeneficiary: areSameAddress(contract.beneficiary, address),
-  }
-}
+  };
+};
 
 export const mapDispatch = (dispatch) => ({
   onRelease: () => dispatch(release()),
