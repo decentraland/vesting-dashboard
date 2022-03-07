@@ -10,33 +10,52 @@ import { TokenAddress, Topic } from "./constants";
 import Big from "big.js";
 
 let vesting, tokenContracts, eth;
-
 export default class API {
   store = null;
+  web3 = null;
+  localWallet = null;
 
   setStore(store) {
     this.store = store;
   }
 
+  getWeb3() {
+    if (this.web3 === null) {
+      this.web3 = new Web3(
+        new Web3.providers.HttpProvider(`https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`)
+      );
+    }
+
+    return this.web3;
+  }
+
+  async logIn() {
+    const ethereum = window.ethereum;
+    await ethereum.enable();
+    const accounts = await ethereum.request({ method: "eth_accounts" });
+    this.localWallet = accounts[0];
+
+    this.web3 = new Web3(ethereum);
+  }
+
   async connect() {
+    try {
+      await this.logIn();
+    } catch {
+      new console.error("Metamask not found");
+    }
     const state = this.store.getState();
     const address = getAddress(state);
 
-    const ethereum = window.ethereum;
-    const accounts = await ethereum.request({ method: "eth_accounts" });
-    const localWallet = accounts[0];
-
-    const web3 = new Web3(ethereum);
-    eth = web3.eth;
-    vesting = new web3.eth.Contract(vestingAbi, address);
+    eth = this.getWeb3().eth;
+    vesting = new eth.Contract(vestingAbi, address);
     tokenContracts = {
-      [TokenAddress.MANA]: new web3.eth.Contract(manaAbi, TokenAddress.MANA),
-      [TokenAddress.DAI]: new web3.eth.Contract(daiAbi, TokenAddress.DAI),
-      [TokenAddress.USDT]: new web3.eth.Contract(usdtAbi, TokenAddress.USDT),
-      [TokenAddress.USDC]: new web3.eth.Contract(usdcAbi, TokenAddress.USDC),
+      [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
+      [TokenAddress.DAI]: new eth.Contract(daiAbi, TokenAddress.DAI),
+      [TokenAddress.USDT]: new eth.Contract(usdtAbi, TokenAddress.USDT),
+      [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
     };
-
-    return localWallet;
+    return this.localWallet;
   }
 
   async fetchContract() {
@@ -156,8 +175,7 @@ export default class API {
   }
 
   async getNetwork() {
-    const web3 = new Web3(window.ethereum);
-    const chainId = await web3.eth.getChainId();
+    const chainId = await eth.getChainId();
     return { name: chainId === 1 ? "mainnet" : "unknown", chainId };
   }
 }

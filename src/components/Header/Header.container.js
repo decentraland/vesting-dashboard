@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { getAddress } from "modules/contract/selectors";
+import { getAddress } from "modules/ethereum/selectors";
 import Header from "./Header";
 
 export const mapState = state => {
