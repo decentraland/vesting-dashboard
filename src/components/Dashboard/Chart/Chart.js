@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import * as echarts from "echarts/core";
 import {
   TitleComponent,
@@ -18,7 +18,7 @@ import { useIntl } from "react-intl";
 const DAY_IN_SECONDS = 86400;
 
 function getXAxisData(start, duration, locale = "en-US") {
-  const durationInDays = duration / DAY_IN_SECONDS;
+  const durationInDays = duration / DAY_IN_SECONDS + 1;
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
@@ -34,7 +34,7 @@ function getDaysFromStart(start) {
 
 function getVestingData(start, cliff, duration, total) {
   const cliffEndDay = (cliff - start) / DAY_IN_SECONDS;
-  const vestingDays = duration / DAY_IN_SECONDS;
+  const vestingDays = duration / DAY_IN_SECONDS + 1;
   const vestedPerDay = total / vestingDays;
 
   const vestingData = new Array(cliffEndDay).fill(0);
@@ -137,12 +137,12 @@ function Chart(props) {
         dimension: 0,
         pieces: [
           {
-            lt: daysFromStart,
+            lte: daysFromStart - 1,
             gt: 0,
             color: "#44B600",
           },
           {
-            gte: daysFromStart,
+            gt: daysFromStart - 1,
             color: "rgba(115, 110, 125, 0.3)",
           },
         ],
@@ -158,7 +158,7 @@ function Chart(props) {
             data: [
               {
                 name: "TODAY",
-                xAxis: getDaysFromStart(start),
+                xAxis: getDaysFromStart(start) - 1,
                 label: {
                   normal: {
                     formatter: "{b}",
@@ -191,7 +191,7 @@ function Chart(props) {
     const chartDom = document.getElementById("chart");
     const myChart = echarts.init(chartDom);
     option && myChart.setOption(option);
-  }, []);
+  });
 
   return <div id="chart" />;
 }
