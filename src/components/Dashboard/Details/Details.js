@@ -13,7 +13,6 @@ function Details(props) {
   const { contract } = props;
   const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
   const vestingCliff = getMonthDiff(start, cliff);
-  console.log(contract);
 
   const copyAddress = () => {
     navigator.clipboard.writeText(contract.beneficiary);
