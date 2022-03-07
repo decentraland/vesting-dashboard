@@ -9,7 +9,7 @@ import vestingAbi from "../abi/vesting.json";
 import { TokenAddress, Topic } from "./constants";
 import Big from "big.js";
 
-let vesting, tokenContracts, eth;
+let vesting, tokenContracts;
 export default class API {
   store = null;
   web3 = null;
@@ -27,6 +27,10 @@ export default class API {
     }
 
     return this.web3;
+  }
+
+  getEth() {
+    return this.getWeb3().eth;
   }
 
   async logIn() {
@@ -47,7 +51,7 @@ export default class API {
     const state = this.store.getState();
     const address = getAddress(state);
 
-    eth = this.getWeb3().eth;
+    const eth = this.getEth();
     vesting = new eth.Contract(vestingAbi, address);
     tokenContracts = {
       [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
@@ -123,6 +127,7 @@ export default class API {
   async getReleaseLogs(decimals) {
     const state = this.store.getState();
     const address = getAddress(state);
+    const eth = this.getEth();
 
     const web3Logs = await eth.getPastLogs({
       address: address,
@@ -175,7 +180,7 @@ export default class API {
   }
 
   async getNetwork() {
-    const chainId = await eth.getChainId();
+    const chainId = await this.getEth().getChainId();
     return { name: chainId === 1 ? "mainnet" : "unknown", chainId };
   }
 }
