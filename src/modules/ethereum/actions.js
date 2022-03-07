@@ -18,32 +18,32 @@ export function connectSuccess(address, network) {
     type: CONNECT_SUCCESS,
     address,
     network,
-  }
+  };
 }
 
 export function connectFailure(error) {
   return {
     type: CONNECT_FAILURE,
     error,
-  }
+  };
 }
 
 export function connect() {
   return async (dispatch, getState, api) => {
-    const contractAddress = getAddress(getState())
+    const contractAddress = getAddress(getState());
     if (!contractAddress || !isValidAddress(contractAddress)) {
-      return
+      return;
     }
-    dispatch(connectRequest())
+    dispatch(connectRequest());
     try {
-      const address = await api.connect()
-      const network = await api.getNetwork()
-      dispatch(connectSuccess(address, network))
-      dispatch(fetchContract())
-      dispatch(fetchTicker())
-      return address
+      const address = await api.connect();
+      const network = await api.getNetwork();
+      dispatch(connectSuccess(address, network));
+      dispatch(fetchContract());
+      dispatch(fetchTicker());
+      return address;
     } catch (e) {
-      dispatch(connectFailure(e.message))
+      dispatch(connectFailure(e.message));
     }
-  }
+  };
 }

@@ -24,10 +24,10 @@ export default function reducer(state = INITIAL_STATE, action) {
         loading: false,
         data: {
           ...state.data,
-          address: action.address.toLowerCase(),
-          network: action.network
-        }
-      }
+          address: action.address?.toLowerCase(),
+          network: action.network,
+        },
+      };
     }
     case CONNECT_FAILURE: {
       return {
