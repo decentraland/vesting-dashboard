@@ -1,9 +1,11 @@
 import React from "react";
 import { Grid } from "semantic-ui-react";
-import { Header, Popup } from "decentraland-ui";
+import { Logo, Header, Popup } from "decentraland-ui";
 import { FormattedMessage, FormattedPlural, FormattedNumber } from "react-intl";
 import { getMonthDiff } from "utils";
 import ManaWidget from "../../ManaWidget";
+import useResponsive from "../../../hooks/useResponsive";
+import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import Copy from "../../../images/copy.svg";
 import DaiLogo from "../../../images/dai_logo.svg";
 import UsdtLogo from "../../../images/usdt_logo.svg";
@@ -29,18 +31,27 @@ export default function Overview(props) {
     USDC: UsdcLogo,
   };
 
+  const responsive = useResponsive();
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
+
   return (
-    <Grid columns={symbol === "MANA" ? 2 : 1} className="overview">
-      <Grid.Row stretched>
+    <Grid columns={symbol === "MANA" && !isMobile ? 2 : 1} className="overview">
+      <Grid.Row>
         <Grid.Column floated="left" style={{ padding: 0 }}>
           <Grid className="contract" style={{ width: "100%" }}>
-            {symbol !== "MANA" && (
+            {symbol !== "MANA" ? (
               <Grid.Column className="TokenLogo">
-                <img src={logo[symbol]} style={{ width: "72px" }} />
+                <img src={logo[symbol]} style={{ width: isMobile ? "48px" : "72px" }} />
               </Grid.Column>
+            ) : (
+              isMobile && (
+                <Grid.Column className="TokenLogo">
+                  <Logo />
+                </Grid.Column>
+              )
             )}
-            <Grid.Column style={{ width: "fit-content" }}>
-              <Header size="large">
+            <Grid.Column className="Info">
+              <Header size="large" className={`TokenContract ${symbol}`}>
                 <FormattedMessage id="overview.title" values={{ token: symbol }} />
               </Header>
               <Header sub>
@@ -54,7 +65,7 @@ export default function Overview(props) {
               </Header>
             </Grid.Column>
           </Grid>
-          <Header style={symbol === "MANA" ? { maxWidth: "500px" } : {}}>
+          <Header style={symbol === "MANA" && !isMobile ? { maxWidth: "500px" } : {}}>
             <FormattedMessage
               id="overview.details"
               values={{
@@ -80,7 +91,7 @@ export default function Overview(props) {
             />
           </Header>
         </Grid.Column>
-        {symbol === "MANA" && (
+        {symbol === "MANA" && !isMobile && (
           <Grid.Column floated="right">
             <ManaWidget />
           </Grid.Column>

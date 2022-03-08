@@ -1,5 +1,5 @@
 import "./Dashboard.css";
-import React, { Component } from "react";
+import React from "react";
 import Progress from "./Progress";
 import Details from "./Details";
 import { Container, Grid } from "semantic-ui-react";
@@ -8,40 +8,45 @@ import Beneficiary from "./Beneficiary";
 import Schedule from "./Schedule";
 import Chart from "./Chart";
 import Summary from "./Summary";
+import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
+import useResponsive from "../../hooks/useResponsive";
 
-class Dashboard extends Component {
-  render() {
-    return (
-      <Container className="dashboard">
-        <Overview />
-        <Beneficiary />
-        <Grid columns={2} padded style={{ width: "100%" }}>
-          <Grid.Column width={13} style={{ paddingLeft: 0 }}>
-            <Progress />
-            <Chart />
-            <Summary />
-          </Grid.Column>
-          <Grid.Column width={3} style={{ paddingRight: 0 }}>
-            <Schedule />
-            <Details />
-          </Grid.Column>
-        </Grid>
+function Dashboard() {
+  const responsive = useResponsive();
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
 
-        {/* <Chart /> */}
-        {/* <Summary /> */}
-        {/* <Schedule /> */}
-      </Container>
-      // <div className="dashboard">
-      //   <div className="dashboard-left">
-      //     <Progress />
-      //     <Details />
-      //   </div>
-      //   <div className="dashboard-right">
-      //     <Schedule />
-      //   </div>
-      // </div>
-    );
-  }
+  return (
+    <Container className="dashboard">
+      <Overview />
+      <Beneficiary />
+      <Grid stackable columns={2} padded style={{ width: "100%" }}>
+        <Grid.Column width={13} style={{ paddingLeft: 0 }}>
+          <Progress />
+          <Chart />
+          <Summary />
+        </Grid.Column>
+        <Grid.Column width={3} style={{ paddingRight: 0 }}>
+          {isMobile ? (
+            <Grid>
+              <Grid.Row columns={2}>
+                <Grid.Column>
+                  <Details />
+                </Grid.Column>
+                <Grid.Column>
+                  <Schedule />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          ) : (
+            <>
+              <Schedule />
+              <Details />
+            </>
+          )}
+        </Grid.Column>
+      </Grid>
+    </Container>
+  );
 }
 
-export default Dashboard;
+export default React.memo(Dashboard);

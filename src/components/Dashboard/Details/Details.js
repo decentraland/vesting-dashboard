@@ -3,6 +3,7 @@ import { Header, Popup } from "decentraland-ui";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
 import { getMonthDiff } from "utils";
 import Info from "../../Info/Info";
+import AddressIcon from "../../../images/address_icon.svg";
 import "./Details.css";
 
 function addressShortener(address) {
@@ -24,6 +25,7 @@ function Details(props) {
         <FormattedMessage id="details.beneficiary" />
       </Header>
       <Header onClick={copyAddress} style={{ cursor: "pointer" }}>
+        <img style={{ width: "13px", marginRight: "5px", paddingBottom: "5px" }} src={AddressIcon} />
         <Popup
           content={<FormattedMessage id="global.copied" />}
           position="bottom center"
