@@ -11,9 +11,7 @@ class Footer extends Component {
           <div className="footer-icons"></div>
         </div>
         <div className="footer-bottom">
-          <span className="footer-copyright">
-            Copyright {new Date().getFullYear()} Decentraland. All rights reserved.
-          </span>
+          <span className="footer-copyright">© {new Date().getFullYear()} Decentraland</span>
         </div>
       </div>
     );

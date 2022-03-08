@@ -11,9 +11,11 @@ import {
 } from "echarts/components";
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
-import { CanvasRenderer } from "echarts/renderers";
+import { SVGRenderer } from "echarts/renderers";
 import "./Chart.css";
 import { useIntl } from "react-intl";
+import useResponsive from "../../../hooks/useResponsive";
+import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 
 const DAY_IN_SECONDS = 86400;
 
@@ -80,9 +82,101 @@ function Chart(props) {
   const total = balance + released;
   const daysFromStart = getDaysFromStart(start);
 
-  getReleaseData(start, cliff, releaseLogs);
-
   const [locale, setLocale] = useState(useIntl().defaultLocale);
+
+  const option = {
+    responsive: true,
+    title: {
+      text: "FUNDS OVER TIME",
+    },
+    color: ["#44B600", "#FF7439"],
+    tooltip: {
+      trigger: "axis",
+    },
+    legend: {
+      data: ["Vested", "Released"],
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
+    },
+    toolbox: {
+      feature: {
+        saveAsImage: {},
+      },
+    },
+    xAxis: {
+      type: "category",
+      boundaryGap: false,
+      data: getXAxisData(start, duration, locale),
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: {
+        formatter: `{value} ${symbol}`,
+      },
+    },
+    visualMap: {
+      type: "piecewise",
+      seriesIndex: 0,
+      show: false,
+      dimension: 0,
+      pieces: [
+        {
+          lte: daysFromStart - 1,
+          gt: 0,
+          color: "#44B600",
+        },
+        {
+          gt: daysFromStart - 1,
+          color: "rgba(115, 110, 125, 0.3)",
+        },
+      ],
+    },
+    series: [
+      {
+        name: "Vested",
+        type: "line",
+        data: getVestingData(start, cliff, duration, total),
+        symbol: "none",
+        markLine: {
+          symbol: "none",
+          data: [
+            {
+              name: "TODAY",
+              xAxis: getDaysFromStart(start) - 1,
+              label: {
+                normal: {
+                  formatter: "{b}",
+                  show: true,
+                  color: "white",
+                  backgroundColor: "#ff2d55",
+                  padding: [3, 6],
+                  borderRadius: 5,
+                },
+              },
+              lineStyle: {
+                normal: {
+                  type: "solid",
+                  color: "#ff2d55",
+                },
+              },
+            },
+          ],
+        },
+      },
+      {
+        name: "Released",
+        type: "line",
+        data: getReleaseData(start, cliff, releaseLogs),
+        symbol: "none",
+      },
+    ],
+  };
+
+  const [myChart, setMyChart] = useState(null);
 
   useEffect(() => {
     echarts.use([
@@ -92,106 +186,32 @@ function Chart(props) {
       GridComponent,
       LegendComponent,
       LineChart,
-      CanvasRenderer,
+      SVGRenderer,
       UniversalTransition,
       VisualMapComponent,
       MarkLineComponent,
     ]);
-    const option = {
-      title: {
-        text: "FUNDS OVER TIME",
-      },
-      color: ["#44B600", "#FF7439"],
-      tooltip: {
-        trigger: "axis",
-      },
-      legend: {
-        data: ["Vested", "Released"],
-      },
-      grid: {
-        left: "3%",
-        right: "4%",
-        bottom: "3%",
-        containLabel: true,
-      },
-      toolbox: {
-        feature: {
-          saveAsImage: {},
-        },
-      },
-      xAxis: {
-        type: "category",
-        boundaryGap: false,
-        data: getXAxisData(start, duration, locale),
-      },
-      yAxis: {
-        type: "value",
-        axisLabel: {
-          formatter: `{value} ${symbol}`,
-        },
-      },
-      visualMap: {
-        type: "piecewise",
-        seriesIndex: 0,
-        show: false,
-        dimension: 0,
-        pieces: [
-          {
-            lte: daysFromStart - 1,
-            gt: 0,
-            color: "#44B600",
-          },
-          {
-            gt: daysFromStart - 1,
-            color: "rgba(115, 110, 125, 0.3)",
-          },
-        ],
-      },
-      series: [
-        {
-          name: "Vested",
-          type: "line",
-          data: getVestingData(start, cliff, duration, total),
-          symbol: "none",
-          markLine: {
-            symbol: "none",
-            data: [
-              {
-                name: "TODAY",
-                xAxis: getDaysFromStart(start) - 1,
-                label: {
-                  normal: {
-                    formatter: "{b}",
-                    show: true,
-                    color: "white",
-                    backgroundColor: "#ff2d55",
-                    padding: [3, 6],
-                    borderRadius: 5,
-                  },
-                },
-                lineStyle: {
-                  normal: {
-                    type: "solid",
-                    color: "#ff2d55",
-                  },
-                },
-              },
-            ],
-          },
-        },
-        {
-          name: "Released",
-          type: "line",
-          data: getReleaseData(start, cliff, releaseLogs),
-          symbol: "none",
-        },
-      ],
-    };
 
     const chartDom = document.getElementById("chart");
-    const myChart = echarts.init(chartDom);
-    option && myChart.setOption(option);
-  });
+    setMyChart(echarts.init(chartDom));
+  }, []);
+
+  const responsive = useResponsive();
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
+
+  useEffect(() => {
+    if (myChart) {
+      if (isMobile) {
+        option.legend.top = "bottom";
+        option.grid.bottom = "10%";
+      } else {
+        option.legend.top = "top";
+        option.grid.bottom = "0%";
+      }
+      option && myChart.setOption(option);
+      myChart.resize();
+    }
+  }, [isMobile, myChart]);
 
   return <div id="chart" />;
 }

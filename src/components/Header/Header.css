@@ -3,8 +3,6 @@
 }
 
 .header .dcl.logo {
-  height: 52px;
-  width: 52px;
   vertical-align: middle;
   margin: 10px 0;
 }
@@ -13,4 +11,11 @@
   font-weight: 600;
   font-size: 19px;
   display: flex;
+}
+
+@media screen and (min-width: 767px) {
+  .header .dcl.logo {
+    height: 52px;
+    width: 52px;
+  }
 }

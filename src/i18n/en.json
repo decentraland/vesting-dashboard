@@ -18,6 +18,7 @@
   "beneficiary.title": "Grant beneficiary",
   "beneficiary.subtitle": "Enabled by the community participating in the Decentraland DAO",
   "beneficiary.button": "View dao proposal",
+  "beneficiary.button.mobile": "Dao initiative",
   "progress.total": "Total vesting",
   "progress.vested": "Vested so far",
   "progress.released": "<b>{amount} {token}</b> released",

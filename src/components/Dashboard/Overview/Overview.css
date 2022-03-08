@@ -19,3 +19,27 @@
   display: flex;
   align-items: center;
 }
+
+.ui.grid.ui.grid.overview .Info {
+  width: fit-content;
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.grid.ui.grid.overview .Info {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .ui.grid.ui.grid.overview .header.sub {
+    font-size: 0.6em;
+  }
+  
+  .ui.grid.ui.grid.overview .TokenLogo .dcl.logo {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .ui.grid.ui.grid.overview .TokenContract {
+    font-size: 1.4em;
+  }
+}

@@ -4,7 +4,7 @@
   box-sizing: border-box;
   border-radius: 8px;
   padding: 10px 15px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 #beneficiary .header {
@@ -14,4 +14,13 @@
 
 #beneficiary .column {
   padding-right: 0;
+}
+
+#beneficiary .button__column {
+  width: fit-content;
+  padding-right: 14px;
+}
+
+#beneficiary .hidden {
+  display: none;
 }
