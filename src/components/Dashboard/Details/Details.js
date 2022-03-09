@@ -1,7 +1,7 @@
 import React from "react";
 import { Header, Popup } from "decentraland-ui";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
-import { getMonthDiff } from "utils";
+import { getMonthDiff } from "../../../utils";
 import Info from "../../Info/Info";
 import AddressIcon from "../../../images/address_icon.svg";
 import "./Details.css";

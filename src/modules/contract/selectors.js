@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import moment from 'moment'
-import { getTicker } from 'modules/ticker/selectors'
-import { toUSD } from 'utils'
+import { getTicker } from "../ticker/selectors";
+import { toUSD } from "../../utils";
 
 export const getState = (state) => state.app.contract
 export const getContract = (state) => getState(state).data

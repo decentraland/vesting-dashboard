@@ -1,16 +1,16 @@
-import { fetchContract } from 'modules/contract/actions'
-import { fetchTicker } from 'modules/ticker/actions'
-import { getAddress } from 'modules/contract/selectors'
-import { isValidAddress } from 'utils'
+import { fetchContract } from "../contract/actions";
+import { fetchTicker } from "../ticker/actions";
+import { getAddress } from "../contract/selectors";
+import { isValidAddress } from "../../utils";
 
-export const CONNECT_REQUEST = '[Request] Connect'
-export const CONNECT_SUCCESS = '[Success] Connect'
-export const CONNECT_FAILURE = '[Failure] Connect'
+export const CONNECT_REQUEST = "[Request] Connect";
+export const CONNECT_SUCCESS = "[Success] Connect";
+export const CONNECT_FAILURE = "[Failure] Connect";
 
 export function connectRequest() {
   return {
     type: CONNECT_REQUEST,
-  }
+  };
 }
 
 export function connectSuccess(address, network) {
