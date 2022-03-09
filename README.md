@@ -1,20 +1,28 @@
-![](https://raw.githubusercontent.com/decentraland/web/gh-pages/img/decentraland.ico)
+<img src="https://decentraland.org/images/decentraland.png" alt="Logo" width="128"/>
 
 # Vesting Dashboard
 
-[Decentraland](https://decentraland.org)'s [MANA Token Vesting Dashboard](https://vesting.decentraland.org)
+Decentraland's [Vesting Dashboard](https://vesting.decentraland.org)
 
-This web UI works with any vesting contract based on [OpenZeppelin's TokenVesting](https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/token/ERC20/TokenVesting.sol) for any ERC20 token just by [tweaking this file](https://github.com/decentraland/vesting-dashboard/blob/master/src/modules/api.js).
+This web UI works with any MANA, DAI, USDC or USDT Vesting Contract
 
-<img width="1440" alt="screen shot 2018-03-12 at 11 32 42 pm" src="https://user-images.githubusercontent.com/2781777/37319433-c9a285c4-264d-11e8-9e15-135f3a1440fb.png">
+### Desktop
+<img width="1440" alt="desktop view" src="https://user-images.githubusercontent.com/45410089/157481195-0f07edc1-5e56-478d-bd03-53a0afb77765.png">
+
+### Mobile
+<img width="1440" alt="mobile view" src="https://user-images.githubusercontent.com/45410089/157279375-9ec9b920-30fe-42e1-b0e1-a64324ede161.png">
 
 ## Running the project
 
-- `npm install`
+First rename the `.env.example` file to `.env` and add your [INFURA API key](https://infura.io/) in the variable `REACT_APP_INFURA_API_KEY`.
 
-- `npm start`
+Then:
 
-You will need a browser with [MetaMask](http://metamask.io/) in order to access the page, and you will have to provide the vesting contract's address in the url, like:
+```bash
+npm install && npm start
+```
+
+You will have to provide the vesting contract's address in the url, like:
 
 ```
 http://localhost:3000/#/0x92f08...6fb12
