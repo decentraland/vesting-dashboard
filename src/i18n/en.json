@@ -1,4 +1,5 @@
 {
+  "global.title": "Decentraland's {token} Vesting Contract",
   "global.copied": "Copied!",
   "global.month": "month",
   "global.month.plural": "months",
