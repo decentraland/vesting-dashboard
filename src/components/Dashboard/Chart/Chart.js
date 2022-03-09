@@ -19,12 +19,12 @@ import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 
 const DAY_IN_SECONDS = 86400;
 
-function getXAxisData(start, duration, locale = "en-US") {
+function getXAxisData(start, duration, intl) {
   const durationInDays = duration / DAY_IN_SECONDS + 1;
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
-    new Date((start + i * DAY_IN_SECONDS) * 1000).toLocaleString(locale, dateOptions)
+    intl.formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), dateOptions)
   );
 
   return xData;
@@ -82,7 +82,7 @@ function Chart(props) {
   const total = balance + released;
   const daysFromStart = getDaysFromStart(start);
 
-  const [locale, setLocale] = useState(useIntl().defaultLocale);
+  const intl = useIntl();
 
   const option = {
     responsive: true,
@@ -110,7 +110,7 @@ function Chart(props) {
     xAxis: {
       type: "category",
       boundaryGap: false,
-      data: getXAxisData(start, duration, locale),
+      data: getXAxisData(start, duration, intl),
     },
     yAxis: {
       type: "value",
@@ -208,7 +208,7 @@ function Chart(props) {
         option.legend.top = "top";
         option.grid.bottom = "0%";
       }
-      option && myChart.setOption(option);
+      myChart.setOption(option);
       myChart.resize();
     }
   }, [isMobile, myChart]);

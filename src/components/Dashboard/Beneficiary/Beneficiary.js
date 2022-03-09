@@ -3,8 +3,8 @@ import { areSameAddress } from "../../../modules/ethereum/utils";
 import { Grid } from "semantic-ui-react";
 import Icon from "../../../images/grant_icon.svg";
 import ButtonIcon from "../../../images/proposal_button_icon.svg";
-import { Header, Button, Loader } from "decentraland-ui";
-import { FormattedMessage } from "react-intl";
+import { Header, Button } from "decentraland-ui";
+import { useIntl, FormattedMessage } from "react-intl";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import { DaoInitiativeContext } from "../../../context/DaoInitiativeContext";
@@ -25,6 +25,8 @@ function Beneficiary(props) {
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
 
+  const intl = useIntl();
+
   const { daoButton, setDaoButton } = useContext(DaoInitiativeContext);
 
   useEffect(() => {
@@ -44,7 +46,7 @@ function Beneficiary(props) {
         proposalUrl.searchParams.append("id", proposal.id);
         setDaoProposal(true);
       } else {
-        throw new Error(<FormattedMessage id="error.dao_proposal_url" />);
+        console.error(intl.formatMessage({ id: "error.dao_proposal_url" }));
       }
 
       setDaoButton(() => () => (
