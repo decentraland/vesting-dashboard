@@ -1,5 +1,5 @@
 import React from "react";
-import { getMonthDiff } from "utils";
+import { getMonthDiff } from "../../../utils";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
 
 function Summary(props) {

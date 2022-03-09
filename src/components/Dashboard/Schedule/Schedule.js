@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Header } from "decentraland-ui";
 import { FormattedMessage, FormattedPlural, FormattedNumber } from "react-intl";
 import Info from "../../Info/Info";
-import { getMonthDiff } from "utils";
+import { getMonthDiff } from "../../../utils";
 import FutureIcon from "../../../images/future_events_icon.svg";
 import ScheduleEvent from "./ScheduleEvent";
 import ShowMore from "./ShowMore";

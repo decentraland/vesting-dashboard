@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
-import { changeBeneficiary } from 'modules/contract/actions'
-import { closeChangeBeneficiaryModal } from 'modules/ui/actions'
-import { isChangeBeneficiaryModalOpen } from 'modules/ui/selectors'
+import { changeBeneficiary } from "../../modules/contract/actions";
+import { closeChangeBeneficiaryModal } from "../../modules/ui/actions";
+import { isChangeBeneficiaryModalOpen } from "../../modules/ui/selectors";
 import ChangeBeneficiaryModal from './ChangeBeneficiaryModal'
 
 export const mapState = state => {

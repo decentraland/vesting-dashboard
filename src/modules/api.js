@@ -1,7 +1,7 @@
-import { getAddress } from 'modules/contract/selectors'
-import { getAddress as getFrom } from 'modules/ethereum/selectors'
-import Web3 from 'web3'
-import manaAbi from '../abi/mana.json'
+import { getAddress } from "./contract/selectors";
+import { getAddress as getFrom } from "./ethereum/selectors";
+import Web3 from "web3";
+import manaAbi from "../abi/mana.json";
 import daiAbi from "../abi/dai.json";
 import usdtAbi from "../abi/usdt.json";
 import usdcAbi from "../abi/usdc.json";

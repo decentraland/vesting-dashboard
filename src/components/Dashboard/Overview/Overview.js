@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Grid } from "semantic-ui-react";
 import { Logo, Header, Popup } from "decentraland-ui";
 import { FormattedMessage, FormattedPlural, FormattedNumber, useIntl } from "react-intl";
-import { getMonthDiff } from "utils";
+import { getMonthDiff } from "../../../utils";
 import ManaWidget from "../../ManaWidget";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";

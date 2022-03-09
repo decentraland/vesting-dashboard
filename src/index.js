@@ -12,7 +12,6 @@ import { IntlProvider } from "react-intl";
 import i18n_en from "./i18n/en.json";
 
 import "./index.css";
-import "semantic-ui-css/semantic.min.css";
 
 const history = createHashHistory(window.history);
 const store = configureStore(history);

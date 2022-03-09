@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { getAddress, getContract } from "modules/contract/selectors";
+import { getAddress, getContract } from "../../../modules/contract/selectors";
 import Overview from "./Overview";
 export const mapState = (state) => {
   return {

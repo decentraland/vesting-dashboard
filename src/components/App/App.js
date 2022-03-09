@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import "./App.css";
 import PropTypes from "prop-types";
-import Header from "components/Header";
-import Dashboard from "components/Dashboard";
-import Footer from "components/Footer";
-import ChangeBeneficiaryModal from "components/ChangeBeneficiaryModal";
-import { isValidAddress } from "utils";
+import Header from "../Header";
+import Dashboard from "../Dashboard";
+import Footer from "../Footer";
+import ChangeBeneficiaryModal from "../ChangeBeneficiaryModal";
+import { isValidAddress } from "../../utils";
 import DaoInitiativeContextProvider from "../../context/DaoInitiativeContext";
 import LandingPage from "../LandingPage/LandingPage";
 import ErrorPage from "../ErrorPage/ErrorPage";

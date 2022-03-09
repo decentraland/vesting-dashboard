@@ -1,14 +1,18 @@
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { connect as connectToEthereum } from 'modules/ethereum/actions'
-import { isLoading as isConnecting, getError as getConnectionError, getNetwork } from 'modules/ethereum/selectors'
+import { connect as connectToEthereum } from "../../modules/ethereum/actions";
+import {
+  isLoading as isConnecting,
+  getError as getConnectionError,
+  getNetwork,
+} from "../../modules/ethereum/selectors";
 import {
   isLoading as isFetchingContract,
   getError as getContractError,
   getAddress,
-  getContract
-} from 'modules/contract/selectors'
+  getContract,
+} from "../../modules/contract/selectors";
 import App from './App'
 
 export const mapState = state => {
