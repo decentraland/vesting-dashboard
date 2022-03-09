@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import Header from 'components/Header'
-import Dashboard from 'components/Dashboard'
-import Footer from 'components/Footer'
-import Input from 'components/Input'
-import ChangeBeneficiaryModal from 'components/ChangeBeneficiaryModal'
-import { isValidAddress } from 'utils'
-import DaoInitiativeContextProvider from "../../context/DaoInitiativeContext";
 import "./App.css";
+import PropTypes from "prop-types";
+import Header from "components/Header";
+import Dashboard from "components/Dashboard";
+import Footer from "components/Footer";
+import ChangeBeneficiaryModal from "components/ChangeBeneficiaryModal";
+import { isValidAddress } from "utils";
+import DaoInitiativeContextProvider from "../../context/DaoInitiativeContext";
+import LandingPage from "../LandingPage/LandingPage";
+import ErrorPage from "../ErrorPage/ErrorPage";
+import LoadingPage from "../LoadingPage/LoadingPage";
 
 class App extends Component {
   static propTypes = {
@@ -63,52 +65,20 @@ class App extends Component {
 
   renderPrompt() {
     const { isNotFound, address, network } = this.props;
-    let helpText = "Press enter to continue";
-    if (!this.state.address) {
-      helpText = "Please provide a vesting contract address";
-    } else if (!isValidAddress(this.state.address)) {
-      helpText = "That's not a valid Ethereum address";
-    } else if (isNotFound && this.state.address === address) {
-      helpText =
-        "There's no vesting contract on that address..." +
-        (network && network.name !== "mainnet" ? "\nMaybe it's because you are on " + network.name + "?" : "");
-    }
+    const landingProps = { isNotFound, address, network, handleAddressChange: (e) => this.handleAddressChange(e) };
     return (
-      <div className="app">
-        <div className="container">
-          <div className="decentraland-logo" />
-          <h3>Contract Address</h3>
-          <Input value={this.state.address} placeholder="0x..." onChange={this.handleAddressChange} />
-          <p className="help">{helpText}</p>
-        </div>
+      <div className="app start">
+        <LandingPage stateAddress={this.state.address} {...landingProps} />
       </div>
     );
   }
 
   renderError() {
     const { connectionError } = this.props;
-    let errorText = "So this happened: " + connectionError;
-    if (connectionError && connectionError.indexOf("Failed to fetch") !== -1) {
-      errorText = <p className="error">Make sure you are connected to the internet.</p>;
-    }
-    if (connectionError && connectionError.indexOf("Ethereum") !== -1) {
-      errorText = (
-        <p className="error">
-          Make sure you have{" "}
-          <a href="https://metamask.io" target="_blank" rel="noreferrer noopener">
-            MetaMask
-          </a>{" "}
-          installed and your account is unlocked.
-        </p>
-      );
-    }
+
     return (
-      <div className="app">
-        <div className="container">
-          <div className="decentraland-logo" />
-          <h3>Uh-oh... something went wrong.</h3>
-          {errorText}
-        </div>
+      <div className="app start">
+        <ErrorPage connectionError={connectionError} />
       </div>
     );
   }
@@ -116,11 +86,8 @@ class App extends Component {
   renderLoading() {
     const { loadingMessage } = this.props;
     return (
-      <div className="app">
-        <div className="container">
-          <div className="decentraland-logo" />
-          <p className="loading-message">{loadingMessage}</p>
-        </div>
+      <div className="app start">
+        <LoadingPage msg={loadingMessage} />
       </div>
     );
   }

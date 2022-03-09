@@ -35,7 +35,7 @@ function Header(props) {
   return (
     <div className="header">
       <Container style={{ height: "auto" }}>
-        <Grid verticalAlign="middle" style={{ width: "100%" }}>
+        <Grid verticalAlign="middle" style={{ marginLeft: 0, marginRight: 0 }}>
           <Grid.Row>
             <Grid.Column style={{ width: "fit-content", paddingLeft: 0 }}>
               <Logo />
