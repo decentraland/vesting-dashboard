@@ -8,18 +8,20 @@ import ManaWidget from "../../ManaWidget";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import Copy from "../../../images/copy.svg";
+import Link from "../../../images/link.svg";
 import DaiLogo from "../../../images/dai_logo.svg";
 import UsdtLogo from "../../../images/usdt_logo.svg";
 import UsdcLogo from "../../../images/usdc_logo.svg";
 
 import "./Overview.css";
+import useReviewUrl from "../../../hooks/useReviewUrl";
+
+function copyAddress(address) {
+  navigator.clipboard.writeText(address);
+}
 
 export default function Overview(props) {
-  const { address, contract } = { ...props };
-
-  const copyAddress = () => {
-    navigator.clipboard.writeText(address);
-  };
+  const { address, contract } = props;
 
   const { symbol, released, balance, start, cliff, duration } = contract;
   const total = balance + released;
@@ -31,6 +33,8 @@ export default function Overview(props) {
     USDT: UsdtLogo,
     USDC: UsdcLogo,
   };
+
+  const [reviewUrl, handleClick] = useReviewUrl(address);
 
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
@@ -63,16 +67,19 @@ export default function Overview(props) {
                 </Header>
                 <Header sub>
                   {address}{" "}
+                  <a href={reviewUrl} onClick={handleClick}>
+                    <img src={Link} />
+                  </a>
                   <Popup
                     content={<FormattedMessage id="global.copied" />}
                     position="bottom center"
-                    trigger={<img src={Copy} onClick={copyAddress} />}
+                    trigger={<img src={Copy} onClick={() => copyAddress(address)} />}
                     on="click"
                   />
                 </Header>
               </Grid.Column>
             </Grid>
-            <Header style={symbol === "MANA" && !isMobile ? { maxWidth: "500px" } : {}}>
+            <Header style={(symbol === "MANA" && !isMobile && { maxWidth: "500px" }) || {}}>
               <FormattedMessage
                 id="overview.details"
                 values={{

@@ -1,6 +1,7 @@
 import React from "react";
 import { getMonthDiff } from "../../../utils";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
+import useReviewUrl from "../../../hooks/useReviewUrl";
 
 function Summary(props) {
   const { address, contract, ticker } = props;
@@ -9,12 +10,7 @@ function Summary(props) {
   const total = balance + released;
   const vestingCliff = getMonthDiff(start, cliff);
 
-  const reviewUrl = `${process.env.REACT_APP_REVIEW_CONTRACT_URL}${address}`;
-
-  const handleClick = (event) => {
-    window.open(reviewUrl, "_blank").focus();
-    event.preventDefault();
-  };
+  const [reviewUrl, handleClick] = useReviewUrl(address);
 
   return (
     <div style={{ textAlign: "justify" }}>

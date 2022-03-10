@@ -14,6 +14,13 @@
   cursor: pointer;
 }
 
+.ui.grid.overview .header a img {
+  display: inline-block;
+  height: auto;
+  vertical-align: middle;
+  margin-right: 5px !important;
+}
+
 .ui.grid.ui.grid.overview .TokenLogo {
   width: fit-content;
   display: flex;
