@@ -18,9 +18,9 @@ function LandingPage(props) {
   } else if (isNotFound && stateAddress === address) {
     helpText =
       intl.formatMessage("helper.landing_page.no_contract") +
-      (network && network.name !== "mainnet"
-        ? `\n${intl.formatMessage({ id: "helper.landing_page.network", values: { network: network.name } })}`
-        : "");
+      (network &&
+        network.name !== "mainnet" &&
+        `\n${intl.formatMessage({ id: "helper.landing_page.network", values: { network: network.name } })}`);
   }
 
   return (

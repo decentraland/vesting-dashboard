@@ -25,3 +25,8 @@ export function getMonthDiff(start, finish) {
   const getDate = (date) => moment(date * 1000).startOf("month");
   return Math.abs(getDate(finish).diff(getDate(start), "months"));
 }
+
+export function openInNewTab(event, url) {
+  window.open(url, "_blank").focus();
+  event.preventDefault();
+}

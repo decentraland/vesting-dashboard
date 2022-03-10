@@ -9,7 +9,7 @@ import ScheduleEvent from "./ScheduleEvent";
 import ShowMore from "./ShowMore";
 
 function Schedule(props) {
-  const { contract } = { ...props };
+  const { contract } = props;
   const { symbol, start, cliff, duration, releaseLogs } = contract;
   const vestingCliff = getMonthDiff(start, cliff);
 

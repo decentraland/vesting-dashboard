@@ -8,19 +8,15 @@ import { useIntl, FormattedMessage } from "react-intl";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import { DaoInitiativeContext } from "../../../context/DaoInitiativeContext";
+import { openInNewTab } from "../../../utils";
 
 import "./Beneficiary.css";
 
 function Beneficiary(props) {
-  const { address } = { ...props };
+  const { address } = props;
 
   const [proposals, setProposals] = useState(null);
   const [daoProposal, setDaoProposal] = useState(false);
-
-  const handleClick = (event, url) => {
-    window.open(url, "_blank").focus();
-    event.preventDefault();
-  };
 
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
@@ -32,7 +28,7 @@ function Beneficiary(props) {
   useEffect(() => {
     fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)
       .then((resp) => resp.json())
-      .then((resp) => setProposals(resp.data))
+      .then((resp) => setProposals(resp))
       .catch((err) => console.log(err));
   }, []);
 
@@ -52,7 +48,7 @@ function Beneficiary(props) {
       setDaoButton(() => () => (
         <Button
           primary
-          onClick={(e) => handleClick(e, proposalUrl)}
+          onClick={(e) => openInNewTab(e, proposalUrl)}
           href={proposalUrl}
           style={(isMobile && { padding: "10px" }) || {}}
         >
@@ -63,27 +59,27 @@ function Beneficiary(props) {
     }
   }, [proposals, address, isMobile]);
 
-  return daoProposal ? (
-    <div id="beneficiary">
-      <Grid verticalAlign="middle">
-        <Grid.Column style={{ width: "fit-content" }}>
-          <img src={Icon} style={{ marginTop: "5px" }} />
-        </Grid.Column>
-        <Grid.Column width={isMobile ? 12 : 9}>
-          <Header>
-            <FormattedMessage id="beneficiary.title" />
-          </Header>
-          <Header sub>
-            <FormattedMessage id="beneficiary.subtitle" />
-          </Header>
-        </Grid.Column>
-        <Grid.Column className={isMobile ? "hidden" : "button__column"} floated="right" textAlign="right">
-          {daoButton()}
-        </Grid.Column>
-      </Grid>
-    </div>
-  ) : (
-    <></>
+  return (
+    daoProposal && (
+      <div id="beneficiary">
+        <Grid verticalAlign="middle">
+          <Grid.Column style={{ width: "fit-content" }}>
+            <img src={Icon} style={{ marginTop: "5px" }} />
+          </Grid.Column>
+          <Grid.Column width={isMobile ? 12 : 9}>
+            <Header>
+              <FormattedMessage id="beneficiary.title" />
+            </Header>
+            <Header sub>
+              <FormattedMessage id="beneficiary.subtitle" />
+            </Header>
+          </Grid.Column>
+          <Grid.Column className={isMobile ? "hidden" : "button__column"} floated="right" textAlign="right">
+            {daoButton()}
+          </Grid.Column>
+        </Grid>
+      </div>
+    )
   );
 }
 

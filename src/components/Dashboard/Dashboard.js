@@ -49,4 +49,4 @@ function Dashboard() {
   );
 }
 
-export default React.memo(Dashboard);
+export default Dashboard;

@@ -1,8 +1,8 @@
+import "./Chart.css";
 import React, { useEffect, useState } from "react";
 import * as echarts from "echarts/core";
 import {
   TitleComponent,
-  ToolboxComponent,
   TooltipComponent,
   GridComponent,
   LegendComponent,
@@ -12,15 +12,13 @@ import {
 import { LineChart } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
 import { SVGRenderer } from "echarts/renderers";
-import "./Chart.css";
 import { useIntl } from "react-intl";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
-
-const DAY_IN_SECONDS = 86400;
+import { DAY_IN_SECONDS, getdurationInDays, getDaysFromStart, getCliffEndDay } from "./utils";
 
 function getXAxisData(start, duration, intl) {
-  const durationInDays = duration / DAY_IN_SECONDS + 1;
+  const durationInDays = getdurationInDays(duration);
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
@@ -30,13 +28,9 @@ function getXAxisData(start, duration, intl) {
   return xData;
 }
 
-function getDaysFromStart(start) {
-  return Math.ceil((new Date() - new Date(start * 1000)) / (DAY_IN_SECONDS * 1000)) + 1;
-}
-
 function getVestingData(start, cliff, duration, total) {
-  const cliffEndDay = (cliff - start) / DAY_IN_SECONDS;
-  const vestingDays = duration / DAY_IN_SECONDS + 1;
+  const cliffEndDay = getCliffEndDay(start, cliff);
+  const vestingDays = getdurationInDays(duration);
   const vestedPerDay = total / vestingDays;
 
   const vestingData = new Array(cliffEndDay).fill(0);
@@ -50,12 +44,12 @@ function getReleaseData(start, cliff, releaseLogs) {
     return [];
   }
 
-  const cliffEndDay = (cliff - start) / DAY_IN_SECONDS;
+  const cliffEndDay = getCliffEndDay(start, cliff);
   const releaseDays = releaseLogs.map((log) => Math.ceil((log.timestamp - start) / DAY_IN_SECONDS));
 
   if (releaseDays.length > 0) {
-    let releaseData = Array.from(new Array(cliffEndDay - 1), (x, i) => "-");
-    releaseData = releaseData.concat(Array.from(new Array(releaseDays[0] - cliffEndDay + 1), (x, i) => 0));
+    let releaseData = Array.from(new Array(cliffEndDay), (x, i) => "-");
+    releaseData = releaseData.concat(Array.from(new Array(releaseDays[0] - cliffEndDay), (x, i) => 0));
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1];
       releaseData = releaseData.concat(
@@ -76,6 +70,12 @@ function getReleaseData(start, cliff, releaseLogs) {
   return Array.from(new Array(getDaysFromStart(start)), (x, i) => "-");
 }
 
+function resizeHandler(chart) {
+  if (chart) {
+    chart.resize();
+  }
+}
+
 function Chart(props) {
   const { contract } = props;
   const { symbol, released, balance, start, cliff, duration, releaseLogs } = contract;
@@ -85,7 +85,6 @@ function Chart(props) {
   const intl = useIntl();
 
   const option = {
-    responsive: true,
     title: {
       text: "FUNDS OVER TIME",
     },
@@ -101,11 +100,6 @@ function Chart(props) {
       right: "4%",
       bottom: "3%",
       containLabel: true,
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {},
-      },
     },
     xAxis: {
       type: "category",
@@ -181,7 +175,6 @@ function Chart(props) {
   useEffect(() => {
     echarts.use([
       TitleComponent,
-      ToolboxComponent,
       TooltipComponent,
       GridComponent,
       LegendComponent,
@@ -200,6 +193,10 @@ function Chart(props) {
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
 
   useEffect(() => {
+    window.onresize = () => resizeHandler(myChart);
+  });
+
+  useEffect(() => {
     if (myChart) {
       if (isMobile) {
         option.legend.top = "bottom";
@@ -209,7 +206,6 @@ function Chart(props) {
         option.grid.bottom = "0%";
       }
       myChart.setOption(option);
-      myChart.resize();
     }
   }, [isMobile, myChart]);
 

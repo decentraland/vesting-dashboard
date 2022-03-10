@@ -46,7 +46,7 @@ export default class API {
     try {
       await this.logIn();
     } catch {
-      new console.error("Metamask not found");
+      console.error("Metamask not found");
     }
     const state = this.store.getState();
     const address = getAddress(state);

@@ -84,3 +84,9 @@ ul li:last-child {
   margin: 0;
   margin-bottom: 4px;
 }
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .timeline ul li div.timeline__event::before {
+    top: -37px;
+  }
+}
