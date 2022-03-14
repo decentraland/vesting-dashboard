@@ -51,5 +51,6 @@
   "details.total_vesting": "Total vesting",
   "details.released": "Released",
   "details.releasable": "Releasable",
+  "details.release_funds": "Release funds",
   "details.revocable": "Revocable"
 }

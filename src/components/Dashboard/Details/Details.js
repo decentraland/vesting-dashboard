@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Popup } from "decentraland-ui";
+import { Header, Popup, Button } from "decentraland-ui";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
 import { getMonthDiff } from "../../../utils";
 import Info from "../../Info/Info";
@@ -11,7 +11,7 @@ function addressShortener(address) {
 }
 
 function Details(props) {
-  const { contract } = props;
+  const { contract, isBeneficiary, onRelease } = props;
   const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
   const vestingCliff = getMonthDiff(start, cliff);
 
@@ -82,10 +82,15 @@ function Details(props) {
       <Header sub>
         <FormattedMessage id="details.releasable" />
       </Header>
-      <Header>
+      <Header style={(isBeneficiary && { marginBottom: "4px" }) || {}}>
         <FormattedNumber value={releasableAmount} /> {symbol}
         <Info message={<FormattedMessage id="helper.releasable" />} position="top center" />
       </Header>
+      {isBeneficiary && releasableAmount > 0 && (
+        <Button basic style={{ padding: 0, marginBottom: "14px" }} onClick={onRelease}>
+          <FormattedMessage id="details.release_funds" />
+        </Button>
+      )}
       <Header sub>
         <FormattedMessage id="details.revocable" />
       </Header>
