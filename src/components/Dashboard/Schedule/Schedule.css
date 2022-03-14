@@ -1,6 +1,7 @@
 .timeline {
   width: 100%;
   --future-color: rgba(115, 110, 125, 0.5);
+  --rovoked-color: #ff2d55;
   margin-bottom: 30px;
 }
 
@@ -16,6 +17,10 @@
 
 .timeline ul li.more .ui.header {
   color: var(--green);
+}
+
+.timeline.revoked ul li.more .ui.header {
+  color: var(--rovoked-color);
 }
 
 .timeline ul li.future .ui.header {
@@ -40,6 +45,11 @@
   margin-top: 10px;
 }
 
+.timeline.revoked ul li::before {
+  border: 0.33em solid var(--rovoked-color);
+  background-color: var(--rovoked-color);
+}
+
 .timeline ul li.more::before {
   background-color: white;
 }
@@ -58,6 +68,10 @@
   bottom: 0;
   z-index: -1;
   height: 100%;
+}
+
+.timeline.revoked ul li div.timeline__event::before {
+  border-left: 2px solid var(--rovoked-color);
 }
 
 .timeline ul li.future div.timeline__event::before {

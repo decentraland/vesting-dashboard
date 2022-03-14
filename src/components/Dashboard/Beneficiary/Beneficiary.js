@@ -41,21 +41,20 @@ function Beneficiary(props) {
         proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL);
         proposalUrl.searchParams.append("id", proposal.id);
         setDaoProposal(true);
+        setDaoButton(() => () => (
+          <Button
+            primary
+            onClick={(e) => openInNewTab(e, proposalUrl)}
+            href={proposalUrl}
+            style={(isMobile && { padding: "10px" }) || {}}
+          >
+            <FormattedMessage id={isMobile ? "beneficiary.button.mobile" : "beneficiary.button"} />
+            <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
+          </Button>
+        ));
       } else {
         console.error(intl.formatMessage({ id: "error.dao_proposal_url" }));
       }
-
-      setDaoButton(() => () => (
-        <Button
-          primary
-          onClick={(e) => openInNewTab(e, proposalUrl)}
-          href={proposalUrl}
-          style={(isMobile && { padding: "10px" }) || {}}
-        >
-          <FormattedMessage id={isMobile ? "beneficiary.button.mobile" : "beneficiary.button"} />
-          <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
-        </Button>
-      ));
     }
   }, [proposals, address, isMobile]);
 

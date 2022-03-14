@@ -87,7 +87,7 @@ export default class API {
       owner,
       released,
       start,
-      releaseLogs,
+      logs,
     ] = await Promise.all([
       tokenContracts[tokenContractAddress].methods.symbol().call(),
       tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
@@ -101,7 +101,7 @@ export default class API {
       vesting.methods.owner().call(),
       vesting.methods.released().call(),
       vesting.methods.start().call(),
-      this.getReleaseLogs(decimals),
+      this.getLogs(decimals),
     ]);
 
     const contract = {
@@ -118,40 +118,81 @@ export default class API {
       owner,
       released: parseInt(released, 10) / 10 ** decimals,
       start: parseInt(start, 10),
-      releaseLogs,
+      logs,
     };
 
     return contract;
   }
 
-  async getReleaseLogs(decimals) {
+  async getLogs(decimals) {
     const state = this.store.getState();
     const address = getAddress(state);
     const eth = this.getEth();
 
     const web3Logs = await eth.getPastLogs({
       address: address,
-      topic: Topic.RELEASE,
       fromBlock: 0,
       toBlock: "latest",
     });
 
     const blocks = await Promise.all(web3Logs.map((log) => eth.getBlock(log.blockNumber)));
-
     const logs = [];
-    let cumulativeData = Big(0);
+    let cumulativeReleased = 0;
+
     for (const idx in web3Logs) {
-      const data = Big(Number(web3Logs[idx].data) || 0).div(10 ** decimals);
-      const currentData = data.minus(cumulativeData);
-      cumulativeData = cumulativeData.add(currentData);
-      logs.push({
-        amount: currentData.toNumber(),
-        acum: data.toNumber(),
-        timestamp: blocks[idx].timestamp,
-      });
+      switch (web3Logs[idx].topics[0]) {
+        case Topic.TRANSFER_OWNERSHIP:
+          logs.push(this.getTransferOwnershipLog([...web3Logs[idx].topics], blocks[idx].timestamp));
+          break;
+        case Topic.RELEASE:
+          logs.push(this.getReleaseLog(decimals, web3Logs[idx].data, cumulativeReleased, blocks[idx].timestamp));
+          cumulativeReleased = web3Logs[idx].data;
+          break;
+        case Topic.REVOKE:
+          logs.push(this.getRevokeLog(blocks[idx].timestamp));
+          break;
+
+        default:
+          break;
+      }
     }
 
-    return logs.slice(1);
+    console.log(logs);
+    return logs;
+  }
+
+  getTransferOwnershipLog(topics, timestamp) {
+    return {
+      topic: Topic.TRANSFER_OWNERSHIP,
+      data: {
+        previousOwner: topics[1].slice(0, 2) + topics[1].slice(26),
+        newOwner: topics[2].slice(0, 2) + topics[2].slice(26),
+        timestamp: timestamp,
+      },
+    };
+  }
+
+  getReleaseLog(decimals, data, cumulativeReleased, timestamp) {
+    const totalReleased = Big(Number(data) || 0).div(10 ** decimals);
+    const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals);
+    const currentReleased = totalReleased.minus(cumulative);
+    return {
+      topic: Topic.RELEASE,
+      data: {
+        amount: currentReleased.toNumber(),
+        acum: totalReleased.toNumber(),
+        timestamp: timestamp,
+      },
+    };
+  }
+
+  getRevokeLog(timestamp) {
+    return {
+      topic: Topic.REVOKE,
+      data: {
+        timestamp: timestamp,
+      },
+    };
   }
 
   release() {

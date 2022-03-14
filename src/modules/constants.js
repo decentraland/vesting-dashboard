@@ -7,4 +7,6 @@ export const TokenAddress = {
 
 export const Topic = {
   RELEASE: "0xfb81f9b30d73d830c3544b34d827c08142579ee75710b490bab0b3995468c565",
+  REVOKE: "0x44825a4b2df8acb19ce4e1afba9aa850c8b65cdb7942e2078f27d0b0960efee6",
+  TRANSFER_OWNERSHIP: "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
 };

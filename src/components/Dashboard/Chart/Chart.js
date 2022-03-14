@@ -15,10 +15,11 @@ import { SVGRenderer } from "echarts/renderers";
 import { useIntl } from "react-intl";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
-import { DAY_IN_SECONDS, getdurationInDays, getDaysFromStart, getCliffEndDay } from "./utils";
+import { DAY_IN_SECONDS, getDurationInDays, getDaysFromStart, getCliffEndDay, getDaysFromRevoke } from "./utils";
+import { Topic } from "../../../modules/constants";
 
 function getXAxisData(start, duration, intl) {
-  const durationInDays = getdurationInDays(duration);
+  const durationInDays = getDurationInDays(duration);
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
@@ -28,12 +29,30 @@ function getXAxisData(start, duration, intl) {
   return xData;
 }
 
-function getVestingData(start, cliff, duration, total) {
+function getVestingData(start, cliff, duration, total, revokeLog) {
   const cliffEndDay = getCliffEndDay(start, cliff);
-  const vestingDays = getdurationInDays(duration);
+  const vestingDays = getDurationInDays(duration);
   const vestedPerDay = total / vestingDays;
 
-  const vestingData = new Array(cliffEndDay).fill(0);
+  const isRevoked = revokeLog.length > 0;
+  const revokedDay = isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : 0;
+
+  let vestingData = new Array(cliffEndDay).fill(0);
+
+  if (isRevoked) {
+    if (revokedDay <= cliffEndDay) {
+      vestingData = new Array(revokedDay).fill(0);
+    } else {
+      vestingData = vestingData.concat(
+        Array.from(new Array(revokedDay), (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+      );
+    }
+
+    vestingData[vestingData.length - 1] = total;
+
+    return vestingData;
+  }
+
   return vestingData.concat(
     Array.from(new Array(vestingDays), (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
   );
@@ -78,9 +97,12 @@ function resizeHandler(chart) {
 
 function Chart(props) {
   const { contract } = props;
-  const { symbol, released, balance, start, cliff, duration, releaseLogs } = contract;
+  const { symbol, released, balance, start, cliff, duration, logs } = contract;
   const total = balance + released;
-  const daysFromStart = getDaysFromStart(start);
+  const daysFromStart = getDaysFromStart(start) - 1;
+  const releaseLogs = logs.filter((log) => log.topic === Topic.RELEASE).map((log) => log.data);
+  const revokeLog = logs.filter((log) => log.topic === Topic.REVOKE);
+  const isRevoked = revokeLog.length > 0;
 
   const intl = useIntl();
 
@@ -112,35 +134,18 @@ function Chart(props) {
         formatter: `{value} ${symbol}`,
       },
     },
-    visualMap: {
-      type: "piecewise",
-      seriesIndex: 0,
-      show: false,
-      dimension: 0,
-      pieces: [
-        {
-          lte: daysFromStart - 1,
-          gt: 0,
-          color: "#44B600",
-        },
-        {
-          gt: daysFromStart - 1,
-          color: "rgba(115, 110, 125, 0.3)",
-        },
-      ],
-    },
     series: [
       {
         name: "Vested",
         type: "line",
-        data: getVestingData(start, cliff, duration, total),
+        data: getVestingData(start, cliff, duration, total, revokeLog),
         symbol: "none",
         markLine: {
           symbol: "none",
           data: [
             {
-              name: "TODAY",
-              xAxis: getDaysFromStart(start) - 1,
+              name: `${isRevoked ? "REVOKED" : "TODAY"}`,
+              xAxis: isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : getDaysFromStart(start) - 1,
               label: {
                 normal: {
                   formatter: "{b}",
@@ -169,6 +174,26 @@ function Chart(props) {
       },
     ],
   };
+
+  if (!isRevoked) {
+    option.visualMap = {
+      type: "piecewise",
+      seriesIndex: 0,
+      show: false,
+      dimension: 0,
+      pieces: [
+        {
+          lte: daysFromStart,
+          gt: 0,
+          color: "#44B600",
+        },
+        {
+          gt: daysFromStart,
+          color: "rgba(115, 110, 125, 0.3)",
+        },
+      ],
+    };
+  }
 
   const [myChart, setMyChart] = useState(null);
 

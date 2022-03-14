@@ -7,13 +7,42 @@ import { getMonthDiff } from "../../../utils";
 import FutureIcon from "../../../images/future_events_icon.svg";
 import ScheduleEvent from "./ScheduleEvent";
 import ShowMore from "./ShowMore";
+import { Topic } from "../../../modules/constants";
+
+function addReleasedEvent(eventList, amount, token, timestamp) {
+  eventList.push(
+    <ScheduleEvent
+      message={
+        <FormattedMessage
+          id="shedule.released"
+          values={{ amount: <FormattedNumber value={Math.round(amount)} />, token: token }}
+        />
+      }
+      timestamp={timestamp}
+      key={timestamp}
+    />
+  );
+}
+
+function addFulfilledEvent(eventList, timestamp, future = false) {
+  eventList.push(
+    <ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} timestamp={timestamp} key="fulfilled" future />
+  );
+}
+
+function addRevokedEvent(eventList, timestamp) {
+  eventList.push(
+    <ScheduleEvent message={<FormattedMessage id="shedule.revoked" />} timestamp={timestamp} key="revoked" />
+  );
+}
 
 function Schedule(props) {
   const { contract } = props;
-  const { symbol, start, cliff, duration, releaseLogs } = contract;
+  const { symbol, start, cliff, duration, logs } = contract;
   const vestingCliff = getMonthDiff(start, cliff);
 
   const [scheduleEvents, setScheduleEvents] = useState([]);
+  const [revoked, setRevoked] = useState(false);
 
   const scheduleEventsSetpUp = (fullShow = false) => {
     const eventList = [];
@@ -63,72 +92,57 @@ function Schedule(props) {
     const endContractDate = new Date(endContractTs * 1000);
     let fulfilledFlag = false;
 
-    if (releaseLogs.length > 0) {
-      if (releaseLogs.length > 1 && !fullShow) {
+    const addEventHandler = (log) => {
+      const logData = log.data;
+      switch (log.topic) {
+        case Topic.RELEASE:
+          addReleasedEvent(eventList, logData.amount, symbol, logData.timestamp);
+          break;
+
+        case Topic.REVOKE:
+          setRevoked(true);
+          addRevokedEvent(eventList, logData.timestamp);
+          break;
+
+        default:
+          break;
+      }
+    };
+
+    if (logs.length > 0) {
+      if (logs.length > 1 && !fullShow) {
         eventList.push(<ShowMore key="showMore" onClick={() => scheduleEventsSetpUp(true)} />);
-        const latestRelease = releaseLogs[releaseLogs.length - 1];
-        const { timestamp } = latestRelease;
+        const latestLog = logs[logs.length - 1];
+        const { timestamp } = latestLog.data;
 
         if (new Date(timestamp * 1000) > endContractDate) {
           fulfilledFlag = true;
         }
 
-        eventList.push(
-          <ScheduleEvent
-            message={
-              <FormattedMessage
-                id="shedule.released"
-                values={{ amount: <FormattedNumber value={Math.round(latestRelease.amount)} />, token: symbol }}
-              />
-            }
-            timestamp={timestamp}
-            key={timestamp}
-          />
-        );
+        addEventHandler(latestLog);
       } else {
-        for (const log of releaseLogs) {
-          const { timestamp, amount } = log;
+        for (const log of logs) {
+          const { timestamp } = log.data;
           if (!fulfilledFlag && new Date(timestamp * 1000) > endContractDate) {
             fulfilledFlag = true;
-            eventList.push(
-              <ScheduleEvent
-                message={<FormattedMessage id="shedule.fulfilled" />}
-                timestamp={endContractTs}
-                key="fulfilled"
-              />
-            );
+            addFulfilledEvent(eventList, endContractTs);
           }
 
-          eventList.push(
-            <ScheduleEvent
-              message={
-                <FormattedMessage
-                  id="shedule.released"
-                  values={{ amount: <FormattedNumber value={Math.round(amount)} />, token: symbol }}
-                />
-              }
-              timestamp={timestamp}
-              key={timestamp}
-            />
-          );
+          addEventHandler(log);
         }
       }
     }
 
-    if (!fulfilledFlag) {
-      if (new Date() >= new Date(endContractTs * 1000)) {
-        eventList.push(
-          <scheduleEvents
-            message={<FormattedMessage id="shedule.fulfilled" />}
-            timestamp={endContractTs}
-            key="fulfilled"
-          />
-        );
-      } else {
-        eventList.push(
-          <ScheduleEvent message={<img src={FutureIcon} className="Future__Icon" />} key="Future__Icon" future />
-        );
-        eventList.push(<ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} key="fulfilled" future />);
+    if (!revoked) {
+      if (!fulfilledFlag) {
+        if (new Date() >= new Date(endContractTs * 1000)) {
+          addFulfilledEvent(eventList, endContractTs);
+        } else {
+          eventList.push(
+            <ScheduleEvent message={<img src={FutureIcon} className="Future__Icon" />} key="Future__Icon" future />
+          );
+          addFulfilledEvent(eventList, 0, true);
+        }
       }
     }
 
@@ -137,15 +151,15 @@ function Schedule(props) {
 
   useEffect(() => {
     scheduleEventsSetpUp();
-  }, []);
+  }, [revoked]);
 
   return (
-    <div className="timeline">
+    <div className={`timeline ${revoked && "revoked"}`}>
       <Header sub>
         <FormattedMessage id="shedule.title" />
         <Info message={<FormattedMessage id="helper.vesting_schedule" />} position="top center" />
       </Header>
-      <ul key={"timeline"}>{scheduleEvents}</ul>
+      <ul>{scheduleEvents}</ul>
     </div>
   );
 }
