@@ -93,6 +93,18 @@ function getReleaseData(start, cliff, releaseLogs) {
   return Array.from(new Array(getDaysFromStart(start)), (x, i) => "-");
 }
 
+function yAxisFormatter(totalVesting, symbol, isMobile) {
+  if (isMobile) {
+    if (totalVesting >= 1000000) {
+      return (value) => `${value / 1000000}M ${symbol}`;
+    }
+
+    return (value) => `${value / 1000}k ${symbol}`;
+  }
+
+  return `{value} ${symbol}`;
+}
+
 function resizeHandler(chart) {
   if (chart) {
     chart.resize();
@@ -236,8 +248,9 @@ function Chart(props) {
       } else {
         option.legend.top = "top";
         option.grid.bottom = "3%";
-        option.yAxis.axisLabel.formatter = `{value} ${symbol}`;
       }
+
+      option.yAxis.axisLabel.formatter = yAxisFormatter(total, symbol, isMobile);
       fundsChart.setOption(option);
     }
   }, [isMobile, fundsChart]);
