@@ -26,23 +26,8 @@ function Dashboard() {
           <Summary />
         </Grid.Column>
         <Grid.Column width={3} style={{ paddingRight: 0 }}>
-          {isMobile ? (
-            <Grid>
-              <Grid.Row columns={2}>
-                <Grid.Column>
-                  <Details />
-                </Grid.Column>
-                <Grid.Column>
-                  <Schedule />
-                </Grid.Column>
-              </Grid.Row>
-            </Grid>
-          ) : (
-            <>
-              <Schedule />
-              <Details />
-            </>
-          )}
+          <Schedule />
+          <Details />
         </Grid.Column>
       </Grid>
     </Container>

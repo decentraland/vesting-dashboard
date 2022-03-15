@@ -30,3 +30,11 @@ export function openInNewTab(event, url) {
   window.open(url, "_blank").focus();
   event.preventDefault();
 }
+
+export function copyToClipboard(text) {
+  navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
+    if (result.state == "granted" || result.state == "prompt") {
+      navigator.clipboard.writeText(text);
+    }
+  });
+}

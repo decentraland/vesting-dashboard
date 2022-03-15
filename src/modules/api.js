@@ -157,7 +157,6 @@ export default class API {
       }
     }
 
-    console.log(logs);
     return logs;
   }
 

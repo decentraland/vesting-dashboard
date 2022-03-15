@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { Grid } from "semantic-ui-react";
 import { Logo, Header, Popup } from "decentraland-ui";
 import { FormattedMessage, FormattedPlural, FormattedNumber, useIntl } from "react-intl";
-import { getMonthDiff } from "../../../utils";
+import { copyToClipboard, getMonthDiff } from "../../../utils";
 import ManaWidget from "../../ManaWidget";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
@@ -15,10 +15,6 @@ import UsdcLogo from "../../../images/usdc_logo.svg";
 
 import "./Overview.css";
 import useReviewUrl from "../../../hooks/useReviewUrl";
-
-function copyAddress(address) {
-  navigator.clipboard.writeText(address);
-}
 
 export default function Overview(props) {
   const { address, contract } = props;
@@ -73,7 +69,7 @@ export default function Overview(props) {
                   <Popup
                     content={<FormattedMessage id="global.copied" />}
                     position="bottom center"
-                    trigger={<img src={Copy} onClick={() => copyAddress(address)} />}
+                    trigger={<img src={Copy} onClick={() => copyToClipboard(address)} />}
                     on="click"
                   />
                 </Header>

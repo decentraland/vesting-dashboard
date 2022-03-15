@@ -18,9 +18,13 @@ import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import { DAY_IN_SECONDS, getDurationInDays, getDaysFromStart, getCliffEndDay, getDaysFromRevoke } from "./utils";
 import { Topic } from "../../../modules/constants";
 
-function getXAxisData(start, duration, intl) {
+function getXAxisData(start, duration, intl, isMobile) {
   const durationInDays = getDurationInDays(duration);
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
+
+  if (isMobile) {
+    dateOptions.month = "short";
+  }
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
     intl.formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), dateOptions)
@@ -106,6 +110,9 @@ function Chart(props) {
 
   const intl = useIntl();
 
+  const responsive = useResponsive();
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
+
   const option = {
     title: {
       text: "FUNDS OVER TIME",
@@ -126,7 +133,7 @@ function Chart(props) {
     xAxis: {
       type: "category",
       boundaryGap: false,
-      data: getXAxisData(start, duration, intl),
+      data: getXAxisData(start, duration, intl, isMobile),
     },
     yAxis: {
       type: "value",
@@ -186,16 +193,18 @@ function Chart(props) {
           lte: daysFromStart,
           gt: 0,
           color: "#44B600",
+          label: "Vested",
         },
         {
           gt: daysFromStart,
           color: "rgba(115, 110, 125, 0.3)",
+          label: "To be vested",
         },
       ],
     };
   }
 
-  const [myChart, setMyChart] = useState(null);
+  const [fundsChart, setFundsChart] = useState(null);
 
   useEffect(() => {
     echarts.use([
@@ -211,28 +220,27 @@ function Chart(props) {
     ]);
 
     const chartDom = document.getElementById("chart");
-    setMyChart(echarts.init(chartDom));
+    setFundsChart(echarts.init(chartDom));
   }, []);
 
-  const responsive = useResponsive();
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
-
   useEffect(() => {
-    window.onresize = () => resizeHandler(myChart);
+    window.onresize = () => resizeHandler(fundsChart);
   });
 
   useEffect(() => {
-    if (myChart) {
+    if (fundsChart) {
       if (isMobile) {
         option.legend.top = "bottom";
         option.grid.bottom = "10%";
+        option.yAxis.axisLabel.formatter = (value) => `${value / 1000}k ${symbol}`;
       } else {
         option.legend.top = "top";
-        option.grid.bottom = "0%";
+        option.grid.bottom = "3%";
+        option.yAxis.axisLabel.formatter = `{value} ${symbol}`;
       }
-      myChart.setOption(option);
+      fundsChart.setOption(option);
     }
-  }, [isMobile, myChart]);
+  }, [isMobile, fundsChart]);
 
   return <div id="chart" />;
 }

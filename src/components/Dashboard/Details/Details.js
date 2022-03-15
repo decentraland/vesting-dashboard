@@ -1,7 +1,7 @@
 import React from "react";
 import { Header, Popup, Button } from "decentraland-ui";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
-import { getMonthDiff } from "../../../utils";
+import { copyToClipboard, getMonthDiff } from "../../../utils";
 import Info from "../../Info/Info";
 import AddressIcon from "../../../images/address_icon.svg";
 import "./Details.css";
@@ -15,16 +15,12 @@ function Details(props) {
   const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
   const vestingCliff = getMonthDiff(start, cliff);
 
-  const copyAddress = () => {
-    navigator.clipboard.writeText(contract.beneficiary);
-  };
-
   return (
     <div id="details">
       <Header sub>
         <FormattedMessage id="details.beneficiary" />
       </Header>
-      <Header onClick={copyAddress} style={{ cursor: "pointer" }}>
+      <Header onClick={() => copyToClipboard(contract.beneficiary)} style={{ cursor: "pointer" }}>
         <img style={{ width: "13px", marginRight: "5px", paddingBottom: "5px" }} src={AddressIcon} />
         <Popup
           content={<FormattedMessage id="global.copied" />}
