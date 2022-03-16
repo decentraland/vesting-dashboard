@@ -62,16 +62,18 @@ function Beneficiary(props) {
     daoProposal && (
       <div id="beneficiary">
         <Grid verticalAlign="middle">
-          <Grid.Column style={{ width: "fit-content" }}>
-            <img src={Icon} style={{ marginTop: "5px" }} />
-          </Grid.Column>
-          <Grid.Column width={isMobile ? 12 : 9}>
-            <Header>
-              <FormattedMessage id="beneficiary.title" />
-            </Header>
-            <Header sub>
-              <FormattedMessage id="beneficiary.subtitle" />
-            </Header>
+          <Grid.Column className="beneficiaryContainer">
+            <Grid.Column style={{ width: "fit-content" }}>
+              <img src={Icon} style={{ marginTop: "5px" }} />
+            </Grid.Column>
+            <Grid.Column className="beneficiaryText" width={isMobile ? 12 : 9}>
+              <Header>
+                <FormattedMessage id="beneficiary.title" />
+              </Header>
+              <Header sub>
+                <FormattedMessage id="beneficiary.subtitle" />
+              </Header>
+            </Grid.Column>
           </Grid.Column>
           <Grid.Column className={isMobile ? "hidden" : "button__column"} floated="right" textAlign="right">
             {daoButton()}

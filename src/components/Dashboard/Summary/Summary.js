@@ -1,3 +1,4 @@
+import "./Summary.css";
 import React from "react";
 import { getMonthDiff } from "../../../utils";
 import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from "react-intl";
@@ -13,7 +14,7 @@ function Summary(props) {
   const [reviewUrl, handleClick] = useReviewUrl(address);
 
   return (
-    <div style={{ textAlign: "justify" }}>
+    <div id="summary" style={{ textAlign: "justify" }}>
       <FormattedMessage
         id="summary.text"
         values={{
