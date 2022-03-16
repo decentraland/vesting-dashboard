@@ -18,6 +18,13 @@ import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 import { DAY_IN_SECONDS, getDurationInDays, getDaysFromStart, getCliffEndDay, getDaysFromRevoke } from "./utils";
 import { Topic } from "../../../modules/constants";
 
+function getRevokedData(revokeLog, start) {
+  const isRevoked = revokeLog.length > 0;
+  const revokedDay = isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : -1;
+
+  return [isRevoked, revokedDay];
+}
+
 function getXAxisData(start, duration, intl, isMobile) {
   const durationInDays = getDurationInDays(duration);
   const dateOptions = { year: "numeric", month: "long", day: "numeric" };
@@ -38,8 +45,7 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
   const vestingDays = getDurationInDays(duration);
   const vestedPerDay = total / vestingDays;
 
-  const isRevoked = revokeLog.length > 0;
-  const revokedDay = isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : 0;
+  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start);
 
   let vestingData = new Array(cliffEndDay).fill(0);
 
@@ -58,11 +64,14 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
   }
 
   return vestingData.concat(
-    Array.from(new Array(vestingDays), (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+    Array.from(
+      new Array(vestingDays - cliffEndDay),
+      (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
+    )
   );
 }
 
-function getReleaseData(start, cliff, releaseLogs) {
+function getReleaseData(start, cliff, releaseLogs, revokeLog) {
   if (new Date() < new Date(cliff * 1000)) {
     return [];
   }
@@ -80,10 +89,13 @@ function getReleaseData(start, cliff, releaseLogs) {
       );
     }
 
+    const [isRevoked, revokedDay] = getRevokedData(revokeLog, start);
+    const finalDataPoint = isRevoked ? revokedDay + 1 : getDaysFromStart(start);
+
     const { acum } = releaseLogs[releaseLogs.length - 1];
     releaseData = releaseData.concat(
       Array.from(
-        new Array(getDaysFromStart(start) - releaseDays[releaseDays.length - 1]),
+        new Array(finalDataPoint - releaseDays[releaseDays.length - 1]),
         (x, i) => Math.round(acum * 100) / 100
       )
     );
@@ -99,7 +111,9 @@ function yAxisFormatter(totalVesting, symbol, isMobile) {
       return (value) => `${value / 1000000}M ${symbol}`;
     }
 
-    return (value) => `${value / 1000}k ${symbol}`;
+    if (totalVesting >= 1000) {
+      return (value) => `${value / 1000}k ${symbol}`;
+    }
   }
 
   return `{value} ${symbol}`;
@@ -118,7 +132,7 @@ function Chart(props) {
   const daysFromStart = getDaysFromStart(start) - 1;
   const releaseLogs = logs.filter((log) => log.topic === Topic.RELEASE).map((log) => log.data);
   const revokeLog = logs.filter((log) => log.topic === Topic.REVOKE);
-  const isRevoked = revokeLog.length > 0;
+  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start);
 
   const intl = useIntl();
 
@@ -127,14 +141,14 @@ function Chart(props) {
 
   const option = {
     title: {
-      text: "FUNDS OVER TIME",
+      text: intl.formatMessage({ id: "chart.title" }),
     },
     color: ["#44B600", "#FF7439"],
     tooltip: {
       trigger: "axis",
     },
     legend: {
-      data: ["Vested", "Released"],
+      data: [intl.formatMessage({ id: "chart.vested" }), intl.formatMessage({ id: "chart.released" })],
     },
     grid: {
       left: "3%",
@@ -149,13 +163,14 @@ function Chart(props) {
     },
     yAxis: {
       type: "value",
+      max: "dataMax",
       axisLabel: {
         formatter: `{value} ${symbol}`,
       },
     },
     series: [
       {
-        name: "Vested",
+        name: intl.formatMessage({ id: "chart.vested" }),
         type: "line",
         data: getVestingData(start, cliff, duration, total, revokeLog),
         symbol: "none",
@@ -163,8 +178,10 @@ function Chart(props) {
           symbol: "none",
           data: [
             {
-              name: `${isRevoked ? "REVOKED" : "TODAY"}`,
-              xAxis: isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : getDaysFromStart(start) - 1,
+              name: `${
+                isRevoked ? intl.formatMessage({ id: "chart.revoked" }) : intl.formatMessage({ id: "chart.today" })
+              }`,
+              xAxis: isRevoked ? revokedDay : getDaysFromStart(start) - 1,
               label: {
                 normal: {
                   formatter: "{b}",
@@ -186,9 +203,9 @@ function Chart(props) {
         },
       },
       {
-        name: "Released",
+        name: intl.formatMessage({ id: "chart.released" }),
         type: "line",
-        data: getReleaseData(start, cliff, releaseLogs),
+        data: getReleaseData(start, cliff, releaseLogs, revokeLog),
         symbol: "none",
       },
     ],
@@ -205,12 +222,10 @@ function Chart(props) {
           lte: daysFromStart,
           gt: 0,
           color: "#44B600",
-          label: "Vested",
         },
         {
           gt: daysFromStart,
           color: "rgba(115, 110, 125, 0.3)",
-          label: "To be vested",
         },
       ],
     };

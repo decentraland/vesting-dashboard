@@ -10,6 +10,7 @@ import ShowMore from "./ShowMore";
 import { Topic } from "../../../modules/constants";
 
 function addReleasedEvent(eventList, amount, token, timestamp) {
+  const props = { timestamp, key: timestamp };
   eventList.push(
     <ScheduleEvent
       message={
@@ -18,22 +19,19 @@ function addReleasedEvent(eventList, amount, token, timestamp) {
           values={{ amount: <FormattedNumber value={Math.round(amount)} />, token: token }}
         />
       }
-      timestamp={timestamp}
-      key={timestamp}
+      {...props}
     />
   );
 }
 
 function addFulfilledEvent(eventList, timestamp, future = false) {
-  eventList.push(
-    <ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} timestamp={timestamp} key="fulfilled" future />
-  );
+  const props = { timestamp, future, key: "fulfilled" };
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="shedule.fulfilled" />} {...props} />);
 }
 
 function addRevokedEvent(eventList, timestamp) {
-  eventList.push(
-    <ScheduleEvent message={<FormattedMessage id="shedule.revoked" />} timestamp={timestamp} key="revoked" />
-  );
+  const props = { timestamp, key: "revoked" };
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="shedule.revoked" />} {...props} />);
 }
 
 function Schedule(props) {
