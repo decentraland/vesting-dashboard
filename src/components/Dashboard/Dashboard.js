@@ -20,14 +20,29 @@ function Dashboard() {
       <Overview />
       <Beneficiary />
       <Grid stackable columns={2} padded style={{ width: "100%" }}>
-        <Grid.Column width={13} style={{ paddingLeft: 0 }}>
+        <Grid.Column width={12} style={{ paddingLeft: 0 }}>
           <Progress />
           <Chart />
           <Summary />
         </Grid.Column>
-        <Grid.Column width={3} style={{ paddingRight: 0 }}>
-          <Schedule />
-          <Details />
+        <Grid.Column width={4} style={{ paddingRight: 0 }}>
+          {isMobile ? (
+            <Grid>
+              <Grid.Row columns={1}>
+                <Grid.Column>
+                  <Schedule />
+                </Grid.Column>
+                <Grid.Column className="detailsMobile">
+                  <Details />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          ) : (
+            <>
+              <Schedule />
+              <Details />
+            </>
+          )}
         </Grid.Column>
       </Grid>
     </Container>

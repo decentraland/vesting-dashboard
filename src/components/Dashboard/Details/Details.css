@@ -17,8 +17,8 @@
 }
 
 #details.mobile .dates,
-#details.mobile .item:not(:first-child):not(:last-child) { 
-  border-bottom: 1px solid #D8D8D8;
+#details.mobile .item:not(:first-child):not(:last-child) {
+  border-bottom: 1px solid #d8d8d8;
 }
 
 #details.mobile .dates {

@@ -142,6 +142,9 @@ function Chart(props) {
   const option = {
     title: {
       text: intl.formatMessage({ id: "chart.title" }),
+      textStyle: {
+        fontSize: "13px",
+      },
     },
     color: ["#44B600", "#FF7439"],
     tooltip: {
@@ -151,8 +154,8 @@ function Chart(props) {
       data: [intl.formatMessage({ id: "chart.vested" }), intl.formatMessage({ id: "chart.released" })],
     },
     grid: {
-      left: "3%",
-      right: "4%",
+      left: "0",
+      right: "0",
       bottom: "3%",
       containLabel: true,
     },
@@ -160,12 +163,45 @@ function Chart(props) {
       type: "category",
       boundaryGap: false,
       data: getXAxisData(start, duration, intl, isMobile),
+      axisLabel: {
+        align: "left",
+        lineHeight: 30,
+        color: "#B0AFB1",
+      },
+      axisTick: {
+        show: false,
+      },
     },
     yAxis: {
       type: "value",
       max: "dataMax",
       axisLabel: {
-        formatter: `{value} ${symbol}`,
+        formatter: function (value, index) {
+          const lookup = [
+            { value: 1, abv: "" },
+            { value: 1e3, abv: "k" },
+            { value: 1e6, abv: "M" },
+            { value: 1e9, abv: "G" },
+            { value: 1e12, abv: "T" },
+            { value: 1e15, abv: "P" },
+            { value: 1e18, abv: "E" },
+          ];
+          const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+          var item = lookup
+            .slice()
+            .reverse()
+            .find(function (item) {
+              return value >= item.value;
+            });
+          return item
+            ? (value / item.value).toFixed(index).replace(rx, "$1") + item.abv + " " + symbol
+            : "0" + " " + symbol;
+        },
+        inside: true,
+        margin: 0,
+        verticalAlign: "bottom",
+        showMinLabel: false,
+        lineHeight: 30,
       },
     },
     series: [
