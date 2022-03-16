@@ -25,13 +25,9 @@ function getRevokedData(revokeLog, start) {
   return [isRevoked, revokedDay];
 }
 
-function getXAxisData(start, duration, intl, isMobile) {
+function getXAxisData(start, duration, intl) {
   const durationInDays = getDurationInDays(duration);
-  const dateOptions = { year: "numeric", month: "long", day: "numeric" };
-
-  if (isMobile) {
-    dateOptions.month = "short";
-  }
+  const dateOptions = { year: "numeric", month: "short", day: "numeric" };
 
   const xData = Array.from(new Array(durationInDays), (x, i) =>
     intl.formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), dateOptions)
@@ -105,18 +101,34 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
   return Array.from(new Array(getDaysFromStart(start)), (x, i) => "-");
 }
 
-function yAxisFormatter(totalVesting, symbol, isMobile) {
+function getLabelInterval(duration, isMobile) {
   if (isMobile) {
-    if (totalVesting >= 1000000) {
-      return (value) => `${value / 1000000}M ${symbol}`;
-    }
-
-    if (totalVesting >= 1000) {
-      return (value) => `${value / 1000}k ${symbol}`;
-    }
+    return "auto";
   }
 
-  return `{value} ${symbol}`;
+  const durationInMonths = getDurationInDays(duration) / 30;
+  const maxLabels = 8;
+
+  return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels));
+}
+
+function getYAxisFormatter(total, symbol) {
+  const lookup = [
+    { magnitude: 1, abv: "" },
+    { magnitude: 1e3, abv: "k" },
+    { magnitude: 1e6, abv: "M" },
+    { magnitude: 1e9, abv: "G" },
+    { magnitude: 1e12, abv: "T" },
+    { magnitude: 1e15, abv: "P" },
+    { magnitude: 1e18, abv: "E" },
+  ];
+  const magnitudes = lookup.map((obj) => obj.magnitude);
+  const valueMag = 10 ** Math.floor(Math.log10(total));
+  const diffArr = magnitudes.map((x) => Math.abs(valueMag - x));
+  const minNumber = Math.min(...diffArr);
+  const idx = diffArr.findIndex((x) => x === minNumber);
+
+  return (value) => `${value / lookup[idx].magnitude}${lookup[idx].abv} ${symbol}`;
 }
 
 function resizeHandler(chart) {
@@ -162,11 +174,12 @@ function Chart(props) {
     xAxis: {
       type: "category",
       boundaryGap: false,
-      data: getXAxisData(start, duration, intl, isMobile),
+      data: getXAxisData(start, duration, intl),
       axisLabel: {
         align: "left",
         lineHeight: 30,
         color: "#B0AFB1",
+        interval: getLabelInterval(duration, isMobile),
       },
       axisTick: {
         show: false,
@@ -176,27 +189,7 @@ function Chart(props) {
       type: "value",
       max: "dataMax",
       axisLabel: {
-        formatter: function (value, index) {
-          const lookup = [
-            { value: 1, abv: "" },
-            { value: 1e3, abv: "k" },
-            { value: 1e6, abv: "M" },
-            { value: 1e9, abv: "G" },
-            { value: 1e12, abv: "T" },
-            { value: 1e15, abv: "P" },
-            { value: 1e18, abv: "E" },
-          ];
-          const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-          var item = lookup
-            .slice()
-            .reverse()
-            .find(function (item) {
-              return value >= item.value;
-            });
-          return item
-            ? (value / item.value).toFixed(index).replace(rx, "$1") + item.abv + " " + symbol
-            : "0" + " " + symbol;
-        },
+        formatter: getYAxisFormatter(total, symbol),
         inside: true,
         margin: 0,
         verticalAlign: "bottom",
@@ -295,13 +288,11 @@ function Chart(props) {
       if (isMobile) {
         option.legend.top = "bottom";
         option.grid.bottom = "10%";
-        option.yAxis.axisLabel.formatter = (value) => `${value / 1000}k ${symbol}`;
       } else {
         option.legend.top = "top";
         option.grid.bottom = "3%";
       }
 
-      option.yAxis.axisLabel.formatter = yAxisFormatter(total, symbol, isMobile);
       fundsChart.setOption(option);
     }
   }, [isMobile, fundsChart]);
