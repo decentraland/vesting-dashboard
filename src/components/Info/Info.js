@@ -18,7 +18,7 @@ function Info(props) {
   const { message, position } = props;
 
   return (
-    <span style={{ padding: "5px" }}>
+    <span className="info" style={{ padding: "5px" }}>
       <Popup
         content={message}
         position={position}

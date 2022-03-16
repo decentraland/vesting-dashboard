@@ -5,43 +5,50 @@ import { copyToClipboard, getMonthDiff } from "../../../utils";
 import Info from "../../Info/Info";
 import AddressIcon from "../../../images/address_icon.svg";
 import "./Details.css";
+import useResponsive from "../../../hooks/useResponsive";
+import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 
 function addressShortener(address) {
   return address.substring(0, 6) + "..." + address.substring(38, 42);
 }
 
-function Details(props) {
-  const { contract, isBeneficiary, onRelease } = props;
-  const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
-  const vestingCliff = getMonthDiff(start, cliff);
-
+function getBeneficiary(addr) {
   return (
-    <div id="details">
+    <div className="item">
       <Header sub>
         <FormattedMessage id="details.beneficiary" />
       </Header>
-      <Header onClick={() => copyToClipboard(contract.beneficiary)} style={{ cursor: "pointer" }}>
+      <Header onClick={() => copyToClipboard(addr)} style={{ cursor: "pointer" }}>
         <img style={{ width: "13px", marginRight: "5px", paddingBottom: "5px" }} src={AddressIcon} />
         <Popup
           content={<FormattedMessage id="global.copied" />}
           position="bottom center"
-          trigger={<span>{addressShortener(contract.beneficiary)}</span>}
+          trigger={<span>{addressShortener(addr)}</span>}
           on="click"
         />
-        <Info message={<FormattedMessage id="helper.beneficiary" />} position="top center" />
+        <Info message={<FormattedMessage id="helper.beneficiary" />} position="left center" />
       </Header>
+    </div>
+  );
+}
+
+function getDate(id, date) {
+  const type = id.split(".");
+  return (
+    <div className={`item ${type[type.length - 1]}`}>
       <Header sub>
-        <FormattedMessage id="details.start" />
+        <FormattedMessage id={id} />
       </Header>
       <Header>
-        <FormattedDate value={new Date(start * 1000)} year="numeric" month="long" day="numeric" />
+        <FormattedDate value={new Date(date * 1000)} year="numeric" month="long" day="numeric" />
       </Header>
-      <Header sub>
-        <FormattedMessage id="details.end" />
-      </Header>
-      <Header>
-        <FormattedDate value={new Date((start + duration) * 1000)} year="numeric" month="long" day="numeric" />
-      </Header>
+    </div>
+  );
+}
+
+function getCliffPeriod(vestingCliff) {
+  return (
+    <div className="item">
       <Header sub>
         <FormattedMessage id="details.cliff_period" />
       </Header>
@@ -59,38 +66,68 @@ function Details(props) {
             ),
           }}
         />
-        <Info message={<FormattedMessage id="helper.cliff_period" />} position="top center" />
+        <Info message={<FormattedMessage id="helper.cliff_period" />} position="left center" />
       </Header>
+    </div>
+  );
+}
+
+function getAmount(id, value, symbol, helperId) {
+  return (
+    <div className="item">
       <Header sub>
-        <FormattedMessage id="details.total_vesting" />
+        <FormattedMessage id={id} />
       </Header>
       <Header>
-        <FormattedNumber value={balance + released} /> {symbol}
-        <Info message={<FormattedMessage id="helper.total_vesting" />} position="top center" />
+        <FormattedNumber value={value} /> {symbol}
+        <Info message={<FormattedMessage id={helperId} />} position="left center" />
       </Header>
-      <Header sub>
-        <FormattedMessage id="details.released" />
-      </Header>
-      <Header>
-        <FormattedNumber value={released} /> {symbol}
-        <Info message={<FormattedMessage id="helper.released" />} position="top center" />
-      </Header>
-      <Header sub>
-        <FormattedMessage id="details.releasable" />
-      </Header>
-      <Header style={(isBeneficiary && { marginBottom: "4px" }) || {}}>
-        <FormattedNumber value={releasableAmount} /> {symbol}
-        <Info message={<FormattedMessage id="helper.releasable" />} position="top center" />
-      </Header>
-      {isBeneficiary && releasableAmount > 0 && (
-        <Button basic style={{ padding: 0, marginBottom: "14px" }} onClick={onRelease}>
-          <FormattedMessage id="details.release_funds" />
-        </Button>
-      )}
+    </div>
+  );
+}
+
+function getRevocable(revocable) {
+  return (
+    <div className="item">
       <Header sub>
         <FormattedMessage id="details.revocable" />
       </Header>
       <Header>{revocable ? <FormattedMessage id="global.yes" /> : <FormattedMessage id="global.no" />}</Header>
+    </div>
+  );
+}
+
+function Details(props) {
+  const { contract, isBeneficiary, onRelease } = props;
+  const { symbol, released, balance, start, cliff, duration, releasableAmount, revocable } = contract;
+  const vestingCliff = getMonthDiff(start, cliff);
+  const total = balance + released;
+
+  const responsive = useResponsive();
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
+
+  return (
+    <div id="details" className={(isMobile && "mobile") || ""}>
+      {isMobile ? (
+        <>
+          <div className="dates">
+            {getDate("details.start", start)}
+            {getDate("details.end", start + duration)}
+          </div>
+          {getBeneficiary(contract.beneficiary)}
+        </>
+      ) : (
+        <>
+          {getBeneficiary(contract.beneficiary)}
+          {getDate("details.start", start)}
+          {getDate("details.end", start + duration)}
+        </>
+      )}
+      {getCliffPeriod(vestingCliff)}
+      {getAmount("details.total_vesting", total, symbol, "helper.total_vesting")}
+      {getAmount("details.released", released, symbol, "helper.released")}
+      {getAmount("details.releasable", releasableAmount, symbol, "helper.releasable")}
+      {getRevocable(revocable)}
     </div>
   );
 }

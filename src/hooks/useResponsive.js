@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
 
 let CURRENT_WIDTH = Responsive.onlyMobile.maxWidth;
