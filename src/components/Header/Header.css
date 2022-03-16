@@ -13,9 +13,15 @@
   display: flex;
 }
 
+.header .dcl.user-menu .toggle,
+.header .dcl.user-menu .toggle .avatar-face {
+  width: 36px;
+  height: 36px;
+}
+
 @media screen and (min-width: 767px) {
   .header .dcl.logo {
-    height: 52px;
-    width: 52px;
+    height: 36px;
+    width: 36px;
   }
 }

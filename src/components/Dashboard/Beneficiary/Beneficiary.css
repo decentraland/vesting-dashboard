@@ -9,7 +9,12 @@
 
 #beneficiary .header {
   margin: 0;
+  font-size: 17px;
   text-transform: none;
+}
+
+#beneficiary .ui.sub.header {
+  font-size: 15px;
 }
 
 #beneficiary .column {
@@ -19,6 +24,18 @@
 #beneficiary .button__column {
   width: fit-content;
   padding-right: 14px;
+  padding-left: 0;
+}
+
+#beneficiary .beneficiaryContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+#beneficiary .beneficiaryText {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 #beneficiary .hidden {

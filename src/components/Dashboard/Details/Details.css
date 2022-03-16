@@ -5,3 +5,8 @@
 #details .ui.sub.header {
   margin: 0;
 }
+
+.detailsMobile #details .ui.header.sub + .ui.header:not(:last-child) {
+  border-bottom: 1px solid #d8d8d8;
+  padding-bottom: 16px;
+}
