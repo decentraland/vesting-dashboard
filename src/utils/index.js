@@ -32,9 +32,8 @@ export function openInNewTab(event, url) {
 }
 
 export function copyToClipboard(text) {
-  navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
-    if (result.state == "granted" || result.state == "prompt") {
-      navigator.clipboard.writeText(text);
-    }
-  });
+  if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+  return Promise.reject("The Clipboard API is not available.");
 }

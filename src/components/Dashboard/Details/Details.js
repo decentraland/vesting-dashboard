@@ -127,6 +127,11 @@ function Details(props) {
       {getAmount("details.total_vesting", total, symbol, "helper.total_vesting")}
       {getAmount("details.released", released, symbol, "helper.released")}
       {getAmount("details.releasable", releasableAmount, symbol, "helper.releasable")}
+      {!isMobile && isBeneficiary && releasableAmount > 0 && (
+        <Button basic style={{ padding: 0, marginTop: "2px" }} onClick={onRelease}>
+          <FormattedMessage id="details.release_funds" />
+        </Button>
+      )}
       {getRevocable(revocable)}
     </div>
   );

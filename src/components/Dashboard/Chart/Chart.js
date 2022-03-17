@@ -112,25 +112,6 @@ function getLabelInterval(duration, isMobile) {
   return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels));
 }
 
-function getYAxisFormatter(total, symbol) {
-  const lookup = [
-    { magnitude: 1, abv: "" },
-    { magnitude: 1e3, abv: "k" },
-    { magnitude: 1e6, abv: "M" },
-    { magnitude: 1e9, abv: "G" },
-    { magnitude: 1e12, abv: "T" },
-    { magnitude: 1e15, abv: "P" },
-    { magnitude: 1e18, abv: "E" },
-  ];
-  const magnitudes = lookup.map((obj) => obj.magnitude);
-  const valueMag = 10 ** Math.floor(Math.log10(total));
-  const diffArr = magnitudes.map((x) => Math.abs(valueMag - x));
-  const minNumber = Math.min(...diffArr);
-  const idx = diffArr.findIndex((x) => x === minNumber);
-
-  return (value) => `${value / lookup[idx].magnitude}${lookup[idx].abv} ${symbol}`;
-}
-
 function resizeHandler(chart) {
   if (chart) {
     chart.resize();
@@ -187,9 +168,29 @@ function Chart(props) {
     },
     yAxis: {
       type: "value",
-      max: "dataMax",
       axisLabel: {
-        formatter: getYAxisFormatter(total, symbol),
+        formatter: (value) => {
+          if (!isMobile) {
+            return `${intl.formatNumber(value)} ${symbol}`;
+          }
+
+          const lookup = [
+            { magnitude: 1, abv: "" },
+            { magnitude: 1e3, abv: "k" },
+            { magnitude: 1e6, abv: "M" },
+            { magnitude: 1e9, abv: "G" },
+            { magnitude: 1e12, abv: "T" },
+            { magnitude: 1e15, abv: "P" },
+            { magnitude: 1e18, abv: "E" },
+          ];
+          const magnitudes = lookup.map((obj) => obj.magnitude);
+          const valueMag = 10 ** Math.floor(Math.log10(value));
+          const diffArr = magnitudes.map((x) => Math.abs(valueMag - x));
+          const minNumber = Math.min(...diffArr);
+          const idx = diffArr.findIndex((x) => x === minNumber);
+
+          return `${intl.formatNumber(value / lookup[idx].magnitude)}${lookup[idx].abv} ${symbol}`;
+        },
         inside: true,
         margin: 0,
         verticalAlign: "bottom",

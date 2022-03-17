@@ -25,7 +25,7 @@ function Dashboard() {
           <Chart />
           <Summary />
         </Grid.Column>
-        <Grid.Column width={4} style={{ paddingRight: 0 }}>
+        <Grid.Column width={4} style={{ paddingRight: 0, paddingLeft: "41px" }}>
           {isMobile ? (
             <Grid>
               <Grid.Row columns={1}>

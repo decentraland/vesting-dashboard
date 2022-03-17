@@ -7,11 +7,11 @@
   margin: 0;
 }
 
-#details .item,
-#details.mobile .dates {
-  margin-bottom: 16px;
+#details .item:not(:first-child) {
+  margin-top: 16px;
 }
 
+#details.mobile .dates,
 #details.mobile .item:not(:first-child):not(:last-child) {
   padding-bottom: 16px;
 }
