@@ -1,5 +1,5 @@
 import "./Chart.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import * as echarts from "echarts/core";
 import {
   TitleComponent,
@@ -112,6 +112,18 @@ function getLabelInterval(duration, isMobile) {
   return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels));
 }
 
+function getTooltipFormatter(today, newName, args) {
+  let tooltip = `<p>${args[0].axisValue}</p><table class="tooltip">`;
+
+  args.forEach(({ marker, seriesName, value }) => {
+    tooltip += `<tr><td>${marker} ${
+      args[0].dataIndex < today ? seriesName : newName
+    }</td><td><b>${value}</b></td></tr>`;
+  });
+
+  return tooltip + "</table>";
+}
+
 function resizeHandler(chart) {
   if (chart) {
     chart.resize();
@@ -131,6 +143,7 @@ function Chart(props) {
 
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
+  const toBeVestedLabel = useMemo(() => intl.formatMessage({ id: "chart.to_be_vested" }), []);
 
   const option = {
     title: {
@@ -142,6 +155,7 @@ function Chart(props) {
     color: ["#44B600", "#FF7439"],
     tooltip: {
       trigger: "axis",
+      formatter: (args) => getTooltipFormatter(getDaysFromStart(start), toBeVestedLabel, args),
     },
     legend: {
       data: [intl.formatMessage({ id: "chart.vested" }), intl.formatMessage({ id: "chart.released" })],

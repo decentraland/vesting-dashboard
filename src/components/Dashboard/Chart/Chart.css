@@ -3,3 +3,7 @@
   min-height: 400px;
   margin-bottom: 30px;
 }
+
+.tooltip tr > td:first-child {
+  padding-right: 15px;
+}

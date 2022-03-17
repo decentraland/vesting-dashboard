@@ -35,6 +35,7 @@
   "chart.title": "FUNDS OVER TIME",
   "chart.vested": "Vested",
   "chart.released": "Released",
+  "chart.to_be_vested": "To be vested",
   "chart.revoked": "REVOKED",
   "chart.today": "TODAY",
   "shedule.title": "Schedule",
