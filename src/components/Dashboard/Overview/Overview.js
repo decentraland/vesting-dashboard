@@ -21,6 +21,12 @@ import UsdcLogo from '../../../images/usdc_logo.svg'
 import './Overview.css'
 import useReviewUrl from '../../../hooks/useReviewUrl'
 
+const logo = {
+  DAI: DaiLogo,
+  USDT: UsdtLogo,
+  USDC: UsdcLogo,
+}
+
 export default function Overview(props) {
   const { address, contract } = props
 
@@ -28,12 +34,6 @@ export default function Overview(props) {
   const total = balance + released
   const vestingMonths = getMonthDiff(start, start + duration)
   const vestingCliff = getMonthDiff(start, cliff)
-
-  const logo = {
-    DAI: DaiLogo,
-    USDT: UsdtLogo,
-    USDC: UsdcLogo,
-  }
 
   const [reviewUrl, handleClick] = useReviewUrl(address)
 

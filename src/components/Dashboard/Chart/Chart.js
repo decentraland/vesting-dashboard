@@ -144,7 +144,9 @@ function getTooltipFormatter(today, newName, intl, args) {
   args.forEach(({ marker, seriesName, value }) => {
     tooltip += `<tr><td>${marker} ${
       args[0].dataIndex < today ? seriesName : newName
-    }</td><td><b>${intl.formatNumber(value)}</b></td></tr>`
+    }</td><td><b>${
+      isNaN(value) ? value : intl.formatNumber(value)
+    }</b></td></tr>`
   })
 
   return tooltip + '</table>'
