@@ -14,12 +14,12 @@ function addressShortener(address) {
 
 function getBeneficiary(addr) {
   return (
-    <div className="item">
+    <div className="item beneficiary">
       <Header sub>
         <FormattedMessage id="details.beneficiary" />
       </Header>
       <Header onClick={() => copyToClipboard(addr)} style={{ cursor: "pointer" }}>
-        <img style={{ width: "13px", marginRight: "5px", paddingBottom: "5px" }} src={AddressIcon} />
+        <img src={AddressIcon} alt="" />
         <Popup
           content={<FormattedMessage id="global.copied" />}
           position="bottom center"
@@ -33,9 +33,8 @@ function getBeneficiary(addr) {
 }
 
 function getDate(id, date) {
-  const type = id.split(".");
   return (
-    <div className={`item ${type[type.length - 1]}`}>
+    <div className="item">
       <Header sub>
         <FormattedMessage id={id} />
       </Header>
@@ -108,21 +107,13 @@ function Details(props) {
 
   return (
     <div id="details" className={(isMobile && "mobile") || ""}>
-      {isMobile ? (
-        <>
-          <div className="dates">
-            {getDate("details.start", start)}
-            {getDate("details.end", start + duration)}
-          </div>
-          {getBeneficiary(contract.beneficiary)}
-        </>
-      ) : (
-        <>
-          {getBeneficiary(contract.beneficiary)}
+      <div className="divToStyle">
+        {getBeneficiary(contract.beneficiary)}
+        <div className="dates">
           {getDate("details.start", start)}
           {getDate("details.end", start + duration)}
-        </>
-      )}
+        </div>
+      </div>
       {getCliffPeriod(vestingCliff)}
       {getAmount("details.total_vesting", total, symbol, "helper.total_vesting")}
       {getAmount("details.released", released, symbol, "helper.released")}

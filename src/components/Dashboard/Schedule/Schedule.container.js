@@ -8,6 +8,4 @@ export const mapState = (state) => {
   };
 };
 
-export const mapDispatch = (dispatch) => ({});
-
-export default connect(mapState, mapDispatch)(Schedule);
+export default connect(mapState)(Schedule);

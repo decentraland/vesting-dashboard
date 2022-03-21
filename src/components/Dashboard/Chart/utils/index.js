@@ -15,3 +15,11 @@ export function getDaysFromStart(start) {
 export function getDaysFromRevoke(revokeTs, start) {
   return Math.floor((revokeTs - start) / DAY_IN_SECONDS) + 1;
 }
+
+export function toDataArray(length, callback) {
+  return Array.from(new Array(length), callback);
+}
+
+export function emptyDataArray(length) {
+  return toDataArray(length, (x, i) => "-");
+}

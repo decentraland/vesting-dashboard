@@ -16,7 +16,7 @@ function Beneficiary(props) {
   const { address } = props;
 
   const [proposals, setProposals] = useState(null);
-  const [daoProposal, setDaoProposal] = useState(false);
+  const [isDaoProposal, setIsDaoProposal] = useState(false);
 
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
@@ -40,16 +40,16 @@ function Beneficiary(props) {
         proposal = proposal[0];
         proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL);
         proposalUrl.searchParams.append("id", proposal.id);
-        setDaoProposal(true);
+        setIsDaoProposal(true);
         setDaoButton(() => () => (
           <Button
             primary
             onClick={(e) => openInNewTab(e, proposalUrl)}
             href={proposalUrl}
-            style={(isMobile && { padding: "10px" }) || {}}
+            className="daoProposal__button"
           >
             <FormattedMessage id={isMobile ? "beneficiary.button.mobile" : "beneficiary.button"} />
-            <img src={ButtonIcon} style={{ marginLeft: "8px" }} />
+            <img src={ButtonIcon} alt="" />
           </Button>
         ));
       } else {
@@ -59,12 +59,12 @@ function Beneficiary(props) {
   }, [proposals, address, isMobile]);
 
   return (
-    daoProposal && (
+    isDaoProposal && (
       <div id="beneficiary">
         <Grid verticalAlign="middle">
           <Grid.Column className="beneficiaryContainer">
             <Grid.Column style={{ width: "fit-content" }}>
-              <img src={Icon} style={{ marginTop: "5px" }} />
+              <img src={Icon} alt="" style={{ marginTop: "5px" }} />
             </Grid.Column>
             <Grid.Column className="beneficiaryText" width={isMobile ? 12 : 9}>
               <Header>

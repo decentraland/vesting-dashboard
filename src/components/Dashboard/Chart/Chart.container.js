@@ -7,6 +7,4 @@ export const mapState = (state) => {
   };
 };
 
-export const mapDispatch = (dispatch) => ({});
-
-export default connect(mapState, mapDispatch)(Chart);
+export default connect(mapState)(Chart);

@@ -48,7 +48,7 @@ export default function Overview(props) {
             <Grid className="contract" style={{ width: "100%" }}>
               {symbol !== "MANA" ? (
                 <Grid.Column className="TokenLogo">
-                  <img src={logo[symbol]} style={{ width: isMobile ? "48px" : "72px" }} />
+                  <img src={logo[symbol]} style={{ width: isMobile ? "48px" : "72px" }} alt="" />
                 </Grid.Column>
               ) : (
                 isMobile && (
@@ -64,12 +64,12 @@ export default function Overview(props) {
                 <Header sub>
                   {address}{" "}
                   <a href={reviewUrl} onClick={handleClick}>
-                    <img src={Link} />
+                    <img src={Link} alt="" />
                   </a>
                   <Popup
                     content={<FormattedMessage id="global.copied" />}
                     position="bottom center"
-                    trigger={<img src={Copy} onClick={() => copyToClipboard(address)} />}
+                    trigger={<img src={Copy} alt="" onClick={() => copyToClipboard(address)} />}
                     on="click"
                   />
                 </Header>

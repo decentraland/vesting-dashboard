@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Header from "../Header";
 import Dashboard from "../Dashboard";
 import Footer from "../Footer";
-import ChangeBeneficiaryModal from "../ChangeBeneficiaryModal";
 import { isValidAddress } from "../../utils";
 import DaoInitiativeContextProvider from "../../context/DaoInitiativeContext";
 import LandingPage from "../LandingPage/LandingPage";
@@ -113,7 +112,6 @@ class App extends Component {
           <Header />
           <Dashboard />
           <Footer />
-          {/* <ChangeBeneficiaryModal /> */}
         </DaoInitiativeContextProvider>
       </div>
     );

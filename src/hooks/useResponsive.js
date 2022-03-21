@@ -24,7 +24,7 @@ function useResponsive() {
     return () => {
       window.removeEventListener("resize", updateWidth);
     };
-  }, []);
+  }, [width]);
 
   return useCallback(
     function responsive(limits = {}) {

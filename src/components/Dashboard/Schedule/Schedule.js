@@ -137,7 +137,11 @@ function Schedule(props) {
           addFulfilledEvent(eventList, endContractTs);
         } else {
           eventList.push(
-            <ScheduleEvent message={<img src={FutureIcon} className="Future__Icon" />} key="Future__Icon" future />
+            <ScheduleEvent
+              message={<img src={FutureIcon} className="Future__Icon" alt="" />}
+              key="Future__Icon"
+              future
+            />
           );
           addFulfilledEvent(eventList, 0, true);
         }

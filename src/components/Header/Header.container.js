@@ -8,6 +8,4 @@ export const mapState = state => {
   };
 };
 
-export const mapDispatch = dispatch => ({});
-
-export default connect(mapState, mapDispatch)(Header);
+export default connect(mapState)(Header);

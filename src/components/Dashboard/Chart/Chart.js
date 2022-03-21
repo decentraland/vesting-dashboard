@@ -1,5 +1,5 @@
 import "./Chart.css";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import * as echarts from "echarts/core";
 import {
   TitleComponent,
@@ -15,7 +15,15 @@ import { SVGRenderer } from "echarts/renderers";
 import { useIntl } from "react-intl";
 import useResponsive from "../../../hooks/useResponsive";
 import Responsive from "semantic-ui-react/dist/commonjs/addons/Responsive";
-import { DAY_IN_SECONDS, getDurationInDays, getDaysFromStart, getCliffEndDay, getDaysFromRevoke } from "./utils";
+import {
+  DAY_IN_SECONDS,
+  getDurationInDays,
+  getDaysFromStart,
+  getCliffEndDay,
+  getDaysFromRevoke,
+  toDataArray,
+  emptyDataArray,
+} from "./utils";
 import { Topic } from "../../../modules/constants";
 
 function getRevokedData(revokeLog, start) {
@@ -29,7 +37,7 @@ function getXAxisData(start, duration, intl) {
   const durationInDays = getDurationInDays(duration);
   const dateOptions = { year: "numeric", month: "short", day: "numeric" };
 
-  const xData = Array.from(new Array(durationInDays), (x, i) =>
+  const xData = toDataArray(durationInDays, (x, i) =>
     intl.formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), dateOptions)
   );
 
@@ -50,7 +58,7 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
       vestingData = new Array(revokedDay).fill(0);
     } else {
       vestingData = vestingData.concat(
-        Array.from(new Array(revokedDay), (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+        toDataArray(revokedDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
       );
     }
 
@@ -60,10 +68,7 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
   }
 
   return vestingData.concat(
-    Array.from(
-      new Array(vestingDays - cliffEndDay),
-      (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
-    )
+    toDataArray(vestingDays - cliffEndDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
   );
 }
 
@@ -72,33 +77,31 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
     return [];
   }
 
+  const today = getDaysFromStart(start);
   const cliffEndDay = getCliffEndDay(start, cliff);
   const releaseDays = releaseLogs.map((log) => Math.ceil((log.timestamp - start) / DAY_IN_SECONDS));
 
   if (releaseDays.length > 0) {
-    let releaseData = Array.from(new Array(cliffEndDay), (x, i) => "-");
-    releaseData = releaseData.concat(Array.from(new Array(releaseDays[0] - cliffEndDay), (x, i) => 0));
+    let releaseData = emptyDataArray(cliffEndDay);
+    releaseData = releaseData.concat(toDataArray(releaseDays[0] - cliffEndDay, (x, i) => 0));
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1];
       releaseData = releaseData.concat(
-        Array.from(new Array(releaseDays[i] - releaseDays[i - 1]), (x, i) => Math.round(acum * 100) / 100)
+        toDataArray(releaseDays[i] - releaseDays[i - 1], (x, i) => Math.round(acum * 100) / 100)
       );
     }
 
     const [isRevoked, revokedDay] = getRevokedData(revokeLog, start);
-    const finalDataPoint = isRevoked ? revokedDay + 1 : getDaysFromStart(start);
+    const finalDataPoint = isRevoked ? revokedDay + 1 : today;
 
     const { acum } = releaseLogs[releaseLogs.length - 1];
     releaseData = releaseData.concat(
-      Array.from(
-        new Array(finalDataPoint - releaseDays[releaseDays.length - 1]),
-        (x, i) => Math.round(acum * 100) / 100
-      )
+      toDataArray(finalDataPoint - releaseDays[releaseDays.length - 1], (x, i) => Math.round(acum * 100) / 100)
     );
     return releaseData;
   }
 
-  return Array.from(new Array(getDaysFromStart(start)), (x, i) => "-");
+  return emptyDataArray(today);
 }
 
 function getLabelInterval(duration, isMobile) {
@@ -107,18 +110,18 @@ function getLabelInterval(duration, isMobile) {
   }
 
   const durationInMonths = getDurationInDays(duration) / 30;
-  const maxLabels = 8;
+  const maxLabels = 7;
 
   return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels));
 }
 
-function getTooltipFormatter(today, newName, args) {
+function getTooltipFormatter(today, newName, intl, args) {
   let tooltip = `<p>${args[0].axisValue}</p><table class="tooltip">`;
 
   args.forEach(({ marker, seriesName, value }) => {
-    tooltip += `<tr><td>${marker} ${
-      args[0].dataIndex < today ? seriesName : newName
-    }</td><td><b>${value}</b></td></tr>`;
+    tooltip += `<tr><td>${marker} ${args[0].dataIndex < today ? seriesName : newName}</td><td><b>${intl.formatNumber(
+      value
+    )}</b></td></tr>`;
   });
 
   return tooltip + "</table>";
@@ -143,7 +146,7 @@ function Chart(props) {
 
   const responsive = useResponsive();
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth });
-  const toBeVestedLabel = useMemo(() => intl.formatMessage({ id: "chart.to_be_vested" }), []);
+  const toBeVestedLabel = intl.formatMessage({ id: "chart.to_be_vested" });
 
   const option = {
     title: {
@@ -155,7 +158,7 @@ function Chart(props) {
     color: ["#44B600", "#FF7439"],
     tooltip: {
       trigger: "axis",
-      formatter: (args) => getTooltipFormatter(getDaysFromStart(start), toBeVestedLabel, args),
+      formatter: (args) => getTooltipFormatter(getDaysFromStart(start), toBeVestedLabel, intl, args),
     },
     legend: {
       data: [intl.formatMessage({ id: "chart.vested" }), intl.formatMessage({ id: "chart.released" })],

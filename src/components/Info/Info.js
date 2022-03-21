@@ -22,7 +22,7 @@ function Info(props) {
       <Popup
         content={message}
         position={position}
-        trigger={<img src={InfoSVG} />}
+        trigger={<img src={InfoSVG} alt="" />}
         on="hover"
         style={{ height: "100%" }}
         basic
