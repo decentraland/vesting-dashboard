@@ -1,2 +1,2 @@
-import ManaWidget from "./ManaWidget";
-export default ManaWidget;
+import ManaWidget from './ManaWidget'
+export default ManaWidget

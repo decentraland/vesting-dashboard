@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import "./App.css";
-import PropTypes from "prop-types";
-import Header from "../Header";
-import Dashboard from "../Dashboard";
-import Footer from "../Footer";
-import { isValidAddress } from "../../utils";
-import DaoInitiativeContextProvider from "../../context/DaoInitiativeContext";
-import LandingPage from "../LandingPage/LandingPage";
-import ErrorPage from "../ErrorPage/ErrorPage";
-import LoadingPage from "../LoadingPage/LoadingPage";
+import './App.css'
+import PropTypes from 'prop-types'
+import Header from '../Header'
+import Dashboard from '../Dashboard'
+import Footer from '../Footer'
+import { isValidAddress } from '../../utils'
+import DaoInitiativeContextProvider from '../../context/DaoInitiativeContext'
+import LandingPage from '../LandingPage/LandingPage'
+import ErrorPage from '../ErrorPage/ErrorPage'
+import LoadingPage from '../LoadingPage/LoadingPage'
 
 class App extends Component {
   static propTypes = {
@@ -16,41 +16,41 @@ class App extends Component {
     errorMessage: PropTypes.string,
     isLoaded: PropTypes.bool,
     onConnect: PropTypes.func.isRequired,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      address: this.props.address || localStorage.getItem("address") || null,
-    };
+      address: this.props.address || localStorage.getItem('address') || null,
+    }
   }
 
   componentWillMount() {
-    const { onConnect } = this.props;
-    onConnect();
-    document.addEventListener("keydown", this.handleKeyDown);
+    const { onConnect } = this.props
+    onConnect()
+    document.addEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener('keydown', this.handleKeyDown)
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.address !== this.props.address) {
-      const { onConnect } = this.props;
-      onConnect();
+      const { onConnect } = this.props
+      onConnect()
     }
   }
 
   handleAddressChange = (e) => {
-    const address = e.target.value.trim();
-    localStorage.setItem("address", address);
-    this.setState({ address });
-  };
+    const address = e.target.value.trim()
+    localStorage.setItem('address', address)
+    this.setState({ address })
+  }
 
   handleKeyDown = (e) => {
-    const isEnterKey = e.which === 13 || e.which === 32;
-    const { onAccess, showPrompt, address } = this.props;
+    const isEnterKey = e.which === 13 || e.which === 32
+    const { onAccess, showPrompt, address } = this.props
     if (
       isEnterKey &&
       showPrompt &&
@@ -58,53 +58,64 @@ class App extends Component {
       isValidAddress(this.state.address) &&
       this.state.address !== address
     ) {
-      onAccess(this.state.address);
+      onAccess(this.state.address)
     }
-  };
+  }
 
   renderPrompt() {
-    const { isNotFound, address, network } = this.props;
-    const landingProps = { isNotFound, address, network, handleAddressChange: (e) => this.handleAddressChange(e) };
+    const { isNotFound, address, network } = this.props
+    const landingProps = {
+      isNotFound,
+      address,
+      network,
+      handleAddressChange: (e) => this.handleAddressChange(e),
+    }
     return (
       <div className="app start">
         <LandingPage stateAddress={this.state.address} {...landingProps} />
       </div>
-    );
+    )
   }
 
   renderError() {
-    const { connectionError } = this.props;
+    const { connectionError } = this.props
 
     return (
       <div className="app start">
         <ErrorPage connectionError={connectionError} />
       </div>
-    );
+    )
   }
 
   renderLoading() {
-    const { loadingMessage } = this.props;
+    const { loadingMessage } = this.props
     return (
       <div className="app start">
         <LoadingPage msg={loadingMessage} />
       </div>
-    );
+    )
   }
 
   render() {
-    const { loadingMessage, connectionError, contractError, showPrompt, isLoaded } = this.props;
+    const {
+      loadingMessage,
+      connectionError,
+      contractError,
+      showPrompt,
+      isLoaded,
+    } = this.props
     if (loadingMessage) {
-      return this.renderLoading();
+      return this.renderLoading()
     }
     if (connectionError || contractError) {
-      return this.renderError();
+      return this.renderError()
     }
     if (showPrompt) {
-      return this.renderPrompt();
+      return this.renderPrompt()
     }
 
     if (!isLoaded) {
-      return null;
+      return null
     }
     return (
       <div className="app">
@@ -114,7 +125,7 @@ class App extends Component {
           <Footer />
         </DaoInitiativeContextProvider>
       </div>
-    );
+    )
   }
 }
 

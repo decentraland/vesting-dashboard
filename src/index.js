@@ -6,15 +6,15 @@ import { ConnectedRouter } from 'react-router-redux'
 import { createHashHistory } from 'history'
 import configureStore from './modules/store'
 
-import App from "./components/App";
-import { Router, Route } from "react-router";
-import { IntlProvider } from "react-intl";
-import i18n_en from "./i18n/en.json";
+import App from './components/App'
+import { Router, Route } from 'react-router'
+import { IntlProvider } from 'react-intl'
+import i18n_en from './i18n/en.json'
 
-import "./index.css";
+import './index.css'
 
-const history = createHashHistory(window.history);
-const store = configureStore(history);
+const history = createHashHistory(window.history)
+const store = configureStore(history)
 
 ReactDOM.render(
   <Provider store={store}>
@@ -28,5 +28,5 @@ ReactDOM.render(
       </Router>
     </ConnectedRouter>
   </Provider>,
-  document.getElementById("root")
-);
+  document.getElementById('root')
+)

@@ -22,18 +22,18 @@ export function isValidAddress(address) {
 }
 
 export function getMonthDiff(start, finish) {
-  const getDate = (date) => moment(date * 1000).startOf("month");
-  return Math.abs(getDate(finish).diff(getDate(start), "months"));
+  const getDate = (date) => moment(date * 1000).startOf('month')
+  return Math.abs(getDate(finish).diff(getDate(start), 'months'))
 }
 
 export function openInNewTab(event, url) {
-  window.open(url, "_blank").focus();
-  event.preventDefault();
+  window.open(url, '_blank').focus()
+  event.preventDefault()
 }
 
 export function copyToClipboard(text) {
   if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(text);
+    return navigator.clipboard.writeText(text)
   }
-  return Promise.reject("The Clipboard API is not available.");
+  return Promise.reject('The Clipboard API is not available.')
 }

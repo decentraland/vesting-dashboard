@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./Footer.css";
+import React, { Component } from 'react'
+import './Footer.css'
 
 class Footer extends Component {
   render() {
@@ -11,11 +11,13 @@ class Footer extends Component {
           <div className="footer-icons"></div>
         </div>
         <div className="footer-bottom">
-          <span className="footer-copyright">© {new Date().getFullYear()} Decentraland</span>
+          <span className="footer-copyright">
+            © {new Date().getFullYear()} Decentraland
+          </span>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Footer;
+export default Footer

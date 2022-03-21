@@ -14,4 +14,4 @@ export const ContractType = shape({
   owner: string.isRequired,
   released: number.isRequired,
   start: number.isRequired,
-});
+})

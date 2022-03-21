@@ -27,7 +27,7 @@ export default function reducer(state = INITIAL_STATE, action) {
           address: action.address?.toLowerCase(),
           network: action.network,
         },
-      };
+      }
     }
     case CONNECT_FAILURE: {
       return {

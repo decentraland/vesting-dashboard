@@ -1,2 +1,2 @@
-import Overview from "./Overview.container";
-export default Overview;
+import Overview from './Overview.container'
+export default Overview

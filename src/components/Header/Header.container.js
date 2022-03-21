@@ -1,11 +1,11 @@
-import { connect } from "react-redux";
-import { getAddress } from "../../modules/ethereum/selectors";
-import Header from "./Header";
+import { connect } from 'react-redux'
+import { getAddress } from '../../modules/ethereum/selectors'
+import Header from './Header'
 
-export const mapState = state => {
+export const mapState = (state) => {
   return {
-    address: getAddress(state)
-  };
-};
+    address: getAddress(state),
+  }
+}
 
-export default connect(mapState)(Header);
+export default connect(mapState)(Header)

@@ -1,10 +1,14 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState } from 'react'
 
-export const DaoInitiativeContext = createContext();
+export const DaoInitiativeContext = createContext()
 
 const DaoInitiativeContextProvider = ({ children }) => {
-  const [daoButton, setDaoButton] = useState(() => () => null);
-  return <DaoInitiativeContext.Provider value={{ daoButton, setDaoButton }}>{children}</DaoInitiativeContext.Provider>;
-};
+  const [daoButton, setDaoButton] = useState(() => () => null)
+  return (
+    <DaoInitiativeContext.Provider value={{ daoButton, setDaoButton }}>
+      {children}
+    </DaoInitiativeContext.Provider>
+  )
+}
 
-export default DaoInitiativeContextProvider;
+export default DaoInitiativeContextProvider

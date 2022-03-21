@@ -1,2 +1,2 @@
-import Beneficiary from "./Beneficiary.container";
-export default Beneficiary;
+import Beneficiary from './Beneficiary.container'
+export default Beneficiary
