@@ -64,7 +64,7 @@
   position: absolute;
   border-left: 2px solid var(--green);
   top: -16px;
-  left: -1.83em;
+  left: -1.85em;
   bottom: 0;
   z-index: -1;
   height: 100%;
@@ -101,6 +101,6 @@ ul li:last-child {
 
 @media screen and (min-width: 768px) and (max-width: 991px) {
   .timeline ul li div.timeline__event::before {
-    top: -37px;
+    top: -35px;
   }
 }

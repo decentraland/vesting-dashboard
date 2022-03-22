@@ -8,6 +8,8 @@ import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
 import { Topic } from '../../../modules/constants'
+import useResponsive from '../../../hooks/useResponsive'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 
 function addReleasedEvent(eventList, amount, token, timestamp) {
   const props = { timestamp, key: timestamp }
@@ -174,13 +176,16 @@ function Schedule(props) {
     scheduleEventsSetpUp()
   }, [revoked])
 
+  const responsive = useResponsive()
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+
   return (
     <div className={`timeline ${revoked && 'revoked'}`}>
       <Header sub>
         <FormattedMessage id="shedule.title" />
         <Info
           message={<FormattedMessage id="helper.vesting_schedule" />}
-          position="top center"
+          position={`${isMobile ? 'right' : 'top'} center`}
         />
       </Header>
       <ul>{scheduleEvents}</ul>

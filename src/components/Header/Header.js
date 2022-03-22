@@ -6,12 +6,13 @@ import { Container, Grid } from 'semantic-ui-react'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import useResponsive from '../../hooks/useResponsive'
 import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
+import { openInNewTab } from '../../utils'
 
 function signInHandler() {
   if (window.ethereum) {
     window.location.reload()
   } else {
-    window.open('https://metamask.io/download/', '_blank').focus()
+    openInNewTab('https://metamask.io/download/')
   }
 }
 

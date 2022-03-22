@@ -46,7 +46,7 @@ function Beneficiary(props) {
         setDaoButton(() => () => (
           <Button
             primary
-            onClick={(e) => openInNewTab(e, proposalUrl)}
+            onClick={(e) => openInNewTab(proposalUrl, e)}
             href={proposalUrl}
             className="daoProposal__button"
           >

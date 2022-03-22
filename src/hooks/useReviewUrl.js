@@ -6,7 +6,7 @@ export default function useReviewUrl(address) {
     () => `${process.env.REACT_APP_REVIEW_CONTRACT_URL}${address}`,
     [address]
   )
-  const clickHandler = (e) => openInNewTab(e, reviewUrl)
+  const clickHandler = (e) => openInNewTab(reviewUrl, e)
 
   return [reviewUrl, clickHandler]
 }

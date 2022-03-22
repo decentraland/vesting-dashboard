@@ -270,20 +270,16 @@ function Chart(props) {
               }`,
               xAxis: isRevoked ? revokedDay : getDaysFromStart(start) - 1,
               label: {
-                normal: {
-                  formatter: '{b}',
-                  show: true,
-                  color: 'white',
-                  backgroundColor: '#ff2d55',
-                  padding: [3, 6],
-                  borderRadius: 5,
-                },
+                formatter: '{b}',
+                show: true,
+                color: 'white',
+                backgroundColor: '#ff2d55',
+                padding: [3, 6],
+                borderRadius: 5,
               },
               lineStyle: {
-                normal: {
-                  type: 'solid',
-                  color: '#ff2d55',
-                },
+                type: 'solid',
+                color: '#ff2d55',
               },
             },
           ],

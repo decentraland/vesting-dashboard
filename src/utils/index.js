@@ -26,9 +26,11 @@ export function getMonthDiff(start, finish) {
   return Math.abs(getDate(finish).diff(getDate(start), 'months'))
 }
 
-export function openInNewTab(event, url) {
+export function openInNewTab(url, event = null) {
   window.open(url, '_blank').focus()
-  event.preventDefault()
+  if (event) {
+    event.preventDefault()
+  }
 }
 
 export function copyToClipboard(text) {
