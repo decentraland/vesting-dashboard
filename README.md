@@ -14,7 +14,11 @@ This web UI works with any MANA, DAI, USDC or USDT Vesting Contract
 
 ## Running the project
 
-First rename the `.env.example` file to `.env` and add your [INFURA API key](https://infura.io/) in the variable `REACT_APP_INFURA_API_KEY`.
+First copy the `.env.example` file to `.env` using:
+```bash
+cp .env.example .env
+```
+and, in `.env`, add your [INFURA API key](https://infura.io/) in the variable `REACT_APP_INFURA_API_KEY`.
 
 Then:
 
