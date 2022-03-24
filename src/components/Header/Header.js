@@ -1,12 +1,14 @@
-import './Header.css'
-
 import { Logo, UserMenu } from 'decentraland-ui'
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
-import useResponsive from '../../hooks/useResponsive'
+
 import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
+import useResponsive from '../../hooks/useResponsive'
 import { openInNewTab } from '../../utils'
+import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
+
+import './Header.css'
 
 function signInHandler() {
   if (window.ethereum) {
@@ -20,7 +22,7 @@ function Header(props) {
   const { address } = props
   const [isSignedIn, setIsSignedIn] = useState(false)
 
-  const { daoButton } = useContext(DaoInitiativeContext)
+  const { proposalUrl } = useContext(DaoInitiativeContext)
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
@@ -49,7 +51,7 @@ function Header(props) {
               style={{ width: 'fit-content', paddingRight: 0 }}
             >
               {isMobile ? (
-                daoButton()
+                proposalUrl && <DaoInitiativeButton />
               ) : (
                 <UserMenu onSignIn={signInHandler} isSignedIn={isSignedIn} />
               )}

@@ -1,69 +1,52 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { areSameAddress } from '../../../modules/ethereum/utils'
 import { Grid } from 'semantic-ui-react'
 import Icon from '../../../images/grant_icon.svg'
-import ButtonIcon from '../../../images/proposal_button_icon.svg'
-import { Header, Button } from 'decentraland-ui'
+import { Header } from 'decentraland-ui'
 import { useIntl, FormattedMessage } from 'react-intl'
 import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import { DaoInitiativeContext } from '../../../context/DaoInitiativeContext'
-import { openInNewTab } from '../../../utils'
+import DaoInitiativeButton from '../../DaoInitiativeButton/DaoInitiativeButton'
 
 import './Beneficiary.css'
 
 function Beneficiary(props) {
   const { address } = props
 
-  const [proposals, setProposals] = useState(null)
-  const [isDaoProposal, setIsDaoProposal] = useState(false)
-
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 
   const intl = useIntl()
 
-  const { daoButton, setDaoButton } = useContext(DaoInitiativeContext)
+  const { proposalUrl, setProposalUrl } = useContext(DaoInitiativeContext)
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)
-      .then((resp) => resp.json())
-      .then((resp) => setProposals(resp))
-      .catch((err) => console.log(err))
-  }, [])
+    const getProposal = async () => {
+      const proposals = await (
+        await fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)
+      ).json()
 
-  useEffect(() => {
-    if (!!proposals) {
-      let proposal = proposals.filter((p) =>
-        areSameAddress(p['vesting_address'], address)
-      )
-      let proposalUrl = null
-      if (proposal.length === 1) {
-        proposal = proposal[0]
-        proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
-        proposalUrl.searchParams.append('id', proposal.id)
-        setIsDaoProposal(true)
-        setDaoButton(() => () => (
-          <Button
-            primary
-            onClick={(e) => openInNewTab(proposalUrl, e)}
-            href={proposalUrl}
-            className="daoProposal__button"
-          >
-            <FormattedMessage
-              id={isMobile ? 'beneficiary.button.mobile' : 'beneficiary.button'}
-            />
-            <img src={ButtonIcon} alt="" />
-          </Button>
-        ))
-      } else {
-        console.error(intl.formatMessage({ id: 'error.dao_proposal_url' }))
+      if (!!proposals) {
+        let proposal = proposals.filter((p) =>
+          areSameAddress(p['vesting_address'], address)
+        )
+        if (proposal.length === 1) {
+          proposal = proposal[0]
+          const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
+          proposalUrl.searchParams.append('id', proposal.id)
+          setProposalUrl(proposalUrl)
+        } else {
+          console.error(intl.formatMessage({ id: 'error.dao_proposal_url' }))
+        }
       }
     }
-  }, [proposals, address, isMobile])
+
+    getProposal()
+  }, [address, isMobile])
 
   return (
-    isDaoProposal && (
+    proposalUrl && (
       <div id="beneficiary">
         <Grid verticalAlign="middle">
           <Grid.Column className="beneficiaryContainer">
@@ -84,7 +67,7 @@ function Beneficiary(props) {
             floated="right"
             textAlign="right"
           >
-            {daoButton()}
+            <DaoInitiativeButton />
           </Grid.Column>
         </Grid>
       </div>
