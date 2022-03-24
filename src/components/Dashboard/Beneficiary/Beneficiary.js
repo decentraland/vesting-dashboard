@@ -63,7 +63,7 @@ function Beneficiary(props) {
             </Grid.Column>
           </Grid.Column>
           <Grid.Column
-            className={isMobile ? 'hidden' : 'button__column'}
+            className="button__column"
             floated="right"
             textAlign="right"
           >

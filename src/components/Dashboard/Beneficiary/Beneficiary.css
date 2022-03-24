@@ -38,10 +38,6 @@
   padding-right: 16px;
 }
 
-#beneficiary .hidden {
-  display: none;
-}
-
 .ui.button.daoProposal__button img {
   margin-left: 8px;
 }
@@ -49,5 +45,9 @@
 @media screen and (max-width: 767px) {
   .ui.button.daoProposal__button {
     padding: 10px;
+  }
+
+  #beneficiary .button__column {
+    display: none;
   }
 }
