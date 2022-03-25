@@ -7,10 +7,10 @@ Decentraland's [Vesting Dashboard](https://vesting.decentraland.org)
 This web UI works with any MANA, DAI, USDC or USDT Vesting Contract
 
 ### Desktop
-<img width="1440" alt="desktop view" src="https://user-images.githubusercontent.com/45410089/157481195-0f07edc1-5e56-478d-bd03-53a0afb77765.png">
+<img width="1440" alt="desktop view" src="https://user-images.githubusercontent.com/45410089/160152325-856b43a6-0792-4b8d-b090-356c1b1f8757.png">
 
 ### Mobile
-<img width="1440" alt="mobile view" src="https://user-images.githubusercontent.com/45410089/157279375-9ec9b920-30fe-42e1-b0e1-a64324ede161.png">
+<img width="1440" alt="mobile view" src="https://user-images.githubusercontent.com/45410089/160152465-b1a2ab64-99dc-4c0e-8103-edb1161e5ba5.png">
 
 ## Running the project
 
