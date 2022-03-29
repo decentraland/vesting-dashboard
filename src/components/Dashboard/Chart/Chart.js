@@ -349,6 +349,7 @@ function Chart(props) {
 
       fundsChart.setOption(option)
     }
+    // eslint-disable-next-line
   }, [isMobile, fundsChart])
 
   return <div id="chart" />

@@ -21,7 +21,7 @@ function DaoInitiativeButton() {
       <FormattedMessage
         id={isMobile ? 'beneficiary.button.mobile' : 'beneficiary.button'}
       />
-      <img src={ButtonIcon} aria-hidden="true" />
+      <img src={ButtonIcon} alt="" />
     </Button>
   )
 }

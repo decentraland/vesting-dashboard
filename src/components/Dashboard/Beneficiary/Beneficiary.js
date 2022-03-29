@@ -43,6 +43,7 @@ function Beneficiary(props) {
     }
 
     getProposal()
+    // eslint-disable-next-line
   }, [address, isMobile])
 
   return (

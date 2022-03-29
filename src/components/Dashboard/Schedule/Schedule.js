@@ -174,6 +174,7 @@ function Schedule(props) {
 
   useEffect(() => {
     scheduleEventsSetpUp()
+    // eslint-disable-next-line
   }, [revoked])
 
   const responsive = useResponsive()
