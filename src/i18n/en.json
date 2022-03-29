@@ -50,6 +50,7 @@
   "summary.text": "<b>Because of the {cliff}-{monthPl} cliff, no funds were vested before {cliffEnd}.</b>{br}{br}Vesting is <b>real-time</b> and the beneficiary is able to release funds as they are vested. The beneficiary has <b>released</b> from said funds, nearly {percentage}% of what is currently vested.{br}{br}By the end of this contract, the beneficiary will have banked, at the current rate, aprox. <b>${amount} USD</b>{br}{br}",
   "summary.review_contract": "Review smart contract",
   "details.beneficiary": "Beneficiary",
+  "details.change_beneficiary": "Change",
   "details.start": "Start",
   "details.end": "End",
   "details.cliff_period": "Cliff period",
@@ -58,5 +59,11 @@
   "details.released": "Released",
   "details.releasable": "Releasable",
   "details.release_funds": "Release funds",
-  "details.revocable": "Revocable"
+  "details.revocable": "Revocable",
+  "modal.title": "Change Beneficiary",
+  "modal.label": "Beneficiary address",
+  "modal.warning": "This is an irreversible operation. Please check the address carefully.",
+  "modal.button": "Transfer",
+  "modal.error": "This is not a valid Ethereum address",
+  "modal.success": "{address} {br} is the new beneficiary. Reload the page to see the reflected changes."
 }

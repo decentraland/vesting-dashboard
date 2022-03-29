@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Header, Popup, Button } from 'decentraland-ui'
 import {
   FormattedDate,
@@ -12,6 +12,7 @@ import AddressIcon from '../../../images/address_icon.svg'
 import './Details.css'
 import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 
 function addressShortener(address) {
   return address.substring(0, 6) + '...' + address.substring(38, 42)
@@ -124,6 +125,14 @@ function getRevocable(revocable) {
   )
 }
 
+function getActionButton(text, onClick) {
+  return (
+    <Button basic className="action" onClick={onClick}>
+      {text}
+    </Button>
+  )
+}
+
 function Details(props) {
   const { contract, isBeneficiary, onRelease } = props
   const {
@@ -142,10 +151,19 @@ function Details(props) {
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const closeModalHandler = () => setIsModalOpen(false)
+
   return (
     <div id="details" className={(isMobile && 'mobile') || ''}>
       <div className="divToStyle">
         {getBeneficiary(contract.beneficiary)}
+        {!isMobile &&
+          isBeneficiary &&
+          getActionButton(
+            <FormattedMessage id="details.change_beneficiary" />,
+            () => setIsModalOpen(true)
+          )}
         <div className="dates">
           {getDate('details.start', start)}
           {getDate('details.end', start + duration)}
@@ -165,16 +183,15 @@ function Details(props) {
         symbol,
         'helper.releasable'
       )}
-      {!isMobile && isBeneficiary && releasableAmount > 0 && (
-        <Button
-          basic
-          style={{ padding: 0, marginTop: '2px' }}
-          onClick={onRelease}
-        >
-          <FormattedMessage id="details.release_funds" />
-        </Button>
-      )}
+      {!isMobile &&
+        isBeneficiary &&
+        releasableAmount > 0 &&
+        getActionButton(
+          <FormattedMessage id="details.release_funds" />,
+          onRelease
+        )}
       {getRevocable(revocable)}
+      <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />
     </div>
   )
 }
