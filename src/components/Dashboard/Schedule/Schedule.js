@@ -17,7 +17,7 @@ function addReleasedEvent(eventList, amount, token, timestamp) {
     <ScheduleEvent
       message={
         <FormattedMessage
-          id="shedule.released"
+          id="schedule.released"
           values={{
             amount: <FormattedNumber value={Math.round(amount)} />,
             token: token,
@@ -33,7 +33,7 @@ function addFulfilledEvent(eventList, timestamp, future = false) {
   const props = { timestamp, future, key: 'fulfilled' }
   eventList.push(
     <ScheduleEvent
-      message={<FormattedMessage id="shedule.fulfilled" />}
+      message={<FormattedMessage id="schedule.fulfilled" />}
       {...props}
     />
   )
@@ -43,7 +43,7 @@ function addRevokedEvent(eventList, timestamp) {
   const props = { timestamp, key: 'revoked' }
   eventList.push(
     <ScheduleEvent
-      message={<FormattedMessage id="shedule.revoked" />}
+      message={<FormattedMessage id="schedule.revoked" />}
       {...props}
     />
   )
@@ -61,7 +61,7 @@ function Schedule(props) {
     const eventList = []
     eventList.push(
       <ScheduleEvent
-        message={<FormattedMessage id={'shedule.contract_started'} />}
+        message={<FormattedMessage id={'schedule.contract_started'} />}
         timestamp={start}
         key="contract_started"
       />
@@ -70,7 +70,7 @@ function Schedule(props) {
       <ScheduleEvent
         message={
           <FormattedMessage
-            id={'shedule.cliff_started'}
+            id={'schedule.cliff_started'}
             values={{
               months: vestingCliff,
               monthsPl: (
@@ -91,14 +91,14 @@ function Schedule(props) {
     if (new Date(cliff * 1000) < new Date()) {
       eventList.push(
         <ScheduleEvent
-          message={<FormattedMessage id="shedule.cliff_ended" />}
+          message={<FormattedMessage id="schedule.cliff_ended" />}
           timestamp={cliff}
           key="cliff_ended"
         />
       )
       eventList.push(
         <ScheduleEvent
-          message={<FormattedMessage id="shedule.vesting_begins" />}
+          message={<FormattedMessage id="schedule.vesting_begins" />}
           timestamp={cliff}
           key="vesting_begins"
         />
@@ -183,7 +183,7 @@ function Schedule(props) {
   return (
     <div className={`timeline ${revoked && 'revoked'}`}>
       <Header sub>
-        <FormattedMessage id="shedule.title" />
+        <FormattedMessage id="schedule.title" />
         <Info
           message={<FormattedMessage id="helper.vesting_schedule" />}
           position={`${isMobile ? 'right' : 'top'} center`}

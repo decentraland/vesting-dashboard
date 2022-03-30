@@ -65,7 +65,7 @@ function ChangeBeneficiaryModal(props) {
           <FormattedMessage id="modal.warning" />
         </p>
         <Field
-          onChange={(e, data) => {
+          onChange={(_, data) => {
             setAddress(data.value)
             setError(false)
           }}
