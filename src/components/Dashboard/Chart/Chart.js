@@ -138,18 +138,31 @@ function getLabelInterval(duration, isMobile) {
   )
 }
 
-function getTooltipFormatter(today, newName, intl, args) {
-  let tooltip = `<p>${args[0].axisValue}</p><table class='tooltip'>`
+function getTooltipFormatter(today, newName, intl, args, symbol, ticker) {
+  let tooltip = `<div class='tooltip'><p>${args[0].axisValue}</p><table>`
+
+  const getValue = (value) => (isNaN(value) ? value : Math.round(value))
+  const getFormattedValue = (value) =>
+    isNaN(value) ? value : intl.formatNumber(getValue(value))
 
   args.forEach(({ marker, seriesName, value }) => {
-    tooltip += `<tr><td>${marker} ${
-      args[0].dataIndex < today ? seriesName : newName
-    }</td><td><b>${
-      isNaN(value) ? value : intl.formatNumber(value)
-    }</b></td></tr>`
+    // prettier-ignore
+    tooltip += `
+    <tr>
+      <td>${marker} ${args[0].dataIndex < today ? seriesName : newName}</td>
+      <td>
+        <div>
+          <strong>${getFormattedValue(value)} ${symbol}</strong>
+        </div>
+        <div class='price ${symbol}'>
+          ${getFormattedValue((value | 0) * ticker)} USD
+        </div>
+      </td>
+    </tr>
+    `
   })
 
-  return tooltip + '</table>'
+  return tooltip + '</table></div>'
 }
 
 function resizeHandler(chart) {
@@ -159,7 +172,7 @@ function resizeHandler(chart) {
 }
 
 function Chart(props) {
-  const { contract } = props
+  const { contract, ticker } = props
   const { symbol, released, balance, start, cliff, duration, logs } = contract
   const total = balance + released
   const daysFromStart = getDaysFromStart(start) - 1
@@ -190,7 +203,9 @@ function Chart(props) {
           getDaysFromStart(start),
           toBeVestedLabel,
           intl,
-          args
+          args,
+          symbol,
+          symbol === 'MANA' ? ticker : 0
         ),
     },
     legend: {
