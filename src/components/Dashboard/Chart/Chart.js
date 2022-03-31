@@ -141,9 +141,8 @@ function getLabelInterval(duration, isMobile) {
 function getTooltipFormatter(today, newName, intl, args, symbol, ticker) {
   let tooltip = `<div class='tooltip'><p>${args[0].axisValue}</p><table>`
 
-  const getValue = (value) => (isNaN(value) ? value : Math.round(value))
   const getFormattedValue = (value) =>
-    isNaN(value) ? value : intl.formatNumber(getValue(value))
+    isNaN(value) ? value : intl.formatNumber(Math.round(value))
 
   args.forEach(({ marker, seriesName, value }) => {
     // prettier-ignore

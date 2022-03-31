@@ -28,13 +28,15 @@
   text-align: right;
 }
 
-.tooltip table tr:first-child>td {
+.tooltip table tr>td {
   padding-bottom: 5px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .tooltip table tr:last-child>td {
   padding-top: 5px;
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .tooltip table tr:only-child>td {
