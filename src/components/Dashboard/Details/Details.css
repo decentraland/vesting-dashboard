@@ -1,6 +1,48 @@
-.action-btn {
-  margin-left: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  color: var(--light-blue);
+#details .ui.header:not(.sub) {
+  margin-top: 2px;
+  font-size: 15px;
+}
+
+#details .ui.sub.header {
+  margin: 0;
+}
+
+#details .item {
+  margin-top: 16px;
+}
+
+#details .item.beneficiary .ui.header > img {
+  width: 13px;
+  margin-right: 5px;
+  padding-bottom: 5px;
+  margin-top: 0;
+}
+
+#details .action {
+  padding: 0; 
+  margin-top: 2px;
+}
+
+#details.mobile .dates,
+#details.mobile .item:not(.dates .item):not(:last-child) {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #d8d8d8;
+}
+
+#details.mobile .divToStyle {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#details.mobile .dates {
+  display: flex;
+  flex-direction: row;
+}
+
+#details.mobile .info {
+  float: right;
+}
+
+#details.mobile .dates .item:first-child {
+  margin-right: 80px;
 }

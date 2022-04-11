@@ -1,91 +1,197 @@
-import React, { Component } from 'react'
-import { Tooltip, LineChart, Line, XAxis, YAxis, ReferenceLine } from 'recharts'
-import * as numeral from 'numeral'
-import { colors, getToday } from 'utils'
 import './Schedule.css'
+import React, { useState, useEffect } from 'react'
+import { Header } from 'decentraland-ui'
+import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
+import Info from '../../Info/Info'
+import { getMonthDiff } from '../../../utils'
+import FutureIcon from '../../../images/future_events_icon.svg'
+import ScheduleEvent from './ScheduleEvent'
+import ShowMore from './ShowMore'
+import { Topic } from '../../../modules/constants'
+import useResponsive from '../../../hooks/useResponsive'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 
-const wrapperStyle = {
-  backgroundColor: 'black',
-  padding: 2,
-  borderColor: colors.darkGray,
+function addReleasedEvent(eventList, amount, token, timestamp) {
+  const props = { timestamp, key: timestamp }
+  eventList.push(
+    <ScheduleEvent
+      message={
+        <FormattedMessage
+          id="schedule.released"
+          values={{
+            amount: <FormattedNumber value={Math.round(amount)} />,
+            token: token,
+          }}
+        />
+      }
+      {...props}
+    />
+  )
 }
 
-const labelStyle = {
-  color: 'white',
+function addFulfilledEvent(eventList, timestamp, future = false) {
+  const props = { timestamp, future, key: 'fulfilled' }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.fulfilled" />}
+      {...props}
+    />
+  )
 }
 
-class YAxisTick extends React.PureComponent {
-  render() {
-    const { x, y, payload } = this.props
+function addRevokedEvent(eventList, timestamp) {
+  const props = { timestamp, key: 'revoked' }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.revoked" />}
+      {...props}
+    />
+  )
+}
 
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666">
-          {numeral(payload.value).format('0,0.0a').toUpperCase()}{' '}
-        </text>
-      </g>
+function Schedule(props) {
+  const { contract } = props
+  const { symbol, start, cliff, duration, logs } = contract
+  const vestingCliff = getMonthDiff(start, cliff)
+
+  const [scheduleEvents, setScheduleEvents] = useState([])
+  const [revoked, setRevoked] = useState(false)
+
+  const scheduleEventsSetpUp = (fullShow = false) => {
+    const eventList = []
+    eventList.push(
+      <ScheduleEvent
+        message={<FormattedMessage id={'schedule.contract_started'} />}
+        timestamp={start}
+        key="contract_started"
+      />
     )
-  }
-}
+    eventList.push(
+      <ScheduleEvent
+        message={
+          <FormattedMessage
+            id={'schedule.cliff_started'}
+            values={{
+              months: vestingCliff,
+              monthsPl: (
+                <FormattedPlural
+                  value={vestingCliff}
+                  one={<FormattedMessage id="global.month" />}
+                  other={<FormattedMessage id="global.month.plural" />}
+                />
+              ),
+            }}
+          />
+        }
+        timestamp={start}
+        key={'cliff_started'}
+      />
+    )
 
-class Schedule extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      width: 0,
-      height: 0,
+    if (new Date(cliff * 1000) < new Date()) {
+      eventList.push(
+        <ScheduleEvent
+          message={<FormattedMessage id="schedule.cliff_ended" />}
+          timestamp={cliff}
+          key="cliff_ended"
+        />
+      )
+      eventList.push(
+        <ScheduleEvent
+          message={<FormattedMessage id="schedule.vesting_begins" />}
+          timestamp={cliff}
+          key="vesting_begins"
+        />
+      )
     }
 
-    this.refContainer = this.refContainer.bind(this)
-  }
+    const endContractTs = start + duration
+    const endContractDate = new Date(endContractTs * 1000)
+    let fulfilledFlag = false
 
-  refContainer(element) {
-    if (element) {
-      const rect = element.getBoundingClientRect()
-      if (this.state.width !== rect.width || this.state.height !== rect.height) {
-        this.setState({
-          width: rect.width,
-          height: rect.height,
-        })
+    const addEventHandler = (log) => {
+      const logData = log.data
+      switch (log.topic) {
+        case Topic.RELEASE:
+          addReleasedEvent(eventList, logData.amount, symbol, logData.timestamp)
+          break
+
+        case Topic.REVOKE:
+          setRevoked(true)
+          addRevokedEvent(eventList, logData.timestamp)
+          break
+
+        default:
+          break
       }
     }
+
+    if (logs.length > 0) {
+      if (logs.length > 1 && !fullShow) {
+        eventList.push(
+          <ShowMore key="showMore" onClick={() => scheduleEventsSetpUp(true)} />
+        )
+        const latestLog = logs[logs.length - 1]
+        const { timestamp } = latestLog.data
+
+        if (new Date(timestamp * 1000) > endContractDate) {
+          fulfilledFlag = true
+        }
+
+        addEventHandler(latestLog)
+      } else {
+        for (const log of logs) {
+          const { timestamp } = log.data
+          if (!fulfilledFlag && new Date(timestamp * 1000) > endContractDate) {
+            fulfilledFlag = true
+            addFulfilledEvent(eventList, endContractTs)
+          }
+
+          addEventHandler(log)
+        }
+      }
+    }
+
+    if (!revoked) {
+      if (!fulfilledFlag) {
+        if (new Date() >= new Date(endContractTs * 1000)) {
+          addFulfilledEvent(eventList, endContractTs)
+        } else {
+          eventList.push(
+            <ScheduleEvent
+              message={<img src={FutureIcon} className="Future__Icon" alt="" />}
+              key="Future__Icon"
+              future
+            />
+          )
+          addFulfilledEvent(eventList, 0, true)
+        }
+      }
+    }
+
+    setScheduleEvents(eventList)
   }
 
-  renderX = (props) => {
-    const { x, y, payload } = props
-    const { schedule } = this.props
-    return (
-      <g transform={`translate(${x},${y})`}>
-        <text x={0} y={0} dy={16} textAnchor="end" fill="#666">
-          {schedule[payload.index].label}
-        </text>
-      </g>
-    )
-  }
+  useEffect(() => {
+    scheduleEventsSetpUp()
+    // eslint-disable-next-line
+  }, [revoked])
 
-  render() {
-    const { schedule } = this.props
-    return (
-      <div className="schedule" ref={this.refContainer}>
-        <h3>Schedule</h3>
-        <LineChart
-          width={this.state.width}
-          height={this.state.height - 50}
-          data={schedule}
-          margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
-        >
-          <XAxis dataKey="label" stroke={colors.darkGray} tick={this.renderX} />
-          <YAxis stroke={colors.darkGray} tick={<YAxisTick />} />
-          <Line dataKey="MANA" />
-          <Line dataKey="USD" />
-          <Line dataKey="amount" stroke={colors.green} strokeWidth={2} />
-          <Tooltip wrapperStyle={wrapperStyle} labelStyle={labelStyle} />
-          <ReferenceLine x={getToday()} stroke={colors.lightBlue} />
-        </LineChart>
-      </div>
-    )
-  }
+  const responsive = useResponsive()
+  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+
+  return (
+    <div className={`timeline ${revoked && 'revoked'}`}>
+      <Header sub>
+        <FormattedMessage id="schedule.title" />
+        <Info
+          message={<FormattedMessage id="helper.vesting_schedule" />}
+          position={`${isMobile ? 'right' : 'top'} center`}
+        />
+      </Header>
+      <ul>{scheduleEvents}</ul>
+    </div>
+  )
 }
 
-export default Schedule
+export default React.memo(Schedule)

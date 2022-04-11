@@ -1,0 +1,52 @@
+.ui.grid.overview {
+  width: 100%;
+  margin: 3% 0;
+}
+
+.ui.grid.overview .contract .header {
+  margin: 0;
+  margin-bottom: 2%;
+}
+
+.ui.grid.overview .contract .header img {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.ui.grid.overview .header a img {
+  display: inline-block;
+  height: auto;
+  vertical-align: middle;
+  margin-right: 5px !important;
+}
+
+.ui.grid.ui.grid.overview .TokenLogo {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+}
+
+.ui.grid.ui.grid.overview .Info {
+  width: fit-content;
+}
+
+@media only screen and (max-width: 767px) {
+  .ui.grid.ui.grid.overview .Info {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  .ui.grid.ui.grid.overview .header.sub {
+    font-size: 0.6em;
+  }
+  
+  .ui.grid.ui.grid.overview .TokenLogo .dcl.logo {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .ui.grid.ui.grid.overview .TokenContract {
+    font-size: 1.4em;
+  }
+}

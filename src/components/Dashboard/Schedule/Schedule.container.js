@@ -1,13 +1,11 @@
 import { connect } from 'react-redux'
-import { getSchedule } from 'modules/contract/selectors'
+import { getContract } from '../../../modules/contract/selectors'
 import Schedule from './Schedule'
 
-export const mapState = state => {
+export const mapState = (state) => {
   return {
-    schedule: getSchedule(state)
+    contract: getContract(state),
   }
 }
 
-export const mapDispatch = dispatch => ({})
-
-export default connect(mapState, mapDispatch)(Schedule)
+export default connect(mapState)(Schedule)

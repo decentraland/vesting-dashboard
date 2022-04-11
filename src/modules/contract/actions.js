@@ -100,12 +100,19 @@ export function changeBeneficiaryFailure(address, error) {
 export function changeBeneficiary(address) {
   return async (dispatch, getState, api) => {
     dispatch(changeBeneficiaryRequest(address))
-    try {
-      await api.changeBeneficiary(address)
-      dispatch(changeBeneficiarySuccess(address))
-      return address
-    } catch (e) {
-      dispatch(changeBeneficiaryFailure(address, e.message))
-    }
+
+    return new Promise((resolve, reject) => {
+      api
+        .changeBeneficiary(address)
+        .then(() => {
+          dispatch(changeBeneficiarySuccess(address))
+          resolve(address)
+        })
+        .catch((e) => {
+          dispatch(changeBeneficiaryFailure(address, e.message))
+          reject(e)
+        })
+    })
+
   }
 }

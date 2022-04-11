@@ -1,2 +1,2 @@
-import Bar from "./Bar";
-export default Bar;
+import Bar from './Bar'
+export default Bar

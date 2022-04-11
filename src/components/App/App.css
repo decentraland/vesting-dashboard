@@ -1,56 +1,29 @@
-.app {
-  display: flex;
-  flex-flow: column nowrap;
+.Landing, .Error, .Loading {
   height: 100%;
-}
-
-.app .decentraland-logo {
-  display: inline-block;
-  width: 100px;
-  height: 100px;
-  background-position: 0 0;
-  background-image: url(../../images/logo.svg);
-  background-size: cover;
-  margin-bottom: 50px;
-}
-
-.app .error {
-  color: gray;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.app .error a {
-  color: var(--green);
-  text-decoration: none;
-}
-
-.app .container .error {
-  height: 40px;
-}
-.app .container .loading-message {
-  height: 105px;
-  color: gray;
-}
-
-.app .container {
-  height: 100%;
-  display: flex;
-  flex-flow: column nowrap;
+  display: flex !important;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.app .container h3 {
+.app.start .dcl.logo {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 50px;
+}
+
+.Landing h3, .Error h3 {
   font-size: 20px;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.app .container input {
+.Landing input {
   width: 70%;
   max-width: 300px;
 }
 
-.app .container .help {
-  color: gray;
+.Landing .help {
+  color: var(--gray);
   font-size: 12px;
+  margin: 12px 0;
 }

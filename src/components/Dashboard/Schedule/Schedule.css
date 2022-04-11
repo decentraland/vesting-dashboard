@@ -1,52 +1,106 @@
-.schedule {
-  flex: 1 0 auto;
-  display: flex;
-  flex-flow: column nowrap;
+.timeline {
+  width: 100%;
+  --future-color: rgba(115, 110, 125, 0.5);
+  --rovoked-color: #ff2d55;
+  margin-bottom: 30px;
 }
 
-.schedule h3 {
-  margin-left: 50px;
+.timeline ul {
+  list-style: none;
+  margin: 0;
+  padding-left: 30px;
+}
+
+.timeline ul li {
+  position: relative;
+}
+
+.timeline ul li.more .ui.header {
+  color: var(--green);
+}
+
+.timeline.revoked ul li.more .ui.header {
+  color: var(--rovoked-color);
+}
+
+.timeline ul li.future .ui.header {
+  color: var(--future-color);
+}
+
+.timeline ul li::before {
+  content: ' ';
+  border: 0.33em solid var(--green);
+  outline: 0.28em solid white;
+  background-color: var(--green);
+  border-radius: 100%;
+  width: 1em;
+  height: 1em;
+  padding: 0.25em;
+  margin-right: 1.5em;
+  margin-left: -1em; 
+  display: inline-table;
+  vertical-align: middle;
+  font-size: xx-small;
+  margin-left: -30px;
   margin-top: 10px;
 }
 
-circle.recharts-dot.recharts-line-dot {
-  display: none;
+.timeline.revoked ul li::before {
+  border: 0.33em solid var(--rovoked-color);
+  background-color: var(--rovoked-color);
 }
 
-.recharts-tooltip-item {
-  color: var(--gray) !important;
-  font-size: 10px;
-  padding: 0px 5px;
+.timeline ul li.more::before {
+  background-color: white;
 }
 
-.recharts-cartesian-axis-tick-value {
-  font-size: 12px;
+.timeline ul li.future::before {
+  border: 0.33em solid var(--future-color);
+  background-color: white;
 }
 
-.recharts-layer.recharts-cartesian-axis-tick text {
-  font-size: 12px;
+.timeline ul li div.timeline__event::before {
+  content: '';
+  position: absolute;
+  border-left: 2px solid var(--green);
+  top: -16px;
+  left: -1.85em;
+  bottom: 0;
+  z-index: -1;
+  height: 100%;
 }
 
-.yAxis .recharts-cartesian-axis-tick:nth-child(1) {
-  display: none;
+.timeline.revoked ul li div.timeline__event::before {
+  border-left: 2px solid var(--rovoked-color);
 }
 
-.recharts-tooltip-label {
-  font-size: 12px;
-  padding: 5px;
-  color: black !important;
+.timeline ul li.future div.timeline__event::before {
+  border-left: 2px solid var(--future-color);
 }
 
-.recharts-tooltip-item-list li:last-child {
-  display: none !important;
+ul li:first-child div.timeline__event:before {
+  content: none;
 }
 
-.recharts-default-tooltip {
-  background-color: white !important;
-  border: 1px solid var(--light-gray) !important;
+ul li:last-child {
+  padding-bottom: 0;
 }
 
-.recharts-tooltip-wrapper {
-  border: none !important;
-  padding: 0px !important;
+.timeline .timeline__event {
+  display: inline-table;
+  vertical-align: middle;
+  margin-top: 10px;
+}
+
+.ui.header > img.Future__Icon {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  margin-bottom: 4px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+  .timeline ul li div.timeline__event::before {
+    top: -35px;
+  }
 }

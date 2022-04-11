@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import moment from 'moment'
-import { getTicker } from 'modules/ticker/selectors'
-import { toUSD } from 'utils'
+import { getTicker } from '../ticker/selectors'
+import { toUSD } from '../../utils'
 
 export const getState = (state) => state.app.contract
 export const getContract = (state) => getState(state).data
@@ -22,7 +22,6 @@ export const getSchedule = createSelector(getContract, getTicker, (contract, tic
   while (!finished) {
     const amount = (((currentDate.toDate() - startDate) / (endDate - startDate)) * total) | 0
 
-    console.log(currentDate.toDate(), cliffDate, currentDate.toDate() > cliffDate)
     data.push({
       MANA: currentDate.toDate() > cliffDate ? amount : 0,
       USD: currentDate.toDate() > cliffDate ? toUSD(amount, ticker) : 0,
@@ -32,6 +31,5 @@ export const getSchedule = createSelector(getContract, getTicker, (contract, tic
     finished = currentDate.toDate() > endDate
     currentDate.endOf('month').add(1, 'days')
   }
-  console.log(data)
   return data
 })

@@ -1,0 +1,53 @@
+#beneficiary {
+  background: rgba(84, 96, 156, 0.15);
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+}
+
+#beneficiary .header {
+  margin: 0;
+  font-size: 17px;
+  text-transform: none;
+}
+
+#beneficiary .ui.sub.header {
+  font-size: 15px;
+}
+
+#beneficiary .column {
+  padding-right: 0;
+}
+
+#beneficiary .button__column {
+  width: fit-content;
+  padding-right: 14px;
+  padding-left: 0;
+}
+
+#beneficiary .beneficiaryContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+#beneficiary .beneficiaryText {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.ui.button.daoProposal__button img {
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 767px) {
+  .ui.button.daoProposal__button {
+    padding: 10px;
+  }
+
+  #beneficiary .button__column {
+    display: none;
+  }
+}

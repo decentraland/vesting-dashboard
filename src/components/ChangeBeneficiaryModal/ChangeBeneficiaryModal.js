@@ -1,49 +1,92 @@
-import React from 'react'
-import Modal from 'components/Modal'
-import Button from 'components/Button'
-import Input from 'components/Input'
-import { isValidAddress } from 'utils'
+import { Close, Field, Modal, Button } from 'decentraland-ui'
+import React, { useState } from 'react'
+import { FormattedMessage } from 'react-intl'
+import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
 
-export default class ChangeBeneficiaryModal extends React.PureComponent {
-  constructor(props) {
-    super(props)
-    this.state = {
-      address: ''
+function ChangeBeneficiaryModal(props) {
+  const { open, onClose, onSubmit } = props
+
+  const [state, setState] = useState({
+    address: '',
+    error: false,
+    errorMessage: '',
+    loading: false,
+    successMessage: '',
+  })
+
+  const setAddress = (addr) => setState((prev) => ({ ...prev, address: addr }))
+  const setError = (isError, msg = '') =>
+    setState((prev) => ({ ...prev, error: isError, errorMessage: msg }))
+  const setLoading = (isLoading) =>
+    setState((prev) => ({ ...prev, loading: isLoading }))
+  const setSuccess = (msg = '') =>
+    setState((prev) => ({ ...prev, successMessage: msg }))
+
+  const transfer = () => {
+    if (isValidAddress(state.address)) {
+      setLoading(true)
+      setError(false)
+      onSubmit(state.address)
+        .then((addr) => {
+          setLoading(false)
+          setSuccess(
+            <FormattedMessage
+              id="modal.success"
+              values={{
+                address: addr,
+                br: <br />,
+              }}
+            />
+          )
+        })
+        .catch((e) => {
+          setLoading(false)
+          setError(true, e.message)
+        })
+    } else {
+      setError(true, <FormattedMessage id="modal.error" />)
     }
   }
 
-  handleSubmit = () => {
-    if (isValidAddress(this.state.address)) {
-      this.props.onSubmit(this.state.address)
-    }
-  }
-
-  handleChange = e => {
-    this.setState({ address: e.target.value.trim() })
-  }
-
-  render() {
-    const { isOpen, onClose } = this.props
-    return (
-      <Modal isOpen={isOpen} onOverlayClick={onClose} onEsc={onClose} onEnter={this.handleSubmit}>
-        <Modal.Header onClose={onClose}>Change Beneficiary</Modal.Header>
-        <Modal.Body>
-          <label>Beneficiary address</label>
-          <Input
-            value={this.state.address}
-            placeholder="0x..."
-            onChange={this.handleChange}
-            className="beneficiary-address-input"
-          />
-          <p>This is an irreversible operation. Please check the address carefully.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button disabled={!isValidAddress(this.state.address)} onClick={this.handleSubmit}>
-            TRANSFER
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    )
-  }
+  return (
+    <Modal
+      className="changeBeneficiaryModal"
+      size="small"
+      open={open}
+      onClose={onClose}
+      closeIcon={<Close />}
+    >
+      <Modal.Header>
+        <FormattedMessage id="modal.title" />
+      </Modal.Header>
+      <Modal.Content>
+        <p>
+          <FormattedMessage id="modal.warning" />
+        </p>
+        <Field
+          onChange={(_, data) => {
+            setAddress(data.value)
+            setError(false)
+          }}
+          label={<FormattedMessage id="modal.label" />}
+          placeholder="0x..."
+          error={state.error}
+          message={state.errorMessage}
+          loading={state.loading}
+          disabled={state.loading}
+        />
+      </Modal.Content>
+      <Modal.Actions>
+        <Button primary onClick={transfer} disabled={state.loading}>
+          <FormattedMessage id="modal.button" />
+        </Button>
+      </Modal.Actions>
+      <Modal.Content>
+        <p className="success">{state.successMessage}</p>
+      </Modal.Content>
+    </Modal>
+  )
 }
+
+export default ChangeBeneficiaryModal

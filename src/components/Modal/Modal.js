@@ -7,13 +7,13 @@ export default class Modal extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
     isOpen: PropTypes.bool.isRequired,
-    children: PropTypes.node
+    children: PropTypes.node,
   }
   static defaultProps = {
     className: '',
-    isOpen: false
+    isOpen: false,
   }
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     const { onEnter, onEsc } = this.props
     if (e.which === 13 && onEnter) {
       onEnter()
@@ -23,7 +23,7 @@ export default class Modal extends React.PureComponent {
     }
   }
 
-  handleClick = e => {
+  handleClick = (e) => {
     e.stopPropagation()
   }
 
@@ -35,8 +35,17 @@ export default class Modal extends React.PureComponent {
 
     return (
       <div className={containerClassName} onKeyDown={this.handleKeyDown}>
-        <div className={modalClassName} tabIndex="-1" role="dialog" onClick={onOverlayClick}>
-          <div className="modal-dialog" role="document" onClick={this.handleClick}>
+        <div
+          className={modalClassName}
+          tabIndex="-1"
+          role="dialog"
+          onClick={onOverlayClick}
+        >
+          <div
+            className="modal-dialog"
+            role="document"
+            onClick={this.handleClick}
+          >
             <div className="modal-content">{children}</div>
           </div>
         </div>
@@ -50,7 +59,12 @@ export class ModalCloseButton extends React.PureComponent {
   render() {
     const { onClose, children } = this.props
     return (
-      <button type="button" className="close btn btn-secondary" data-dismiss="modal" onClick={onClose}>
+      <button
+        type="button"
+        className="close btn btn-secondary"
+        data-dismiss="modal"
+        onClick={onClose}
+      >
         {children}
       </button>
     )
@@ -60,10 +74,10 @@ export class ModalCloseButton extends React.PureComponent {
 export class ModalBody extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
   }
   static defaultProps = {
-    className: ''
+    className: '',
   }
   render() {
     const { children, className } = this.props
@@ -75,10 +89,10 @@ export class ModalBody extends React.PureComponent {
 export class ModalFooter extends React.PureComponent {
   static propTypes = {
     className: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
   }
   static defaultProps = {
-    className: ''
+    className: '',
   }
   render() {
     const { children, className } = this.props
@@ -95,7 +109,7 @@ export class ModalHeader extends React.PureComponent {
       <div className={classes}>
         {onClose && (
           <ModalCloseButton onClose={onClose}>
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times</span>
           </ModalCloseButton>
         )}
         <div className="banner">

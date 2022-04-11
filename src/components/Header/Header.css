@@ -1,45 +1,27 @@
 .header {
-  height: 100px;
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center;
   border-bottom: 1px solid var(--light-gray);
 }
 
-.header-left {
-  width: 300px;
-  height: 52px;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  -webkit-font-smoothing: antialiased;
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-
-.header-icon {
-  display: inline-block;
-  width: 52px;
-  height: 52px;
-  background-position: center;
-  background-image: url(../../images/logo.svg);
-  background-size: cover;
+.header .dcl.logo {
+  vertical-align: middle;
+  margin: 10px 0;
 }
 
 .header-title {
-  margin-left: 12px;
   font-weight: 600;
   font-size: 19px;
-}
-
-.header-right {
-  height: 100px;
   display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-end;
 }
 
-.header-contract-address {
-  color: var(--gray);
-  font-size: 12px;
+.header .dcl.user-menu .toggle,
+.header .dcl.user-menu .toggle .avatar-face {
+  width: 36px;
+  height: 36px;
+}
+
+@media screen and (min-width: 768px) {
+  .header .dcl.logo {
+    height: 36px;
+    width: 36px;
+  }
 }

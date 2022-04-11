@@ -1,18 +1,3 @@
-.dashboard {
-  flex: 1 0 auto;
-  display: flex;
-  flex-flow: row nowrap;
-  margin: 20px 0px;
-}
-
-.dashboard-left {
-  width: 50%;
-  display: flex;
-  flex-flow: column nowrap;
-}
-
-.dashboard-right {
-  width: 50%;
-  display: flex;
-  flex-flow: column nowrap;
+.ui.container.dashboard {
+  height: auto;
 }
