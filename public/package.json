@@ -1,0 +1,13 @@
+{
+  "name": "@dcl/vesting-dashboard",
+  "version": "0.1.0",
+  "description": "Static website for the vesting dashboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "homepage": ""
+}

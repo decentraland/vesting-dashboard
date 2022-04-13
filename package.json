@@ -1,5 +1,5 @@
 {
-  "name": "vesting-dashboard",
+  "name": "@dcl/vesting-dashboard",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,7 +33,7 @@
     "build": "react-scripts build && rimraf docs && mv build docs && cp CNAME docs/CNAME",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prepush": "npm run build && (git add . && git commit -m'build' || true)"
+    "postinstall": "node ./scripts/prebuild.js"
   },
   "browserslist": {
     "production": [
@@ -46,5 +46,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage": ""
 }
