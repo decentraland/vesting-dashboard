@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rimraf docs && mv build docs && cp CNAME docs/CNAME",
+    "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "postinstall": "node ./scripts/prebuild.js"
