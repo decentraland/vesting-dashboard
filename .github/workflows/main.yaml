@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - master
+
+name: CI
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Use Node.js 14.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - name: Set package.json version
+        uses: menduz/oddish-action@master
+        with:
+          deterministic-snapshot: true
+          only-update-versions: true
+      - name: Copy Env
+        run: ./scripts/copyEnv.sh ${{ github.ref_name }} ./config
+      - name: Install
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Publish
+        uses: menduz/oddish-action@master
+        with:
+          cwd: './build'
+          deterministic-snapshot: true
+          registry-url: 'https://registry.npmjs.org'
+          access: public
+          gitlab-token: ${{ secrets.GITLAB_CDN_DEPLOYER_TOKEN }}
+          gitlab-pipeline-url: ${{ secrets.GITLAB_CDN_DEPLOYER_URL }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
