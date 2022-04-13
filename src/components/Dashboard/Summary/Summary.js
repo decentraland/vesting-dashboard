@@ -41,6 +41,16 @@ function Summary(props) {
               day="numeric"
             />
           ),
+          nearly:
+            percentage > 0 ? (
+              <>
+                ,&nbsp;
+                <FormattedMessage id="summary.nearly" />
+                &nbsp;
+              </>
+            ) : (
+              <>&nbsp;</>
+            ),
           percentage: <FormattedNumber value={percentage} />,
           amount: (
             <FormattedNumber
