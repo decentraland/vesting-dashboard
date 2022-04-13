@@ -2,6 +2,9 @@ on:
   push:
     branches:
       - master
+  release:
+    types:
+      - created
 
 name: CI
 jobs:
@@ -19,7 +22,7 @@ jobs:
           deterministic-snapshot: true
           only-update-versions: true
       - name: Copy Env
-        run: ./scripts/copyEnv.sh ${{ github.ref_name }} ./config
+        run: cp .env.example .env
       - name: Install
         run: npm install
       - name: Build
