@@ -22,9 +22,7 @@ export default class API {
   getWeb3() {
     if (this.web3 === null) {
       this.web3 = new Web3(
-        new Web3.providers.HttpProvider(
-          `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`
-        )
+        new Web3.providers.HttpProvider('https://rpc.decentraland.org/mainnet')
       )
     }
 
