@@ -22,7 +22,7 @@ First copy the `.env.example` file to `.env` using:
 cp .env.example .env
 ```
 
-and, in `.env`, add your [INFURA API key](https://infura.io/) in the variable `REACT_APP_INFURA_API_KEY`.
+and, in `.env`, change any variable you need.
 
 Then:
 
