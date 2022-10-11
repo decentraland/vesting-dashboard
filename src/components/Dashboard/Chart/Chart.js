@@ -85,7 +85,7 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
     return []
   }
 
-  const today = getDaysFromStart(start)
+  const today = getDaysFromStart(start) + 1
   const cliffEndDay = getCliffEndDay(start, cliff)
   const releaseDays = releaseLogs.map((log) =>
     Math.ceil((log.timestamp - start) / DAY_IN_SECONDS)
@@ -174,7 +174,10 @@ function Chart(props) {
   const { contract, ticker } = props
   const { symbol, released, balance, start, cliff, duration, logs } = contract
   const total = balance + released
-  const daysFromStart = getDaysFromStart(start) - 1
+
+  const today = Math.floor(new Date().getTime() / 1000)
+  const daysFromStart = start > today ? 0 : getDaysFromStart(start)
+
   const releaseLogs = logs
     .filter((log) => log.topic === Topic.RELEASE)
     .map((log) => log.data)
@@ -199,7 +202,7 @@ function Chart(props) {
       trigger: 'axis',
       formatter: (args) =>
         getTooltipFormatter(
-          getDaysFromStart(start),
+          getDaysFromStart(start) + 1,
           toBeVestedLabel,
           intl,
           args,
@@ -282,7 +285,7 @@ function Chart(props) {
                   ? intl.formatMessage({ id: 'chart.revoked' })
                   : intl.formatMessage({ id: 'chart.today' })
               }`,
-              xAxis: isRevoked ? revokedDay : getDaysFromStart(start) - 1,
+              xAxis: isRevoked ? revokedDay : getDaysFromStart(start),
               label: {
                 formatter: '{b}',
                 show: true,
@@ -317,7 +320,7 @@ function Chart(props) {
       pieces: [
         {
           lte: daysFromStart,
-          gt: 0,
+          gt: -1,
           color: '#44B600',
         },
         {
