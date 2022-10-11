@@ -9,10 +9,7 @@ export function getCliffEndDay(start, cliff) {
 }
 
 export function getDaysFromStart(start) {
-  return (
-    Math.ceil((new Date() - new Date(start * 1000)) / (DAY_IN_SECONDS * 1000)) +
-    1
-  )
+  return Math.ceil((new Date() - new Date(start * 1000)) / (DAY_IN_SECONDS * 1000))
 }
 
 export function getDaysFromRevoke(revokeTs, start) {
