@@ -7,6 +7,10 @@ on:
         description: 'NPM Version of the release (@dcl/vesting-dashboard)'
         required: true
         default: ''
+      percentage:
+        description: 'Percentage of users getting this version'
+        required: true
+        default: '0'
       deploymentDomain:
         type: 'choice'
         description: 'Deployment domain'
@@ -38,4 +42,4 @@ jobs:
           # Rollout information
           deploymentDomain: vesting.decentraland${{ github.event.inputs.deploymentDomain }}
           deploymentName: '_site'
-          percentage: 100
+          percentage: ${{ github.event.inputs.percentage }}
