@@ -24,7 +24,6 @@ import {
   toDataArray,
   emptyDataArray,
 } from './utils'
-import { Topic } from '../../../modules/constants'
 
 function getRevokedData(revokeLog, start) {
   const isRevoked = revokeLog.length > 0
@@ -171,7 +170,7 @@ function resizeHandler(chart) {
 }
 
 function Chart(props) {
-  const { contract, ticker } = props
+  const { contract, ticker, Topic } = props
   const { symbol, released, balance, start, cliff, duration, logs } = contract
   const total = balance + released
 

@@ -7,7 +7,6 @@ import { getMonthDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
-import { Topic } from '../../../modules/constants'
 import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 
@@ -50,7 +49,7 @@ function addRevokedEvent(eventList, timestamp) {
 }
 
 function Schedule(props) {
-  const { contract } = props
+  const { contract, Topic } = props
   const { symbol, start, cliff, duration, logs } = contract
   const vestingCliff = getMonthDiff(start, cliff)
 

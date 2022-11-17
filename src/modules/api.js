@@ -7,7 +7,7 @@ import usdtAbi from '../abi/usdt.json'
 import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
-import { TokenAddressByChainId, Topic } from './constants'
+import { TokenAddressByChainId, TopicByVersion } from './constants'
 import Big from 'big.js'
 
 let vesting, tokenContracts
@@ -214,6 +214,8 @@ export default class API {
     const logs = []
     let cumulativeReleased = 0
 
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
     for (const idx in web3Logs) {
       switch (web3Logs[idx].topics[0]) {
         case Topic.TRANSFER_OWNERSHIP:
@@ -248,6 +250,8 @@ export default class API {
   }
 
   getTransferOwnershipLog(topics, timestamp) {
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
     return {
       topic: Topic.TRANSFER_OWNERSHIP,
       data: {
@@ -262,6 +266,9 @@ export default class API {
     const totalReleased = Big(Number(data) || 0).div(10 ** decimals)
     const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
     const currentReleased = totalReleased.minus(cumulative)
+
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
     return {
       topic: Topic.RELEASE,
       data: {
@@ -273,6 +280,8 @@ export default class API {
   }
 
   getRevokeLog(timestamp) {
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
     return {
       topic: Topic.REVOKE,
       data: {
@@ -312,5 +321,14 @@ export default class API {
   async getNetwork() {
     const chainId = await this.getEth().getChainId()
     return { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }
+  }
+
+  getTopicAddressesForCurrentVersion() {
+    const state = this.store.getState()
+    const version = getVersion(state)
+
+    console.log(TopicByVersion[version])
+
+    return TopicByVersion[version]
   }
 }
