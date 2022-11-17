@@ -8,16 +8,6 @@ export const getContract = (state) => getState(state).data
 export const isLoading = (state) => getState(state).loading
 export const getError = (state) => getState(state).error
 
-export const getChainId = (state) => {
-  const { location } = state.routing
-
-  if (!location) {
-    return null
-  }
-
-  return new URLSearchParams(location.search).get('chainId')
-}
-
 export const getPathnameSplit = (state) =>
   state.routing.location?.pathname.split('/') || null
 
