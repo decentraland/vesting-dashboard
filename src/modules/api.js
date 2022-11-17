@@ -1,4 +1,4 @@
-import { getAddress } from './contract/selectors'
+import { getAddress, getVersion } from './contract/selectors'
 import { getAddress as getFrom } from './ethereum/selectors'
 import Web3 from 'web3'
 import manaAbi from '../abi/mana.json'
@@ -6,7 +6,8 @@ import daiAbi from '../abi/dai.json'
 import usdtAbi from '../abi/usdt.json'
 import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
-import { TokenAddress, Topic } from './constants'
+import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
+import { TokenAddressByChainId, Topic } from './constants'
 import Big from 'big.js'
 
 let vesting, tokenContracts
@@ -48,27 +49,41 @@ export default class API {
     } catch {
       console.error('Metamask not found')
     }
+
     const state = this.store.getState()
     const address = getAddress(state)
-
+    const version = getVersion(state)
+    const abi = version === 'v1' ? vestingAbi : periodicTokenVestingAbi
     const eth = this.getEth()
-    vesting = new eth.Contract(vestingAbi, address)
+    const chainId = await eth.getChainId()
+    const TokenAddress = TokenAddressByChainId[chainId]
+
+    vesting = new eth.Contract(abi, address)
+
     tokenContracts = {
       [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
       [TokenAddress.DAI]: new eth.Contract(daiAbi, TokenAddress.DAI),
       [TokenAddress.USDT]: new eth.Contract(usdtAbi, TokenAddress.USDT),
       [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
     }
+
     return this.localWallet
   }
 
   async fetchContract() {
     const state = this.store.getState()
     const address = getAddress(state)
+    const version = getVersion(state)
 
-    const tokenContractAddress = (
-      await vesting.methods.token().call()
-    ).toLowerCase()
+    let tokenContractAddress
+
+    if (version === 'v1') {
+      tokenContractAddress = await vesting.methods.token().call()
+    } else {
+      tokenContractAddress = await vesting.methods.getToken().call()
+    }
+
+    tokenContractAddress = tokenContractAddress.toLowerCase()
 
     if (!(tokenContractAddress in tokenContracts)) {
       throw new Error('Token not supported')
@@ -78,9 +93,46 @@ export default class API {
       .decimals()
       .call()
 
+    const promises = {
+      v1: {
+        duration: () => vesting.methods.duration().call(),
+        cliff: () => vesting.methods.cliff().call(),
+        beneficiary: () => vesting.methods.beneficiary().call(),
+        vestedAmount: () => vesting.methods.vestedAmount().call(),
+        releasableAmount: () => vesting.methods.releasableAmount().call(),
+        revoked: () => vesting.methods.revoked().call(),
+        revocable: () => vesting.methods.revocable().call(),
+        released: () => vesting.methods.released().call(),
+        start: () => vesting.methods.start().call(),
+        periodDuration: () => Promise.resolve('0'),
+        vestedPerPeriod: () => Promise.resolve([]),
+        paused: () => Promise.resolve(false),
+        pausable: () => Promise.resolve(false),
+        stop: () => Promise.resolve('0'),
+      },
+      v2: {
+        duration: () => Promise.resolve('0'),
+        cliff: () => vesting.methods.getCliff().call(),
+        beneficiary: () => vesting.methods.getBeneficiary().call(),
+        vestedAmount: () => vesting.methods.getVested().call(),
+        releasableAmount: () => vesting.methods.getReleasable().call(),
+        revoked: () => vesting.methods.getIsRevoked().call(),
+        revocable: () => vesting.methods.getIsRevocable().call(),
+        released: () => vesting.methods.getReleased().call(),
+        start: () => vesting.methods.getStart().call(),
+        periodDuration: () => vesting.methods.getPeriod().call(),
+        vestedPerPeriod: () => vesting.methods.getVestedPerPeriod().call(),
+        paused: () => vesting.methods.paused().call(),
+        pausable: () => vesting.methods.getIsPausable().call(),
+        stop: () => vesting.methods.getStop().call(),
+      },
+    }
+
     const [
       symbol,
       balance,
+      logs,
+      owner,
       duration,
       cliff,
       beneficiary,
@@ -88,24 +140,32 @@ export default class API {
       releasableAmount,
       revoked,
       revocable,
-      owner,
       released,
       start,
-      logs,
+      periodDuration,
+      vestedPerPeriod,
+      paused,
+      pausable,
+      stop,
     ] = await Promise.all([
       tokenContracts[tokenContractAddress].methods.symbol().call(),
       tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
-      vesting.methods.duration().call(),
-      vesting.methods.cliff().call(),
-      vesting.methods.beneficiary().call(),
-      vesting.methods.vestedAmount().call(),
-      vesting.methods.releasableAmount().call(),
-      vesting.methods.revoked().call(),
-      vesting.methods.revocable().call(),
-      vesting.methods.owner().call(),
-      vesting.methods.released().call(),
-      vesting.methods.start().call(),
       this.getLogs(decimals),
+      vesting.methods.owner().call(),
+      promises[version].duration(),
+      promises[version].cliff(),
+      promises[version].beneficiary(),
+      promises[version].vestedAmount(),
+      promises[version].releasableAmount(),
+      promises[version].revoked(),
+      promises[version].revocable(),
+      promises[version].released(),
+      promises[version].start(),
+      promises[version].periodDuration(),
+      promises[version].vestedPerPeriod(),
+      promises[version].paused(),
+      promises[version].pausable(),
+      promises[version].stop(),
     ])
 
     const contract = {
@@ -123,7 +183,16 @@ export default class API {
       released: parseInt(released, 10) / 10 ** decimals,
       start: parseInt(start, 10),
       logs,
+      periodDuration,
+      vestedPerPeriod: vestedPerPeriod.map(
+        (amount) => parseInt(amount, 10) / 10 ** decimals
+      ),
+      paused,
+      pausable,
+      stop: parseInt(stop, 10),
     }
+
+    console.log(contract)
 
     return contract
   }
