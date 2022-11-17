@@ -19,21 +19,11 @@ export default class API {
     this.store = store
   }
 
-  async getWeb3() {
+  getWeb3() {
     if (this.web3 === null) {
-      const network = await this.getNetwork()
-
-      let rpcUrl
-
-      switch (network.name) {
-        case 'goerli':
-          rpcUrl = 'https://rpc.decentraland.org/goerli'
-          break
-        default:
-          rpcUrl = 'https://rpc.decentraland.org/mainnet'
-      }
-
-      this.web3 = new Web3(new Web3.providers.HttpProvider(rpcUrl))
+      this.web3 = new Web3(
+        new Web3.providers.HttpProvider('https://rpc.decentraland.org/mainnet')
+      )
     }
 
     return this.web3
@@ -252,22 +242,6 @@ export default class API {
 
   async getNetwork() {
     const chainId = await this.getEth().getChainId()
-
-    let name
-
-    switch (chainId) {
-      case 1:
-        name = 'mainnet'
-        break
-      case 5:
-        name = 'goerli'
-        break
-      default:
-        name = 'unknown'
-    }
-
-    console.log(name)
-
-    return { name, chainId }
+    return { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }
   }
 }
