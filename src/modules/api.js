@@ -192,8 +192,6 @@ export default class API {
       stop: parseInt(stop, 10),
     }
 
-    console.log(contract)
-
     return contract
   }
 
@@ -326,8 +324,6 @@ export default class API {
   getTopicAddressesForCurrentVersion() {
     const state = this.store.getState()
     const version = getVersion(state)
-
-    console.log(TopicByVersion[version])
 
     return TopicByVersion[version]
   }
