@@ -35,9 +35,8 @@ export default class API {
 
   async logIn() {
     const ethereum = window.ethereum
-    await ethereum.enable()
     const accounts = await ethereum.request({ method: 'eth_accounts' })
-    this.localWallet = accounts[0]
+    this.localWallet = accounts.length > 0 ? accounts[0] : null
 
     this.web3 = new Web3(ethereum)
   }
