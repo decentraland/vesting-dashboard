@@ -4,12 +4,14 @@ import { Header } from 'decentraland-ui'
 import Bar from './Bar/Bar'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Info from '../../Info/Info'
-
 import './Progress.css'
 
 function Progress(props) {
-  const { contract } = props
-  const total = contract.balance + contract.released
+  const { contract, version } = props
+  const total =
+    version === 'v1'
+      ? contract.balance + contract.released
+      : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
   const vestedPercentage = Math.round((contract.vestedAmount / total) * 100)
   const releasedPercentage = Math.round((contract.released / total) * 100)
 

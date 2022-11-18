@@ -10,10 +10,28 @@ import {
 import useReviewUrl from '../../../hooks/useReviewUrl'
 
 function Summary(props) {
-  const { address, contract, ticker } = props
-  const { symbol, released, balance, start, cliff, vestedAmount } = contract
-  const percentage = Math.round((released / vestedAmount) * 100)
-  const total = balance + released
+  const { address, contract, ticker, version } = props
+  const {
+    symbol,
+    released,
+    balance,
+    start,
+    cliff,
+    vestedAmount,
+    vestedPerPeriod,
+  } = contract
+
+  let percentage = Math.round((released / vestedAmount) * 100)
+
+  if (isNaN(percentage)) {
+    percentage = 0
+  }
+
+  const total =
+    version === 'v1'
+      ? balance + released
+      : vestedPerPeriod.reduce((a, b) => a + b, 0)
+
   const vestingCliff = getMonthDiff(start, cliff)
 
   const [reviewUrl, handleClick] = useReviewUrl(address)

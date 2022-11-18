@@ -15,6 +15,7 @@ import { SVGRenderer } from 'echarts/renderers'
 import { useIntl } from 'react-intl'
 import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import { TopicByVersion } from '../../../modules/constants'
 import {
   DAY_IN_SECONDS,
   getDurationInDays,
@@ -170,12 +171,25 @@ function resizeHandler(chart) {
 }
 
 function Chart(props) {
-  const { contract, ticker, Topic } = props
-  const { symbol, released, balance, start, cliff, duration, logs } = contract
-  const total = balance + released
+  const { contract, ticker, version } = props
+  const {
+    symbol,
+    released,
+    balance,
+    start,
+    cliff,
+    duration,
+    logs,
+    vestedPerPeriod,
+  } = contract
 
+  const total =
+    version === 'v1'
+      ? balance + released
+      : vestedPerPeriod.reduce((a, b) => a + b, 0)
   const today = Math.floor(new Date().getTime() / 1000)
   const daysFromStart = start > today ? 0 : getDaysFromStart(start)
+  const Topic = TopicByVersion[version]
 
   const releaseLogs = logs
     .filter((log) => log.topic === Topic.RELEASE)

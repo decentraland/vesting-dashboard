@@ -61,6 +61,7 @@
   "details.releasable": "Releasable",
   "details.release_funds": "Release funds",
   "details.revocable": "Revocable",
+  "details.pausable": "Pausable",
   "modal.title": "Change Beneficiary",
   "modal.label": "Beneficiary address",
   "modal.warning": "This is an irreversible operation. Please check the address carefully.",

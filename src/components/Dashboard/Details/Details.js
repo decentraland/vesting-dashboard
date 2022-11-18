@@ -125,6 +125,23 @@ function getRevocable(revocable) {
   )
 }
 
+function getPausable(pausable) {
+  return (
+    <div className="item">
+      <Header sub>
+        <FormattedMessage id="details.pausable" />
+      </Header>
+      <Header>
+        {pausable ? (
+          <FormattedMessage id="global.yes" />
+        ) : (
+          <FormattedMessage id="global.no" />
+        )}
+      </Header>
+    </div>
+  )
+}
+
 function getActionButton(text, onClick) {
   return (
     <Button basic className="action" onClick={onClick}>
@@ -134,7 +151,7 @@ function getActionButton(text, onClick) {
 }
 
 function Details(props) {
-  const { contract, isBeneficiary, onRelease } = props
+  const { contract, isBeneficiary, onRelease, version } = props
   const {
     symbol,
     released,
@@ -144,9 +161,14 @@ function Details(props) {
     duration,
     releasableAmount,
     revocable,
+    vestedPerPeriod,
+    pausable,
   } = contract
   const vestingCliff = getMonthDiff(start, cliff)
-  const total = balance + released
+  const total =
+    version === 'v1'
+      ? balance + released
+      : vestedPerPeriod.reduce((a, b) => a + b, 0)
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
@@ -191,6 +213,7 @@ function Details(props) {
           onRelease
         )}
       {getRevocable(revocable)}
+      {version === 'v2' && getPausable(pausable)}
       <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />
     </div>
   )
