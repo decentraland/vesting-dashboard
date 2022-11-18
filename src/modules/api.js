@@ -172,8 +172,14 @@ export default class API {
       symbol,
       address,
       balance: parseInt(balance, 10) / 10 ** decimals,
-      duration: parseInt(duration, 10),
-      cliff: parseInt(cliff, 10),
+      duration:
+        version === 'v1'
+          ? parseInt(duration, 10)
+          : vestedPerPeriod.length * parseInt(periodDuration, 10),
+      cliff:
+        version === 'v1'
+          ? parseInt(cliff, 10)
+          : parseInt(cliff, 10) + parseInt(start, 10),
       beneficiary,
       vestedAmount: parseInt(vestedAmount, 10) / 10 ** decimals,
       releasableAmount: parseInt(releasableAmount, 10) / 10 ** decimals,
