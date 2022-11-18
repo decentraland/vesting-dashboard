@@ -48,6 +48,26 @@ function addRevokedEvent(eventList, timestamp) {
   )
 }
 
+function addPausedEvent(eventList, timestamp) {
+  const props = { timestamp, key: 'paused' }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.paused" />}
+      {...props}
+    />
+  )
+}
+
+function addUnpausedEvent(eventList, timestamp) {
+  const props = { timestamp, key: 'unpaused' }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.unpaused" />}
+      {...props}
+    />
+  )
+}
+
 function Schedule(props) {
   const { contract, Topic } = props
   const { symbol, start, cliff, duration, logs } = contract
@@ -118,6 +138,16 @@ function Schedule(props) {
         case Topic.REVOKE:
           setRevoked(true)
           addRevokedEvent(eventList, logData.timestamp)
+          break
+
+        case Topic.PAUSED:
+          setRevoked(true)
+          addPausedEvent(eventList, logData.timestamp)
+          break
+
+        case Topic.UNPAUSED:
+          setRevoked(false)
+          addUnpausedEvent(eventList, logData.timestamp)
           break
 
         default:

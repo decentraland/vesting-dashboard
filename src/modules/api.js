@@ -249,7 +249,12 @@ export default class API {
         case Topic.REVOKE:
           logs.push(this.getRevokeLog(blocks[idx].timestamp))
           break
-
+        case Topic.PAUSED:
+          logs.push(this.getPausedLog(blocks[idx].timestamp))
+          break
+        case Topic.UNPAUSED:
+          logs.push(this.getUnpausedLog(blocks[idx].timestamp))
+          break
         default:
           break
       }
@@ -293,6 +298,28 @@ export default class API {
 
     return {
       topic: Topic.REVOKE,
+      data: {
+        timestamp: timestamp,
+      },
+    }
+  }
+
+  getPausedLog(timestamp) {
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
+    return {
+      topic: Topic.PAUSED,
+      data: {
+        timestamp: timestamp,
+      },
+    }
+  }
+
+  getUnpausedLog(timestamp) {
+    const Topic = this.getTopicAddressesForCurrentVersion()
+
+    return {
+      topic: Topic.UNPAUSED,
       data: {
         timestamp: timestamp,
       },
