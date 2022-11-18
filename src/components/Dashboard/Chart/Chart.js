@@ -46,6 +46,28 @@ function getXAxisData(start, duration, intl) {
   return xData
 }
 
+function getVestingDataV2(
+  start,
+  cliff,
+  duration,
+  periodDuration,
+  vestedPerPeriod
+) {
+  const cliffEndDay = getCliffEndDay(start, cliff)
+  const vestingDays = getDurationInDays(duration)
+
+  let vestingData = new Array(cliffEndDay).fill(0)
+
+  return vestingData.concat(
+    toDataArray(vestingDays - cliffEndDay, (_, i) => {
+      const elapsedPeriods = Math.trunc(
+        (DAY_IN_SECONDS * (cliffEndDay + i + 1)) / periodDuration
+      )
+      return vestedPerPeriod.slice(0, elapsedPeriods).reduce((a, b) => a + b, 0)
+    })
+  )
+}
+
 function getVestingData(start, cliff, duration, total, revokeLog) {
   const cliffEndDay = getCliffEndDay(start, cliff)
   const vestingDays = getDurationInDays(duration)
@@ -181,6 +203,7 @@ function Chart(props) {
     duration,
     logs,
     vestedPerPeriod,
+    periodDuration,
   } = contract
 
   const total =
@@ -287,7 +310,16 @@ function Chart(props) {
       {
         name: intl.formatMessage({ id: 'chart.vested' }),
         type: 'line',
-        data: getVestingData(start, cliff, duration, total, revokeLog),
+        data:
+          version === 'v1'
+            ? getVestingData(start, cliff, duration, total, revokeLog)
+            : getVestingDataV2(
+                start,
+                cliff,
+                duration,
+                periodDuration,
+                vestedPerPeriod
+              ),
         symbol: 'none',
         markLine: {
           symbol: 'none',
