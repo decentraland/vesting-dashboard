@@ -37,6 +37,7 @@
   "chart.released": "Released",
   "chart.to_be_vested": "To be vested",
   "chart.revoked": "REVOKED",
+  "chart.paused": "PAUSED",
   "chart.today": "TODAY",
   "schedule.title": "Schedule",
   "schedule.contract_started": "Contract in place",

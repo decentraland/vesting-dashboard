@@ -35,6 +35,14 @@ function getRevokedData(revokeLog, start) {
   return [isRevoked, revokedDay]
 }
 
+function getRevokedDataV2(start, paused, revoked, stop) {
+  return [
+    revoked,
+    revoked || paused ? getDaysFromRevoke(stop, start) : -1,
+    paused,
+  ]
+}
+
 function getXAxisData(start, duration, intl) {
   const durationInDays = getDurationInDays(duration)
   const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }
@@ -44,6 +52,40 @@ function getXAxisData(start, duration, intl) {
   )
 
   return xData
+}
+
+function getVestingData(start, cliff, duration, total, revokeLog) {
+  const cliffEndDay = getCliffEndDay(start, cliff)
+  const vestingDays = getDurationInDays(duration)
+  const vestedPerDay = total / vestingDays
+
+  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
+
+  let vestingData = new Array(cliffEndDay).fill(0)
+
+  if (isRevoked) {
+    if (revokedDay <= cliffEndDay) {
+      vestingData = new Array(revokedDay).fill(0)
+    } else {
+      vestingData = vestingData.concat(
+        toDataArray(
+          revokedDay,
+          (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
+        )
+      )
+    }
+
+    vestingData[vestingData.length - 1] = total
+
+    return vestingData
+  }
+
+  return vestingData.concat(
+    toDataArray(
+      vestingDays - cliffEndDay,
+      (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
+    )
+  )
 }
 
 function getVestingDataV2(
@@ -85,40 +127,6 @@ function getVestingDataV2(
   }
 
   return vestingData
-}
-
-function getVestingData(start, cliff, duration, total, revokeLog) {
-  const cliffEndDay = getCliffEndDay(start, cliff)
-  const vestingDays = getDurationInDays(duration)
-  const vestedPerDay = total / vestingDays
-
-  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
-
-  let vestingData = new Array(cliffEndDay).fill(0)
-
-  if (isRevoked) {
-    if (revokedDay <= cliffEndDay) {
-      vestingData = new Array(revokedDay).fill(0)
-    } else {
-      vestingData = vestingData.concat(
-        toDataArray(
-          revokedDay,
-          (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
-        )
-      )
-    }
-
-    vestingData[vestingData.length - 1] = total
-
-    return vestingData
-  }
-
-  return vestingData.concat(
-    toDataArray(
-      vestingDays - cliffEndDay,
-      (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
-    )
-  )
 }
 
 function getReleaseData(start, cliff, releaseLogs, revokeLog) {
@@ -224,6 +232,9 @@ function Chart(props) {
     vestedPerPeriod,
     periodDuration,
     linear,
+    paused,
+    revoked,
+    stop,
   } = contract
 
   const total =
@@ -238,7 +249,20 @@ function Chart(props) {
     .filter((log) => log.topic === Topic.RELEASE)
     .map((log) => log.data)
   const revokeLog = logs.filter((log) => log.topic === Topic.REVOKE)
-  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
+
+  let isRevoked, revokeOrPauseDay
+  let isPaused = false
+
+  if (version === 'v1') {
+    ;[isRevoked, revokeOrPauseDay] = getRevokedData(revokeLog, start)
+  } else {
+    ;[isRevoked, revokeOrPauseDay, isPaused] = getRevokedDataV2(
+      start,
+      paused,
+      revoked,
+      stop
+    )
+  }
 
   const intl = useIntl()
 
@@ -349,9 +373,14 @@ function Chart(props) {
               name: `${
                 isRevoked
                   ? intl.formatMessage({ id: 'chart.revoked' })
+                  : isPaused
+                  ? intl.formatMessage({ id: 'chart.paused' })
                   : intl.formatMessage({ id: 'chart.today' })
               }`,
-              xAxis: isRevoked ? revokedDay : getDaysFromStart(start),
+              xAxis:
+                isRevoked || isPaused
+                  ? revokeOrPauseDay
+                  : getDaysFromStart(start),
               label: {
                 formatter: '{b}',
                 show: true,
@@ -377,7 +406,27 @@ function Chart(props) {
     ],
   }
 
-  if (!isRevoked) {
+  if (version === 'v1') {
+    if (!isRevoked) {
+      option.visualMap = {
+        type: 'piecewise',
+        seriesIndex: 0,
+        show: false,
+        dimension: 0,
+        pieces: [
+          {
+            lte: daysFromStart,
+            gt: -1,
+            color: '#44B600',
+          },
+          {
+            gt: daysFromStart,
+            color: 'rgba(115, 110, 125, 0.3)',
+          },
+        ],
+      }
+    }
+  } else {
     option.visualMap = {
       type: 'piecewise',
       seriesIndex: 0,
@@ -385,12 +434,12 @@ function Chart(props) {
       dimension: 0,
       pieces: [
         {
-          lte: daysFromStart,
+          lte: isRevoked || isPaused ? revokeOrPauseDay : daysFromStart,
           gt: -1,
           color: '#44B600',
         },
         {
-          gt: daysFromStart,
+          gt: isRevoked || isPaused ? revokeOrPauseDay : daysFromStart,
           color: 'rgba(115, 110, 125, 0.3)',
         },
       ],
