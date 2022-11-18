@@ -109,6 +109,7 @@ export default class API {
         paused: () => Promise.resolve(false),
         pausable: () => Promise.resolve(false),
         stop: () => Promise.resolve('0'),
+        linear: () => Promise.resolve(false),
       },
       v2: {
         duration: () => Promise.resolve('0'),
@@ -125,6 +126,7 @@ export default class API {
         paused: () => vesting.methods.paused().call(),
         pausable: () => vesting.methods.getIsPausable().call(),
         stop: () => vesting.methods.getStop().call(),
+        linear: () => vesting.methods.getIsLinear().call(),
       },
     }
 
@@ -147,6 +149,7 @@ export default class API {
       paused,
       pausable,
       stop,
+      linear,
     ] = await Promise.all([
       tokenContracts[tokenContractAddress].methods.symbol().call(),
       tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
@@ -166,6 +169,7 @@ export default class API {
       promises[version].paused(),
       promises[version].pausable(),
       promises[version].stop(),
+      promises[version].linear(),
     ])
 
     const contract = {
@@ -196,6 +200,7 @@ export default class API {
       paused,
       pausable,
       stop: parseInt(stop, 10),
+      linear,
     }
 
     return contract

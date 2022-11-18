@@ -51,21 +51,40 @@ function getVestingDataV2(
   cliff,
   duration,
   periodDuration,
-  vestedPerPeriod
+  vestedPerPeriod,
+  linear
 ) {
   const cliffEndDay = getCliffEndDay(start, cliff)
   const vestingDays = getDurationInDays(duration)
 
-  let vestingData = new Array(cliffEndDay).fill(0)
+  let vestingData = []
 
-  return vestingData.concat(
-    toDataArray(vestingDays - cliffEndDay, (_, i) => {
-      const elapsedPeriods = Math.trunc(
-        (DAY_IN_SECONDS * (cliffEndDay + i + 1)) / periodDuration
-      )
-      return vestedPerPeriod.slice(0, elapsedPeriods).reduce((a, b) => a + b, 0)
-    })
-  )
+  for (let i = 0; i < vestingDays; i++) {
+    let vestedThatDay
+
+    if (i <= cliffEndDay) {
+      vestedThatDay = 0
+    } else {
+      const elapsedPeriods = (DAY_IN_SECONDS * (i + 1)) / periodDuration
+      const elapsedPeriodsTrunc = Math.trunc(elapsedPeriods)
+
+      vestedThatDay = vestedPerPeriod
+        .slice(0, elapsedPeriodsTrunc)
+        .reduce((a, b) => a + b, 0)
+
+      if (linear && elapsedPeriodsTrunc < vestedPerPeriod.length) {
+        const toVestThisPeriod = vestedPerPeriod[elapsedPeriodsTrunc]
+        const elapsedPeriodsDecimals = elapsedPeriods % 1
+        const vestedThisPeriod = toVestThisPeriod * elapsedPeriodsDecimals
+
+        vestedThatDay += vestedThisPeriod
+      }
+    }
+
+    vestingData.push(vestedThatDay)
+  }
+
+  return vestingData
 }
 
 function getVestingData(start, cliff, duration, total, revokeLog) {
@@ -204,6 +223,7 @@ function Chart(props) {
     logs,
     vestedPerPeriod,
     periodDuration,
+    linear,
   } = contract
 
   const total =
@@ -318,7 +338,8 @@ function Chart(props) {
                 cliff,
                 duration,
                 periodDuration,
-                vestedPerPeriod
+                vestedPerPeriod,
+                linear
               ),
         symbol: 'none',
         markLine: {
