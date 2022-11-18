@@ -299,16 +299,28 @@ export default class API {
     }
   }
 
-  release() {
+  async release() {
     const state = this.store.getState()
+    const version = getVersion(state)
     const from = getFrom(state)
-    return vesting.methods.release().send({ from })
+
+    if (version === 'v1') {
+      return vesting.methods.release().send({ from })
+    }
+
+    const releasableAmount = await vesting.methods.getReleasable().call()
+
+    return vesting.methods.release(from, releasableAmount).send({ from })
   }
 
   changeBeneficiary(address) {
     const state = this.store.getState()
+    const version = getVersion(state)
     const from = getFrom(state)
-    return vesting.methods.changeBeneficiary(address).send({ from })
+
+    return version === 'v1'
+      ? vesting.methods.changeBeneficiary(address).send({ from })
+      : vesting.methods.setBeneficiary(address).send({ from })
   }
 
   async fetchTicker(ticker = 'decentraland') {
