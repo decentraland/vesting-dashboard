@@ -139,17 +139,14 @@ function Schedule(props) {
           break
 
         case Topic.REVOKE:
-          setRevokedOrPaused(true)
           addRevokedEvent(eventList, logData.timestamp)
           break
 
         case Topic.PAUSED:
-          setRevokedOrPaused(true)
           addPausedEvent(eventList, logData.timestamp)
           break
 
         case Topic.UNPAUSED:
-          setRevokedOrPaused(false)
           addUnpausedEvent(eventList, logData.timestamp)
           break
 
@@ -208,6 +205,25 @@ function Schedule(props) {
     scheduleEventsSetpUp()
     // eslint-disable-next-line
   }, [revokedOrPaused])
+
+  useEffect(() => {
+    const cpLogs = [...logs]
+
+    cpLogs.sort((a, b) => a.data.timestamp - b.data.timestamp)
+
+    for (const log of cpLogs) {
+      switch (log.topic) {
+        case Topic.REVOKE:
+        case Topic.PAUSED:
+          setRevokedOrPaused(true)
+          break
+        case Topic.UNPAUSED:
+          setRevokedOrPaused(false)
+          break
+        default:
+      }
+    }
+  }, [Topic, logs])
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
