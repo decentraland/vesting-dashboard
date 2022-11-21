@@ -50,15 +50,9 @@ export default class API {
       console.error('Metamask not found')
     }
 
-    const state = this.store.getState()
-    const address = getAddress(state)
-    const version = getVersion(state)
-    const abi = version === 'v1' ? vestingAbi : periodicTokenVestingAbi
     const eth = this.getEth()
     const chainId = await eth.getChainId()
     const TokenAddress = TokenAddressByChainId[chainId]
-
-    vesting = new eth.Contract(abi, address)
 
     tokenContracts = {
       [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
@@ -73,7 +67,18 @@ export default class API {
   async fetchContract() {
     const state = this.store.getState()
     const address = getAddress(state)
-    const version = getVersion(state)
+    const eth = this.getEth()
+
+    let version
+
+    try {
+      vesting = new eth.Contract(periodicTokenVestingAbi, address)
+      await vesting.methods.getIsLinear().call()
+      version = 'v2'
+    } catch (e) {
+      vesting = new eth.Contract(vestingAbi, address)
+      version = 'v1'
+    }
 
     let tokenContractAddress
 
@@ -153,7 +158,7 @@ export default class API {
     ] = await Promise.all([
       tokenContracts[tokenContractAddress].methods.symbol().call(),
       tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
-      this.getLogs(decimals),
+      this.getLogs(decimals, version),
       vesting.methods.owner().call(),
       promises[version].duration(),
       promises[version].cliff(),
@@ -173,6 +178,7 @@ export default class API {
     ])
 
     const contract = {
+      version,
       symbol,
       address,
       balance: parseInt(balance, 10) / 10 ** decimals,
@@ -206,7 +212,7 @@ export default class API {
     return contract
   }
 
-  async getLogs(decimals) {
+  async getLogs(decimals, version) {
     const state = this.store.getState()
     const address = getAddress(state)
     const eth = this.getEth()
@@ -223,7 +229,7 @@ export default class API {
     const logs = []
     let cumulativeReleased = 0
 
-    const Topic = this.getTopicAddressesForCurrentVersion()
+    const Topic = TopicByVersion[version]
 
     for (const idx in web3Logs) {
       switch (web3Logs[idx].topics[0]) {
@@ -231,7 +237,8 @@ export default class API {
           logs.push(
             this.getTransferOwnershipLog(
               [...web3Logs[idx].topics],
-              blocks[idx].timestamp
+              blocks[idx].timestamp,
+              Topic
             )
           )
           break
@@ -241,19 +248,21 @@ export default class API {
               decimals,
               web3Logs[idx].data,
               cumulativeReleased,
-              blocks[idx].timestamp
+              blocks[idx].timestamp,
+              version,
+              Topic
             )
           )
           cumulativeReleased = web3Logs[idx].data
           break
         case Topic.REVOKE:
-          logs.push(this.getRevokeLog(blocks[idx].timestamp))
+          logs.push(this.getRevokeLog(blocks[idx].timestamp, Topic))
           break
         case Topic.PAUSED:
-          logs.push(this.getPausedLog(blocks[idx].timestamp))
+          logs.push(this.getPausedLog(blocks[idx].timestamp, Topic))
           break
         case Topic.UNPAUSED:
-          logs.push(this.getUnpausedLog(blocks[idx].timestamp))
+          logs.push(this.getUnpausedLog(blocks[idx].timestamp, Topic))
           break
         default:
           break
@@ -263,9 +272,7 @@ export default class API {
     return logs
   }
 
-  getTransferOwnershipLog(topics, timestamp) {
-    const Topic = this.getTopicAddressesForCurrentVersion()
-
+  getTransferOwnershipLog(topics, timestamp, Topic) {
     return {
       topic: Topic.TRANSFER_OWNERSHIP,
       data: {
@@ -276,11 +283,7 @@ export default class API {
     }
   }
 
-  getReleaseLog(decimals, data, cumulativeReleased, timestamp) {
-    const state = this.store.getState()
-    const version = getVersion(state)
-    const Topic = this.getTopicAddressesForCurrentVersion()
-
+  getReleaseLog(decimals, data, cumulativeReleased, timestamp, version, Topic) {
     const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
 
     let totalReleased
@@ -306,9 +309,7 @@ export default class API {
     }
   }
 
-  getRevokeLog(timestamp) {
-    const Topic = this.getTopicAddressesForCurrentVersion()
-
+  getRevokeLog(timestamp, Topic) {
     return {
       topic: Topic.REVOKE,
       data: {
@@ -317,9 +318,7 @@ export default class API {
     }
   }
 
-  getPausedLog(timestamp) {
-    const Topic = this.getTopicAddressesForCurrentVersion()
-
+  getPausedLog(timestamp, Topic) {
     return {
       topic: Topic.PAUSED,
       data: {
@@ -328,9 +327,7 @@ export default class API {
     }
   }
 
-  getUnpausedLog(timestamp) {
-    const Topic = this.getTopicAddressesForCurrentVersion()
-
+  getUnpausedLog(timestamp, Topic) {
     return {
       topic: Topic.UNPAUSED,
       data: {
