@@ -10,6 +10,7 @@ import Chart from './Chart'
 import Summary from './Summary'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import useResponsive from '../../hooks/useResponsive'
+import PendingFunds from './PendingFunds'
 
 function Dashboard() {
   const responsive = useResponsive()
@@ -21,6 +22,7 @@ function Dashboard() {
       <Beneficiary />
       <Grid stackable columns={2} padded style={{ width: '100%' }}>
         <Grid.Column width={12} style={{ paddingLeft: 0 }}>
+          <PendingFunds />
           <Progress />
           <Chart />
           <Summary />

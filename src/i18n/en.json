@@ -70,5 +70,6 @@
   "modal.warning": "This is an irreversible operation. Please check the address carefully.",
   "modal.button": "Transfer",
   "modal.error": "This is not a valid Ethereum address",
-  "modal.success": "{address} {br} is the new beneficiary. Reload the page to see the reflected changes."
+  "modal.success": "{address} {br} is the new beneficiary. Reload the page to see the reflected changes.",
+  "pending_funds.releasable": "The contract requires {pending} more {token} to cover the releasable amount. Please contact the issuer to have it funded accordingly."
 }
