@@ -101,6 +101,7 @@ function getVestingDataV2(
 
   let vestingData = []
 
+  // TODO: This can probably be optimized to avoid doing the same calculations for every day.
   for (let i = 0; i < vestingDays; i++) {
     let vestedThatDay
 
