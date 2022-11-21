@@ -277,11 +277,24 @@ export default class API {
   }
 
   getReleaseLog(decimals, data, cumulativeReleased, timestamp) {
-    const totalReleased = Big(Number(data) || 0).div(10 ** decimals)
-    const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
-    const currentReleased = totalReleased.minus(cumulative)
-
+    const state = this.store.getState()
+    const version = getVersion(state)
     const Topic = this.getTopicAddressesForCurrentVersion()
+
+    const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
+
+    let totalReleased
+    let currentReleased
+
+    if (version === 'v1') {
+      totalReleased = Big(Number(data) || 0).div(10 ** decimals)
+      currentReleased = totalReleased.minus(cumulative)
+    } else {
+      currentReleased = Big(Number(data) || 0).div(10 ** decimals)
+      totalReleased = Big(Number(cumulativeReleased) || 0)
+        .div(10 ** decimals)
+        .add(currentReleased)
+    }
 
     return {
       topic: Topic.RELEASE,
