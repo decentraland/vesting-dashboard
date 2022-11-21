@@ -74,7 +74,7 @@ function Schedule(props) {
   const vestingCliff = getMonthDiff(start, cliff)
 
   const [scheduleEvents, setScheduleEvents] = useState([])
-  const [revoked, setRevoked] = useState(false)
+  const [revokedOrPaused, setRevokedOrPaused] = useState(false)
 
   const scheduleEventsSetpUp = (fullShow = false) => {
     const eventList = []
@@ -136,17 +136,17 @@ function Schedule(props) {
           break
 
         case Topic.REVOKE:
-          setRevoked(true)
+          setRevokedOrPaused(true)
           addRevokedEvent(eventList, logData.timestamp)
           break
 
         case Topic.PAUSED:
-          setRevoked(true)
+          setRevokedOrPaused(true)
           addPausedEvent(eventList, logData.timestamp)
           break
 
         case Topic.UNPAUSED:
-          setRevoked(false)
+          setRevokedOrPaused(false)
           addUnpausedEvent(eventList, logData.timestamp)
           break
 
@@ -181,7 +181,7 @@ function Schedule(props) {
       }
     }
 
-    if (!revoked) {
+    if (!revokedOrPaused) {
       if (!fulfilledFlag) {
         if (new Date() >= new Date(endContractTs * 1000)) {
           addFulfilledEvent(eventList, endContractTs)
@@ -204,13 +204,13 @@ function Schedule(props) {
   useEffect(() => {
     scheduleEventsSetpUp()
     // eslint-disable-next-line
-  }, [revoked])
+  }, [revokedOrPaused])
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 
   return (
-    <div className={`timeline ${revoked && 'revoked'}`}>
+    <div className={`timeline ${revokedOrPaused && 'revoked'}`}>
       <Header sub>
         <FormattedMessage id="schedule.title" />
         <Info
