@@ -35,7 +35,7 @@ function getRevokedData(revokeLog, start) {
   return [isRevoked, revokedDay]
 }
 
-function getRevokedDataV2(start, paused, revoked, stop) {
+function getPausedAndRevokedData(start, paused, revoked, stop) {
   return [
     revoked,
     revoked || paused ? getDaysFromRevoke(stop, start) : -1,
@@ -252,7 +252,7 @@ function Chart(props) {
   if (version === 'v1') {
     ;[isRevoked, revokeOrPauseDay] = getRevokedData(revokeLog, start)
   } else {
-    ;[isRevoked, revokeOrPauseDay, isPaused] = getRevokedDataV2(
+    ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(
       start,
       paused,
       revoked,
@@ -400,30 +400,7 @@ function Chart(props) {
         symbol: 'none',
       },
     ],
-  }
-
-  if (version === 'v1') {
-    if (!isRevoked) {
-      option.visualMap = {
-        type: 'piecewise',
-        seriesIndex: 0,
-        show: false,
-        dimension: 0,
-        pieces: [
-          {
-            lte: daysFromStart,
-            gt: -1,
-            color: '#44B600',
-          },
-          {
-            gt: daysFromStart,
-            color: 'rgba(115, 110, 125, 0.3)',
-          },
-        ],
-      }
-    }
-  } else {
-    option.visualMap = {
+    visualMap: {
       type: 'piecewise',
       seriesIndex: 0,
       show: false,
@@ -439,7 +416,7 @@ function Chart(props) {
           color: 'rgba(115, 110, 125, 0.3)',
         },
       ],
-    }
+    },
   }
 
   const [fundsChart, setFundsChart] = useState(null)
