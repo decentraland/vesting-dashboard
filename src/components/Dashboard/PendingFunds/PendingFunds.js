@@ -4,9 +4,9 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import './PendingFunds.css'
 
 function PendingFunds(props) {
-  const { pendingFunds, contract, version } = props
+  const { pendingFunds, contract } = props
 
-  if (version !== 'v2' || !contract || !pendingFunds) {
+  if (!contract || contract.version !== 'v2' || !pendingFunds) {
     return null
   }
 

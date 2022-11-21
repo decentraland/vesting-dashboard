@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { release } from '../../../modules/contract/actions'
-import { getContract, getVersion } from '../../../modules/contract/selectors'
+import { getContract } from '../../../modules/contract/selectors'
 import { getAddress } from '../../../modules/ethereum/selectors'
 import { areSameAddress } from '../../../modules/ethereum/utils'
 import Details from './Details'
@@ -11,7 +11,6 @@ export const mapState = (state) => {
   return {
     contract,
     isBeneficiary: areSameAddress(contract.beneficiary, address),
-    version: getVersion(state),
   }
 }
 

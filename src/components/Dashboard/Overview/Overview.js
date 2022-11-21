@@ -28,14 +28,9 @@ const logo = {
 }
 
 export default function Overview(props) {
-  const { address, contract, version } = props
+  const { address, contract } = props
 
-  const { symbol, released, balance, start, cliff, duration, vestedPerPeriod } =
-    contract
-  const total =
-    version === 'v1'
-      ? balance + released
-      : vestedPerPeriod.reduce((a, b) => a + b, 0)
+  const { symbol, start, cliff, duration, total } = contract
   const vestingMonths = getMonthDiff(start, start + duration)
   const vestingCliff = getMonthDiff(start, cliff)
 

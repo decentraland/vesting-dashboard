@@ -7,13 +7,13 @@ import Info from '../../Info/Info'
 import './Progress.css'
 
 function Progress(props) {
-  const { contract, version } = props
-  const total =
-    version === 'v1'
-      ? contract.balance + contract.released
-      : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
-  const vestedPercentage = Math.round((contract.vestedAmount / total) * 100)
-  const releasedPercentage = Math.round((contract.released / total) * 100)
+  const { contract } = props
+  const vestedPercentage = Math.round(
+    (contract.vestedAmount / contract.total) * 100
+  )
+  const releasedPercentage = Math.round(
+    (contract.released / contract.total) * 100
+  )
 
   return (
     <div id="progress">
@@ -43,7 +43,8 @@ function Progress(props) {
             <FormattedMessage id="progress.total" />
           </Header>
           <Header style={{ display: 'inline-block' }}>
-            <FormattedNumber value={Math.round(total)} /> {contract.symbol}
+            <FormattedNumber value={Math.round(contract.total)} />{' '}
+            {contract.symbol}
           </Header>
         </Grid.Column>
       </Grid>

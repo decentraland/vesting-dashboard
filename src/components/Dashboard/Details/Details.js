@@ -151,25 +151,21 @@ function getActionButton(text, onClick) {
 }
 
 function Details(props) {
-  const { contract, isBeneficiary, onRelease, version } = props
+  const { contract, isBeneficiary, onRelease } = props
   const {
+    version,
     symbol,
     released,
-    balance,
     start,
     cliff,
     duration,
     releasableAmount,
     revocable,
-    vestedPerPeriod,
     pausable,
+    total,
   } = contract
-  const vestingCliff = getMonthDiff(start, cliff)
-  const total =
-    version === 'v1'
-      ? balance + released
-      : vestedPerPeriod.reduce((a, b) => a + b, 0)
 
+  const vestingCliff = getMonthDiff(start, cliff)
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 

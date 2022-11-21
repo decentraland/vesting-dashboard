@@ -2,13 +2,14 @@ import './Schedule.css'
 import React, { useState, useEffect } from 'react'
 import { Header } from 'decentraland-ui'
 import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import Info from '../../Info/Info'
 import { getMonthDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
 import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import { TopicByVersion } from '../../../modules/constants'
 
 function addReleasedEvent(eventList, amount, token, timestamp) {
   const props = { timestamp, key: timestamp }
@@ -69,12 +70,14 @@ function addUnpausedEvent(eventList, timestamp) {
 }
 
 function Schedule(props) {
-  const { contract, Topic } = props
-  const { symbol, start, cliff, duration, logs } = contract
+  const { contract } = props
+  const { symbol, start, cliff, duration, logs, version } = contract
   const vestingCliff = getMonthDiff(start, cliff)
 
   const [scheduleEvents, setScheduleEvents] = useState([])
   const [revokedOrPaused, setRevokedOrPaused] = useState(false)
+
+  const Topic = TopicByVersion[version]
 
   const scheduleEventsSetpUp = (fullShow = false) => {
     const eventList = []

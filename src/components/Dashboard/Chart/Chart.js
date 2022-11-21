@@ -220,11 +220,10 @@ function resizeHandler(chart) {
 }
 
 function Chart(props) {
-  const { contract, ticker, version } = props
+  const { contract, ticker } = props
   const {
+    version,
     symbol,
-    released,
-    balance,
     start,
     cliff,
     duration,
@@ -235,12 +234,9 @@ function Chart(props) {
     paused,
     revoked,
     stop,
+    total,
   } = contract
 
-  const total =
-    version === 'v1'
-      ? balance + released
-      : vestedPerPeriod.reduce((a, b) => a + b, 0)
   const today = Math.floor(new Date().getTime() / 1000)
   const daysFromStart = start > today ? 0 : getDaysFromStart(start)
   const Topic = TopicByVersion[version]

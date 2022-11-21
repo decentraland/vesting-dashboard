@@ -1,4 +1,4 @@
-import { getAddress, getVersion } from './contract/selectors'
+import { getAddress, getContract } from './contract/selectors'
 import { getAddress as getFrom } from './ethereum/selectors'
 import Web3 from 'web3'
 import manaAbi from '../abi/mana.json'
@@ -209,6 +209,11 @@ export default class API {
       linear,
     }
 
+    contract.total =
+      version === 'v1'
+        ? contract.balance + contract.released
+        : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
+
     return contract
   }
 
@@ -338,10 +343,10 @@ export default class API {
 
   async release() {
     const state = this.store.getState()
-    const version = getVersion(state)
+    const contract = getContract(state)
     const from = getFrom(state)
 
-    if (version === 'v1') {
+    if (contract.version === 'v1') {
       return vesting.methods.release().send({ from })
     }
 
@@ -352,10 +357,10 @@ export default class API {
 
   changeBeneficiary(address) {
     const state = this.store.getState()
-    const version = getVersion(state)
+    const contract = getContract(state)
     const from = getFrom(state)
 
-    return version === 'v1'
+    return contract.version === 'v1'
       ? vesting.methods.changeBeneficiary(address).send({ from })
       : vesting.methods.setBeneficiary(address).send({ from })
   }
@@ -379,12 +384,5 @@ export default class API {
   async getNetwork() {
     const chainId = await this.getEth().getChainId()
     return { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }
-  }
-
-  getTopicAddressesForCurrentVersion() {
-    const state = this.store.getState()
-    const version = getVersion(state)
-
-    return TopicByVersion[version]
   }
 }
