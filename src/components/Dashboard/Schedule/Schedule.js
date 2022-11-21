@@ -49,7 +49,7 @@ function addRevokedEvent(eventList, timestamp) {
 }
 
 function addPausedEvent(eventList, timestamp) {
-  const props = { timestamp, key: 'paused' }
+  const props = { timestamp, key: `paused-${timestamp}` }
   eventList.push(
     <ScheduleEvent
       message={<FormattedMessage id="schedule.paused" />}
@@ -59,7 +59,7 @@ function addPausedEvent(eventList, timestamp) {
 }
 
 function addUnpausedEvent(eventList, timestamp) {
-  const props = { timestamp, key: 'unpaused' }
+  const props = { timestamp, key: `unpaused-${timestamp}` }
   eventList.push(
     <ScheduleEvent
       message={<FormattedMessage id="schedule.unpaused" />}
