@@ -1,7 +1,6 @@
 import React from 'react'
 import { Segment } from 'decentraland-ui'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import './PendingFunds.css'
 
 function PendingFunds(props) {
   const { pendingFunds, contract } = props
