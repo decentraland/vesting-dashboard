@@ -13,8 +13,9 @@ import { LineChart } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
 import { useIntl } from 'react-intl'
-import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import useResponsive from '../../../hooks/useResponsive'
+import { ContractVersion, TopicByVersion } from '../../../modules/constants'
 import {
   DAY_IN_SECONDS,
   getDurationInDays,
@@ -24,7 +25,6 @@ import {
   toDataArray,
   emptyDataArray,
 } from './utils'
-import { Topic } from '../../../modules/constants'
 
 function getRevokedData(revokeLog, start) {
   const isRevoked = revokeLog.length > 0
@@ -33,6 +33,14 @@ function getRevokedData(revokeLog, start) {
     : -1
 
   return [isRevoked, revokedDay]
+}
+
+function getPausedAndRevokedData(start, paused, revoked, stop) {
+  return [
+    revoked,
+    revoked || paused ? getDaysFromRevoke(stop, start) : -1,
+    paused,
+  ]
 }
 
 function getXAxisData(start, duration, intl) {
@@ -78,6 +86,52 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
       (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
     )
   )
+}
+
+function getVestingDataV2(
+  start,
+  cliff,
+  duration,
+  periodDuration,
+  vestedPerPeriod,
+  linear
+) {
+  const cliffEndDay = getCliffEndDay(start, cliff)
+  const vestingDays = getDurationInDays(duration)
+
+  let vestingData = []
+
+  if (!periodDuration) {
+    return vestingData
+  }
+
+  // TODO: This can probably be optimized to avoid doing the same calculations for every day.
+  for (let i = 0; i < vestingDays; i++) {
+    let vestedThatDay
+
+    if (i <= cliffEndDay) {
+      vestedThatDay = 0
+    } else {
+      const elapsedPeriods = (DAY_IN_SECONDS * (i + 1)) / periodDuration
+      const elapsedPeriodsTrunc = Math.trunc(elapsedPeriods)
+
+      vestedThatDay = vestedPerPeriod
+        .slice(0, elapsedPeriodsTrunc)
+        .reduce((a, b) => a + b, 0)
+
+      if (linear && elapsedPeriodsTrunc < vestedPerPeriod.length) {
+        const toVestThisPeriod = vestedPerPeriod[elapsedPeriodsTrunc]
+        const elapsedPeriodsDecimals = elapsedPeriods % 1
+        const vestedThisPeriod = toVestThisPeriod * elapsedPeriodsDecimals
+
+        vestedThatDay += vestedThisPeriod
+      }
+    }
+
+    vestingData.push(vestedThatDay)
+  }
+
+  return vestingData
 }
 
 function getReleaseData(start, cliff, releaseLogs, revokeLog) {
@@ -172,17 +226,44 @@ function resizeHandler(chart) {
 
 function Chart(props) {
   const { contract, ticker } = props
-  const { symbol, released, balance, start, cliff, duration, logs } = contract
-  const total = balance + released
+  const {
+    version,
+    symbol,
+    start,
+    cliff,
+    duration,
+    logs,
+    vestedPerPeriod,
+    periodDuration,
+    linear,
+    paused,
+    revoked,
+    stop,
+    total,
+  } = contract
 
   const today = Math.floor(new Date().getTime() / 1000)
   const daysFromStart = start > today ? 0 : getDaysFromStart(start)
+  const Topic = TopicByVersion[version]
 
   const releaseLogs = logs
     .filter((log) => log.topic === Topic.RELEASE)
     .map((log) => log.data)
   const revokeLog = logs.filter((log) => log.topic === Topic.REVOKE)
-  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
+
+  let isRevoked, revokeOrPauseDay
+  let isPaused = false
+
+  if (version === ContractVersion.V1) {
+    ;[isRevoked, revokeOrPauseDay] = getRevokedData(revokeLog, start)
+  } else {
+    ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(
+      start,
+      paused,
+      revoked,
+      stop
+    )
+  }
 
   const intl = useIntl()
 
@@ -274,7 +355,17 @@ function Chart(props) {
       {
         name: intl.formatMessage({ id: 'chart.vested' }),
         type: 'line',
-        data: getVestingData(start, cliff, duration, total, revokeLog),
+        data:
+          version === ContractVersion.V1
+            ? getVestingData(start, cliff, duration, total, revokeLog)
+            : getVestingDataV2(
+                start,
+                cliff,
+                duration,
+                periodDuration,
+                vestedPerPeriod,
+                linear
+              ),
         symbol: 'none',
         markLine: {
           symbol: 'none',
@@ -283,9 +374,14 @@ function Chart(props) {
               name: `${
                 isRevoked
                   ? intl.formatMessage({ id: 'chart.revoked' })
+                  : isPaused
+                  ? intl.formatMessage({ id: 'chart.paused' })
                   : intl.formatMessage({ id: 'chart.today' })
               }`,
-              xAxis: isRevoked ? revokedDay : getDaysFromStart(start),
+              xAxis:
+                isRevoked || isPaused
+                  ? revokeOrPauseDay
+                  : getDaysFromStart(start),
               label: {
                 formatter: '{b}',
                 show: true,
@@ -309,26 +405,23 @@ function Chart(props) {
         symbol: 'none',
       },
     ],
-  }
-
-  if (!isRevoked) {
-    option.visualMap = {
+    visualMap: {
       type: 'piecewise',
       seriesIndex: 0,
       show: false,
       dimension: 0,
       pieces: [
         {
-          lte: daysFromStart,
+          lte: isRevoked || isPaused ? revokeOrPauseDay : daysFromStart,
           gt: -1,
           color: '#44B600',
         },
         {
-          gt: daysFromStart,
+          gt: isRevoked || isPaused ? revokeOrPauseDay : daysFromStart,
           color: 'rgba(115, 110, 125, 0.3)',
         },
       ],
-    }
+    },
   }
 
   const [fundsChart, setFundsChart] = useState(null)

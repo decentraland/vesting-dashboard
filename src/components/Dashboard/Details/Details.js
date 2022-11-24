@@ -6,13 +6,14 @@ import {
   FormattedNumber,
   FormattedPlural,
 } from 'react-intl'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
-import './Details.css'
 import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
+import { ContractVersion } from '../../../modules/constants'
+import './Details.css'
 
 function addressShortener(address) {
   return address.substring(0, 6) + '...' + address.substring(38, 42)
@@ -125,6 +126,23 @@ function getRevocable(revocable) {
   )
 }
 
+function getPausable(pausable) {
+  return (
+    <div className="item">
+      <Header sub>
+        <FormattedMessage id="details.pausable" />
+      </Header>
+      <Header>
+        {pausable ? (
+          <FormattedMessage id="global.yes" />
+        ) : (
+          <FormattedMessage id="global.no" />
+        )}
+      </Header>
+    </div>
+  )
+}
+
 function getActionButton(text, onClick) {
   return (
     <Button basic className="action" onClick={onClick}>
@@ -136,18 +154,19 @@ function getActionButton(text, onClick) {
 function Details(props) {
   const { contract, isBeneficiary, onRelease } = props
   const {
+    version,
     symbol,
     released,
-    balance,
     start,
     cliff,
     duration,
     releasableAmount,
     revocable,
+    pausable,
+    total,
   } = contract
-  const vestingCliff = getMonthDiff(start, cliff)
-  const total = balance + released
 
+  const vestingCliff = getMonthDiff(start, cliff)
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 
@@ -191,6 +210,7 @@ function Details(props) {
           onRelease
         )}
       {getRevocable(revocable)}
+      {version === ContractVersion.V2 && getPausable(pausable)}
       <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />
     </div>
   )

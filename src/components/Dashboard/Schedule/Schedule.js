@@ -2,14 +2,14 @@ import './Schedule.css'
 import React, { useState, useEffect } from 'react'
 import { Header } from 'decentraland-ui'
 import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import Info from '../../Info/Info'
 import { getMonthDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
-import { Topic } from '../../../modules/constants'
 import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import { TopicByVersion } from '../../../modules/constants'
 
 function addReleasedEvent(eventList, amount, token, timestamp) {
   const props = { timestamp, key: timestamp }
@@ -49,13 +49,35 @@ function addRevokedEvent(eventList, timestamp) {
   )
 }
 
+function addPausedEvent(eventList, timestamp) {
+  const props = { timestamp, key: `paused-${timestamp}` }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.paused" />}
+      {...props}
+    />
+  )
+}
+
+function addUnpausedEvent(eventList, timestamp) {
+  const props = { timestamp, key: `unpaused-${timestamp}` }
+  eventList.push(
+    <ScheduleEvent
+      message={<FormattedMessage id="schedule.unpaused" />}
+      {...props}
+    />
+  )
+}
+
 function Schedule(props) {
   const { contract } = props
-  const { symbol, start, cliff, duration, logs } = contract
+  const { symbol, start, cliff, duration, logs, version } = contract
   const vestingCliff = getMonthDiff(start, cliff)
 
   const [scheduleEvents, setScheduleEvents] = useState([])
-  const [revoked, setRevoked] = useState(false)
+  const [revokedOrPaused, setRevokedOrPaused] = useState(false)
+
+  const Topic = TopicByVersion[version]
 
   const scheduleEventsSetpUp = (fullShow = false) => {
     const eventList = []
@@ -117,8 +139,15 @@ function Schedule(props) {
           break
 
         case Topic.REVOKE:
-          setRevoked(true)
           addRevokedEvent(eventList, logData.timestamp)
+          break
+
+        case Topic.PAUSED:
+          addPausedEvent(eventList, logData.timestamp)
+          break
+
+        case Topic.UNPAUSED:
+          addUnpausedEvent(eventList, logData.timestamp)
           break
 
         default:
@@ -152,7 +181,7 @@ function Schedule(props) {
       }
     }
 
-    if (!revoked) {
+    if (!revokedOrPaused) {
       if (!fulfilledFlag) {
         if (new Date() >= new Date(endContractTs * 1000)) {
           addFulfilledEvent(eventList, endContractTs)
@@ -175,13 +204,32 @@ function Schedule(props) {
   useEffect(() => {
     scheduleEventsSetpUp()
     // eslint-disable-next-line
-  }, [revoked])
+  }, [revokedOrPaused])
+
+  useEffect(() => {
+    const cpLogs = [...logs]
+
+    cpLogs.sort((a, b) => a.data.timestamp - b.data.timestamp)
+
+    for (const log of cpLogs) {
+      switch (log.topic) {
+        case Topic.REVOKE:
+        case Topic.PAUSED:
+          setRevokedOrPaused(true)
+          break
+        case Topic.UNPAUSED:
+          setRevokedOrPaused(false)
+          break
+        default:
+      }
+    }
+  }, [Topic, logs])
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
 
   return (
-    <div className={`timeline ${revoked && 'revoked'}`}>
+    <div className={`timeline ${revokedOrPaused && 'revoked'}`}>
       <Header sub>
         <FormattedMessage id="schedule.title" />
         <Info

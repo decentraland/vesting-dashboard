@@ -1,13 +1,18 @@
-import { getAddress } from './contract/selectors'
+import { getAddress, getContract } from './contract/selectors'
 import { getAddress as getFrom } from './ethereum/selectors'
 import Web3 from 'web3'
+import Big from 'big.js'
 import manaAbi from '../abi/mana.json'
 import daiAbi from '../abi/dai.json'
 import usdtAbi from '../abi/usdt.json'
 import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
-import { TokenAddress, Topic } from './constants'
-import Big from 'big.js'
+import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
+import {
+  ContractVersion,
+  TokenAddressByChainId,
+  TopicByVersion,
+} from './constants'
 
 let vesting, tokenContracts
 export default class API {
@@ -47,27 +52,46 @@ export default class API {
     } catch {
       console.error('Metamask not found')
     }
-    const state = this.store.getState()
-    const address = getAddress(state)
 
     const eth = this.getEth()
-    vesting = new eth.Contract(vestingAbi, address)
+    const chainId = await eth.getChainId()
+    const TokenAddress = TokenAddressByChainId[chainId]
+
     tokenContracts = {
       [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
       [TokenAddress.DAI]: new eth.Contract(daiAbi, TokenAddress.DAI),
       [TokenAddress.USDT]: new eth.Contract(usdtAbi, TokenAddress.USDT),
       [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
     }
+
     return this.localWallet
   }
 
   async fetchContract() {
     const state = this.store.getState()
     const address = getAddress(state)
+    const eth = this.getEth()
 
-    const tokenContractAddress = (
-      await vesting.methods.token().call()
-    ).toLowerCase()
+    let version
+
+    try {
+      vesting = new eth.Contract(periodicTokenVestingAbi, address)
+      await vesting.methods.getIsLinear().call()
+      version = ContractVersion.V2
+    } catch (e) {
+      vesting = new eth.Contract(vestingAbi, address)
+      version = ContractVersion.V1
+    }
+
+    let tokenContractAddress
+
+    if (version === ContractVersion.V1) {
+      tokenContractAddress = await vesting.methods.token().call()
+    } else {
+      tokenContractAddress = await vesting.methods.getToken().call()
+    }
+
+    tokenContractAddress = tokenContractAddress.toLowerCase()
 
     if (!(tokenContractAddress in tokenContracts)) {
       throw new Error('Token not supported')
@@ -77,9 +101,48 @@ export default class API {
       .decimals()
       .call()
 
+    const promises = {
+      v1: {
+        duration: () => vesting.methods.duration().call(),
+        cliff: () => vesting.methods.cliff().call(),
+        beneficiary: () => vesting.methods.beneficiary().call(),
+        vestedAmount: () => vesting.methods.vestedAmount().call(),
+        releasableAmount: () => vesting.methods.releasableAmount().call(),
+        revoked: () => vesting.methods.revoked().call(),
+        revocable: () => vesting.methods.revocable().call(),
+        released: () => vesting.methods.released().call(),
+        start: () => vesting.methods.start().call(),
+        periodDuration: () => Promise.resolve('0'),
+        vestedPerPeriod: () => Promise.resolve([]),
+        paused: () => Promise.resolve(false),
+        pausable: () => Promise.resolve(false),
+        stop: () => Promise.resolve('0'),
+        linear: () => Promise.resolve(false),
+      },
+      v2: {
+        duration: () => Promise.resolve('0'),
+        cliff: () => vesting.methods.getCliff().call(),
+        beneficiary: () => vesting.methods.getBeneficiary().call(),
+        vestedAmount: () => vesting.methods.getVested().call(),
+        releasableAmount: () => vesting.methods.getReleasable().call(),
+        revoked: () => vesting.methods.getIsRevoked().call(),
+        revocable: () => vesting.methods.getIsRevocable().call(),
+        released: () => vesting.methods.getReleased().call(),
+        start: () => vesting.methods.getStart().call(),
+        periodDuration: () => vesting.methods.getPeriod().call(),
+        vestedPerPeriod: () => vesting.methods.getVestedPerPeriod().call(),
+        paused: () => vesting.methods.paused().call(),
+        pausable: () => vesting.methods.getIsPausable().call(),
+        stop: () => vesting.methods.getStop().call(),
+        linear: () => vesting.methods.getIsLinear().call(),
+      },
+    }
+
     const [
       symbol,
       balance,
+      logs,
+      owner,
       duration,
       cliff,
       beneficiary,
@@ -87,32 +150,49 @@ export default class API {
       releasableAmount,
       revoked,
       revocable,
-      owner,
       released,
       start,
-      logs,
+      periodDuration,
+      vestedPerPeriod,
+      paused,
+      pausable,
+      stop,
+      linear,
     ] = await Promise.all([
       tokenContracts[tokenContractAddress].methods.symbol().call(),
       tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
-      vesting.methods.duration().call(),
-      vesting.methods.cliff().call(),
-      vesting.methods.beneficiary().call(),
-      vesting.methods.vestedAmount().call(),
-      vesting.methods.releasableAmount().call(),
-      vesting.methods.revoked().call(),
-      vesting.methods.revocable().call(),
+      this.getLogs(decimals, version),
       vesting.methods.owner().call(),
-      vesting.methods.released().call(),
-      vesting.methods.start().call(),
-      this.getLogs(decimals),
+      promises[version].duration(),
+      promises[version].cliff(),
+      promises[version].beneficiary(),
+      promises[version].vestedAmount(),
+      promises[version].releasableAmount(),
+      promises[version].revoked(),
+      promises[version].revocable(),
+      promises[version].released(),
+      promises[version].start(),
+      promises[version].periodDuration(),
+      promises[version].vestedPerPeriod(),
+      promises[version].paused(),
+      promises[version].pausable(),
+      promises[version].stop(),
+      promises[version].linear(),
     ])
 
     const contract = {
+      version,
       symbol,
       address,
       balance: parseInt(balance, 10) / 10 ** decimals,
-      duration: parseInt(duration, 10),
-      cliff: parseInt(cliff, 10),
+      duration:
+        version === ContractVersion.V1
+          ? parseInt(duration, 10)
+          : vestedPerPeriod.length * parseInt(periodDuration, 10),
+      cliff:
+        version === ContractVersion.V1
+          ? parseInt(cliff, 10)
+          : parseInt(cliff, 10) + parseInt(start, 10),
       beneficiary,
       vestedAmount: parseInt(vestedAmount, 10) / 10 ** decimals,
       releasableAmount: parseInt(releasableAmount, 10) / 10 ** decimals,
@@ -122,12 +202,25 @@ export default class API {
       released: parseInt(released, 10) / 10 ** decimals,
       start: parseInt(start, 10),
       logs,
+      periodDuration,
+      vestedPerPeriod: vestedPerPeriod.map(
+        (amount) => parseInt(amount, 10) / 10 ** decimals
+      ),
+      paused,
+      pausable,
+      stop: parseInt(stop, 10),
+      linear,
     }
+
+    contract.total =
+      version === ContractVersion.V1
+        ? contract.balance + contract.released
+        : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
 
     return contract
   }
 
-  async getLogs(decimals) {
+  async getLogs(decimals, version) {
     const state = this.store.getState()
     const address = getAddress(state)
     const eth = this.getEth()
@@ -144,13 +237,16 @@ export default class API {
     const logs = []
     let cumulativeReleased = 0
 
+    const Topic = TopicByVersion[version]
+
     for (const idx in web3Logs) {
       switch (web3Logs[idx].topics[0]) {
         case Topic.TRANSFER_OWNERSHIP:
           logs.push(
             this.getTransferOwnershipLog(
               [...web3Logs[idx].topics],
-              blocks[idx].timestamp
+              blocks[idx].timestamp,
+              Topic
             )
           )
           break
@@ -160,15 +256,22 @@ export default class API {
               decimals,
               web3Logs[idx].data,
               cumulativeReleased,
-              blocks[idx].timestamp
+              blocks[idx].timestamp,
+              version,
+              Topic
             )
           )
           cumulativeReleased = web3Logs[idx].data
           break
         case Topic.REVOKE:
-          logs.push(this.getRevokeLog(blocks[idx].timestamp))
+          logs.push(this.getRevokeLog(blocks[idx].timestamp, Topic))
           break
-
+        case Topic.PAUSED:
+          logs.push(this.getPausedLog(blocks[idx].timestamp, Topic))
+          break
+        case Topic.UNPAUSED:
+          logs.push(this.getUnpausedLog(blocks[idx].timestamp, Topic))
+          break
         default:
           break
       }
@@ -177,7 +280,7 @@ export default class API {
     return logs
   }
 
-  getTransferOwnershipLog(topics, timestamp) {
+  getTransferOwnershipLog(topics, timestamp, Topic) {
     return {
       topic: Topic.TRANSFER_OWNERSHIP,
       data: {
@@ -188,10 +291,22 @@ export default class API {
     }
   }
 
-  getReleaseLog(decimals, data, cumulativeReleased, timestamp) {
-    const totalReleased = Big(Number(data) || 0).div(10 ** decimals)
+  getReleaseLog(decimals, data, cumulativeReleased, timestamp, version, Topic) {
     const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
-    const currentReleased = totalReleased.minus(cumulative)
+
+    let totalReleased
+    let currentReleased
+
+    if (version === ContractVersion.V1) {
+      totalReleased = Big(Number(data) || 0).div(10 ** decimals)
+      currentReleased = totalReleased.minus(cumulative)
+    } else {
+      currentReleased = Big(Number(data) || 0).div(10 ** decimals)
+      totalReleased = Big(Number(cumulativeReleased) || 0)
+        .div(10 ** decimals)
+        .add(currentReleased)
+    }
+
     return {
       topic: Topic.RELEASE,
       data: {
@@ -202,7 +317,7 @@ export default class API {
     }
   }
 
-  getRevokeLog(timestamp) {
+  getRevokeLog(timestamp, Topic) {
     return {
       topic: Topic.REVOKE,
       data: {
@@ -211,16 +326,46 @@ export default class API {
     }
   }
 
-  release() {
+  getPausedLog(timestamp, Topic) {
+    return {
+      topic: Topic.PAUSED,
+      data: {
+        timestamp: timestamp,
+      },
+    }
+  }
+
+  getUnpausedLog(timestamp, Topic) {
+    return {
+      topic: Topic.UNPAUSED,
+      data: {
+        timestamp: timestamp,
+      },
+    }
+  }
+
+  async release() {
     const state = this.store.getState()
+    const contract = getContract(state)
     const from = getFrom(state)
-    return vesting.methods.release().send({ from })
+
+    if (contract.version === ContractVersion.V1) {
+      return vesting.methods.release().send({ from })
+    }
+
+    const releasableAmount = await vesting.methods.getReleasable().call()
+
+    return vesting.methods.release(from, releasableAmount).send({ from })
   }
 
   changeBeneficiary(address) {
     const state = this.store.getState()
+    const contract = getContract(state)
     const from = getFrom(state)
-    return vesting.methods.changeBeneficiary(address).send({ from })
+
+    return contract.version === ContractVersion.V1
+      ? vesting.methods.changeBeneficiary(address).send({ from })
+      : vesting.methods.setBeneficiary(address).send({ from })
   }
 
   async fetchTicker(ticker = 'decentraland') {

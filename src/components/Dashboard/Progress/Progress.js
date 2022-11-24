@@ -4,14 +4,16 @@ import { Header } from 'decentraland-ui'
 import Bar from './Bar/Bar'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Info from '../../Info/Info'
-
 import './Progress.css'
 
 function Progress(props) {
   const { contract } = props
-  const total = contract.balance + contract.released
-  const vestedPercentage = Math.round((contract.vestedAmount / total) * 100)
-  const releasedPercentage = Math.round((contract.released / total) * 100)
+  const vestedPercentage = Math.round(
+    (contract.vestedAmount / contract.total) * 100
+  )
+  const releasedPercentage = Math.round(
+    (contract.released / contract.total) * 100
+  )
 
   return (
     <div id="progress">
@@ -41,7 +43,8 @@ function Progress(props) {
             <FormattedMessage id="progress.total" />
           </Header>
           <Header style={{ display: 'inline-block' }}>
-            <FormattedNumber value={Math.round(total)} /> {contract.symbol}
+            <FormattedNumber value={Math.round(contract.total)} />{' '}
+            {contract.symbol}
           </Header>
         </Grid.Column>
       </Grid>

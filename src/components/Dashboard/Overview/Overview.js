@@ -30,8 +30,7 @@ const logo = {
 export default function Overview(props) {
   const { address, contract } = props
 
-  const { symbol, released, balance, start, cliff, duration } = contract
-  const total = balance + released
+  const { symbol, start, cliff, duration, total } = contract
   const vestingMonths = getMonthDiff(start, start + duration)
   const vestingCliff = getMonthDiff(start, cliff)
 
