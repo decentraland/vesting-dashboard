@@ -9,10 +9,13 @@ import { openInNewTab } from '../../utils'
 import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
 
 import './Header.css'
+import { getDclProfile } from './utils'
 
 function signInHandler() {
   if (window.ethereum) {
-    window.location.reload()
+    window.ethereum.enable().then(() => {
+      window.location.reload()
+    })
   } else {
     openInNewTab('https://metamask.io/download/')
   }
@@ -21,6 +24,7 @@ function signInHandler() {
 function Header(props) {
   const { address } = props
   const [isSignedIn, setIsSignedIn] = useState(false)
+  const [profile, setProfile] = useState(undefined)
 
   const { proposalUrl } = useContext(DaoInitiativeContext)
 
@@ -30,6 +34,9 @@ function Header(props) {
   useEffect(() => {
     if (address) {
       setIsSignedIn(true)
+      getDclProfile(address).then((profile) => {
+        setProfile(profile)
+      })
     } else {
       setIsSignedIn(false)
     }
@@ -53,7 +60,16 @@ function Header(props) {
               {isMobile ? (
                 proposalUrl && <DaoInitiativeButton />
               ) : (
-                <UserMenu onSignIn={signInHandler} isSignedIn={isSignedIn} />
+                <UserMenu
+                  onSignIn={signInHandler}
+                  isSignedIn={isSignedIn}
+                  avatar={profile}
+                  onClickProfile={() =>
+                    openInNewTab(
+                      `https://governance.decentraland.org/profile/?address=${address}`
+                    )
+                  }
+                />
               )}
             </Grid.Column>
           </Grid.Row>
