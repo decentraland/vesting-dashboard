@@ -1,11 +1,12 @@
 import React from 'react'
 import { Segment } from 'decentraland-ui'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { ContractVersion } from '../../../modules/constants'
 
 function PendingFunds(props) {
   const { pendingFunds, contract } = props
 
-  if (!contract || contract.version !== 'v2' || !pendingFunds) {
+  if (!contract || contract.version !== ContractVersion.V2 || !pendingFunds) {
     return null
   }
 

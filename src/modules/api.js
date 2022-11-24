@@ -1,14 +1,18 @@
 import { getAddress, getContract } from './contract/selectors'
 import { getAddress as getFrom } from './ethereum/selectors'
 import Web3 from 'web3'
+import Big from 'big.js'
 import manaAbi from '../abi/mana.json'
 import daiAbi from '../abi/dai.json'
 import usdtAbi from '../abi/usdt.json'
 import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
-import { TokenAddressByChainId, TopicByVersion } from './constants'
-import Big from 'big.js'
+import {
+  ContractVersion,
+  TokenAddressByChainId,
+  TopicByVersion,
+} from './constants'
 
 let vesting, tokenContracts
 export default class API {
@@ -74,15 +78,15 @@ export default class API {
     try {
       vesting = new eth.Contract(periodicTokenVestingAbi, address)
       await vesting.methods.getIsLinear().call()
-      version = 'v2'
+      version = ContractVersion.V2
     } catch (e) {
       vesting = new eth.Contract(vestingAbi, address)
-      version = 'v1'
+      version = ContractVersion.V1
     }
 
     let tokenContractAddress
 
-    if (version === 'v1') {
+    if (version === ContractVersion.V1) {
       tokenContractAddress = await vesting.methods.token().call()
     } else {
       tokenContractAddress = await vesting.methods.getToken().call()
@@ -183,11 +187,11 @@ export default class API {
       address,
       balance: parseInt(balance, 10) / 10 ** decimals,
       duration:
-        version === 'v1'
+        version === ContractVersion.V1
           ? parseInt(duration, 10)
           : vestedPerPeriod.length * parseInt(periodDuration, 10),
       cliff:
-        version === 'v1'
+        version === ContractVersion.V1
           ? parseInt(cliff, 10)
           : parseInt(cliff, 10) + parseInt(start, 10),
       beneficiary,
@@ -210,7 +214,7 @@ export default class API {
     }
 
     contract.total =
-      version === 'v1'
+      version === ContractVersion.V1
         ? contract.balance + contract.released
         : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
 
@@ -294,7 +298,7 @@ export default class API {
     let totalReleased
     let currentReleased
 
-    if (version === 'v1') {
+    if (version === ContractVersion.V1) {
       totalReleased = Big(Number(data) || 0).div(10 ** decimals)
       currentReleased = totalReleased.minus(cumulative)
     } else {
@@ -346,7 +350,7 @@ export default class API {
     const contract = getContract(state)
     const from = getFrom(state)
 
-    if (contract.version === 'v1') {
+    if (contract.version === ContractVersion.V1) {
       return vesting.methods.release().send({ from })
     }
 
@@ -360,7 +364,7 @@ export default class API {
     const contract = getContract(state)
     const from = getFrom(state)
 
-    return contract.version === 'v1'
+    return contract.version === ContractVersion.V1
       ? vesting.methods.changeBeneficiary(address).send({ from })
       : vesting.methods.setBeneficiary(address).send({ from })
   }

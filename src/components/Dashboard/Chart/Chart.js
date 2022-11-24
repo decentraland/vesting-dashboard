@@ -13,9 +13,9 @@ import { LineChart } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
 import { useIntl } from 'react-intl'
-import useResponsive from '../../../hooks/useResponsive'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
-import { TopicByVersion } from '../../../modules/constants'
+import useResponsive from '../../../hooks/useResponsive'
+import { ContractVersion, TopicByVersion } from '../../../modules/constants'
 import {
   DAY_IN_SECONDS,
   getDurationInDays,
@@ -254,7 +254,7 @@ function Chart(props) {
   let isRevoked, revokeOrPauseDay
   let isPaused = false
 
-  if (version === 'v1') {
+  if (version === ContractVersion.V1) {
     ;[isRevoked, revokeOrPauseDay] = getRevokedData(revokeLog, start)
   } else {
     ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(
@@ -356,7 +356,7 @@ function Chart(props) {
         name: intl.formatMessage({ id: 'chart.vested' }),
         type: 'line',
         data:
-          version === 'v1'
+          version === ContractVersion.V1
             ? getVestingData(start, cliff, duration, total, revokeLog)
             : getVestingDataV2(
                 start,

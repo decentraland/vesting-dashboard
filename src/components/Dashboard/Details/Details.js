@@ -6,13 +6,14 @@ import {
   FormattedNumber,
   FormattedPlural,
 } from 'react-intl'
+import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
-import './Details.css'
 import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
+import { ContractVersion } from '../../../modules/constants'
+import './Details.css'
 
 function addressShortener(address) {
   return address.substring(0, 6) + '...' + address.substring(38, 42)
@@ -209,7 +210,7 @@ function Details(props) {
           onRelease
         )}
       {getRevocable(revocable)}
-      {version === 'v2' && getPausable(pausable)}
+      {version === ContractVersion.V2 && getPausable(pausable)}
       <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />
     </div>
   )

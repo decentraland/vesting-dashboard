@@ -15,8 +15,13 @@ export const TokenAddressByChainId = {
   },
 }
 
+export const ContractVersion = {
+  V1: 'v1',
+  V2: 'v2',
+}
+
 export const TopicByVersion = {
-  v1: {
+  [ContractVersion.V1]: {
     RELEASE:
       '0xfb81f9b30d73d830c3544b34d827c08142579ee75710b490bab0b3995468c565',
     REVOKE:
@@ -28,7 +33,7 @@ export const TopicByVersion = {
     UNPAUSED:
       '0x0000000000000000000000000000000000000000000000000000000000000000',
   },
-  v2: {
+  [ContractVersion.V2]: {
     RELEASE:
       '0xb21fb52d5749b80f3182f8c6992236b5e5576681880914484d7f4c9b062e619e',
     REVOKE:
