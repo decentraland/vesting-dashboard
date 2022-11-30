@@ -71,5 +71,6 @@
   "modal.button": "Transfer",
   "modal.error": "This is not a valid Ethereum address",
   "modal.success": "{address} {br} is the new beneficiary. Reload the page to see the reflected changes.",
-  "pending_funds.releasable": "The contract requires {pending} more {token} to cover the releasable amount. Please contact the issuer to have it funded accordingly."
+  "pending_funds.requires_more_funding": "The contract requires {pending} more {token} to cover the total vesting. Please contact the issuer to have it funded accordingly.",
+  "pending_funds.over_funded": "The contract has {pending} more {token} than the amount required to fund the total vesting."
 }
