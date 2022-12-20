@@ -109,10 +109,10 @@ function getVestingDataV2(
   for (let i = 0; i < vestingDays; i++) {
     let vestedThatDay
 
-    if (i <= cliffEndDay) {
+    if (i < cliffEndDay) {
       vestedThatDay = 0
     } else {
-      const elapsedPeriods = (DAY_IN_SECONDS * (i + 1)) / periodDuration
+      const elapsedPeriods = (DAY_IN_SECONDS * i) / periodDuration
       const elapsedPeriodsTrunc = Math.trunc(elapsedPeriods)
 
       vestedThatDay = vestedPerPeriod
