@@ -142,20 +142,20 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
   const today = getDaysFromStart(start) + 1
   const cliffEndDay = getCliffEndDay(start, cliff)
   const releaseDays = releaseLogs.map((log) =>
-    Math.ceil((log.timestamp - start) / DAY_IN_SECONDS)
+    Math.round((log.timestamp - start) / DAY_IN_SECONDS)
   )
 
   if (releaseDays.length > 0) {
     let releaseData = emptyDataArray(cliffEndDay)
     releaseData = releaseData.concat(
-      toDataArray(releaseDays[0] - cliffEndDay, (x, i) => 0)
-    )
+      toDataArray(releaseDays[0] - cliffEndDay, () => 0)
+      )
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1]
       releaseData = releaseData.concat(
         toDataArray(
           releaseDays[i] - releaseDays[i - 1],
-          (x, i) => Math.round(acum * 100) / 100
+          () => Math.round(acum * 100) / 100
         )
       )
     }

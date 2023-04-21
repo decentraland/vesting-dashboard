@@ -251,17 +251,16 @@ export default class API {
           )
           break
         case Topic.RELEASE:
-          logs.push(
-            this.getReleaseLog(
-              decimals,
-              web3Logs[idx].data,
-              cumulativeReleased,
-              blocks[idx].timestamp,
-              version,
-              Topic
-            )
+          const log = this.getReleaseLog(
+            decimals,
+            web3Logs[idx].data,
+            cumulativeReleased,
+            blocks[idx].timestamp,
+            version,
+            Topic
           )
-          cumulativeReleased = web3Logs[idx].data
+          logs.push(log)
+          cumulativeReleased = Big(log.data.acum).mul(10 ** decimals).toNumber()
           break
         case Topic.REVOKE:
           logs.push(this.getRevokeLog(blocks[idx].timestamp, Topic))
