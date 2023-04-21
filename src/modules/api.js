@@ -8,11 +8,7 @@ import usdtAbi from '../abi/usdt.json'
 import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
-import {
-  ContractVersion,
-  TokenAddressByChainId,
-  TopicByVersion,
-} from './constants'
+import { ContractVersion, TokenAddressByChainId, TopicByVersion } from './constants'
 
 let vesting, tokenContracts
 export default class API {
@@ -55,6 +51,11 @@ export default class API {
 
     const eth = this.getEth()
     const chainId = await eth.getChainId()
+
+    if(chainId !== 1) {
+      throw new Error(`Unsupported chain id ${chainId}`)
+    }
+
     const TokenAddress = TokenAddressByChainId[chainId]
 
     tokenContracts = {
@@ -64,7 +65,7 @@ export default class API {
       [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
     }
 
-    return this.localWallet
+    return {address: this.localWallet, network: { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }, chainId: chainId }
   }
 
   async fetchContract() {
@@ -381,10 +382,5 @@ export default class API {
     } catch (e) {
       return 0
     }
-  }
-
-  async getNetwork() {
-    const chainId = await this.getEth().getChainId()
-    return { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }
   }
 }

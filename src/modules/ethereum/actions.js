@@ -13,11 +13,12 @@ export function connectRequest() {
   }
 }
 
-export function connectSuccess(address, network) {
+export function connectSuccess(address, network, chainId) {
   return {
     type: CONNECT_SUCCESS,
     address,
     network,
+    chainId
   }
 }
 
@@ -36,9 +37,8 @@ export function connect() {
     }
     dispatch(connectRequest())
     try {
-      const address = await api.connect()
-      const network = await api.getNetwork()
-      dispatch(connectSuccess(address, network))
+      const { address, network, chainId } = await api.connect()
+      dispatch(connectSuccess(address, network, chainId))
       dispatch(fetchContract())
       dispatch(fetchTicker())
       return address

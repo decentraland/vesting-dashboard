@@ -18,7 +18,7 @@ function WrongNetworkModal(props){
 
   const currentChainName = () => {
    return <b>{currentNetwork
-        ? getChainName(currentNetwork.chainId)
+        ? getChainName(currentNetwork)
         : 'unknown chain'}</b>
   }
 

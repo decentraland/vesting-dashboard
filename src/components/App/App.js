@@ -9,6 +9,8 @@ import DaoInitiativeContextProvider from '../../context/DaoInitiativeContext'
 import LandingPage from '../LandingPage/LandingPage'
 import ErrorPage from '../ErrorPage/ErrorPage'
 import LoadingPage from '../LoadingPage/LoadingPage'
+import WrongNetworkModal from '../WrongNetworkModal/WrongNetworkModal'
+import { ChainId } from '@dcl/schemas/dist/dapps/chain-id'
 
 class App extends Component {
   static propTypes = {
@@ -22,6 +24,8 @@ class App extends Component {
     super(props)
     this.state = {
       address: this.props.address || localStorage.getItem('address') || null,
+      chainId: this.props.chainId || null,
+      showNetworkChangeModal: false,
     }
   }
 
@@ -41,6 +45,45 @@ class App extends Component {
       onConnect()
     }
   }
+
+  componentDidMount() {
+    if (typeof window.ethereum !== 'undefined' && window.ethereum.isConnected()) {
+      const expectedChainId = '0x1';
+
+      window.ethereum.request({ method: 'eth_chainId' })
+        .then(chainId => {
+          if (chainId !== expectedChainId) {
+            console.log('WRONG CHAIN ID: ', chainId)
+            this.setState({ showNetworkChangeModal: true, chainId: parseInt(String(chainId).substring(2), 16)});
+          }
+        })
+        .catch(error => console.log(error));
+
+      window.ethereum.on('chainChanged', (chainId) => {
+        console.log('CHANGED CHAIN ID', chainId)
+        if (chainId !== expectedChainId) {
+          this.setState({ showNetworkChangeModal: true, chainId: parseInt(String(chainId).substring(2), 16)});
+        }
+      });
+
+    } else {
+      console.log('Please install MetaMask to use this app');
+    }
+  }
+
+  async switchToMainnet() {
+    try {
+      window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x1' }],
+      }).then(() => {
+        window.location.reload()
+      })
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
 
   handleAddressChange = (e) => {
     const address = e.target.value.trim()
@@ -96,6 +139,20 @@ class App extends Component {
     )
   }
 
+  renderNetworkChangeModal() {
+    console.log('thisStateChainId', this.state.chainId)
+    return (
+      <div className="app start">
+        <WrongNetworkModal
+          isOpen={true}
+          currentNetwork={this.state.chainId}
+          expectedNetwork={ChainId.ETHEREUM_MAINNET}
+          onSwitchNetwork={this.switchToMainnet}
+        />
+      </div>
+    )
+  }
+
   render() {
     const {
       loadingMessage,
@@ -107,13 +164,15 @@ class App extends Component {
     if (loadingMessage) {
       return this.renderLoading()
     }
-    if (connectionError || contractError) {
+    if(connectionError || !!this.state.showNetworkChangeModal) {
+      return this.renderNetworkChangeModal()
+    }
+    if (contractError) {
       return this.renderError()
     }
     if (showPrompt) {
       return this.renderPrompt()
     }
-
     if (!isLoaded) {
       return null
     }
