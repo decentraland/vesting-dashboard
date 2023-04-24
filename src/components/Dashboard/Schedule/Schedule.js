@@ -1,5 +1,5 @@
 import './Schedule.css'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Header } from 'decentraland-ui'
 import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
 import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
@@ -73,6 +73,8 @@ function Schedule(props) {
   const { contract } = props
   const { symbol, start, cliff, duration, logs, version } = contract
   const vestingCliff = getMonthDiff(start, cliff)
+
+  const filteredLogs = useMemo(() => logs.filter((log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP), [logs, version])
 
   const [scheduleEvents, setScheduleEvents] = useState([])
   const [revokedOrPaused, setRevokedOrPaused] = useState(false)
@@ -155,12 +157,12 @@ function Schedule(props) {
       }
     }
 
-    if (logs.length > 0) {
-      if (logs.length > 1 && !fullShow) {
+    if (filteredLogs.length > 0) {
+      if (filteredLogs.length > 1 && !fullShow) {
         eventList.push(
           <ShowMore key="showMore" onClick={() => scheduleEventsSetpUp(true)} />
         )
-        const latestLog = logs[logs.length - 1]
+        const latestLog = filteredLogs[filteredLogs.length - 1]
         const { timestamp } = latestLog.data
 
         if (new Date(timestamp * 1000) > endContractDate) {
@@ -169,7 +171,7 @@ function Schedule(props) {
 
         addEventHandler(latestLog)
       } else {
-        for (const log of logs) {
+        for (const log of filteredLogs) {
           const { timestamp } = log.data
           if (!fulfilledFlag && new Date(timestamp * 1000) > endContractDate) {
             fulfilledFlag = true
@@ -207,7 +209,7 @@ function Schedule(props) {
   }, [revokedOrPaused])
 
   useEffect(() => {
-    const cpLogs = [...logs]
+    const cpLogs = [...filteredLogs]
 
     cpLogs.sort((a, b) => a.data.timestamp - b.data.timestamp)
 
@@ -223,7 +225,7 @@ function Schedule(props) {
         default:
       }
     }
-  }, [Topic, logs])
+  }, [Topic, filteredLogs])
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
