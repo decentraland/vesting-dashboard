@@ -4,13 +4,12 @@ import { getChainName } from '@dcl/schemas/dist/dapps/chain-id'
 import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Modal } from 'decentraland-ui/dist/components/Modal/Modal'
 import { ModalNavigation } from 'decentraland-ui/dist/components/ModalNavigation/ModalNavigation'
-import './WrongNetworkModal.css'
 import { FormattedMessage } from 'react-intl'
 
 const UNKNOWN_CHAIN_NAME = 'unknown chain'
 
 function WrongNetworkModal(props){
-  const { isOpen,
+  const {
     currentNetwork,
     expectedNetwork,
     onSwitchNetwork } = props
@@ -29,7 +28,7 @@ function WrongNetworkModal(props){
   return (
     <Modal
       size="tiny"
-      open={isOpen}
+      open={true}
       style={{ position: 'absolute' }}
     >
     <ModalNavigation title={<FormattedMessage id={"wrong_network_modal.title"} />} />

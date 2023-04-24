@@ -146,7 +146,6 @@ class App extends Component {
     return (
       <div className="app start">
         <WrongNetworkModal
-          isOpen={true}
           currentNetwork={this.state.chainId}
           expectedNetwork={ChainId.ETHEREUM_MAINNET}
           onSwitchNetwork={this.switchToMainnet}
@@ -166,10 +165,10 @@ class App extends Component {
     if (loadingMessage) {
       return this.renderLoading()
     }
-    if(connectionError || !!this.state.showNetworkChangeModal) {
+    if(!!this.state.showNetworkChangeModal) {
       return this.renderNetworkChangeModal()
     }
-    if (contractError) {
+    if (connectionError || contractError) {
       return this.renderError()
     }
     if (showPrompt) {
