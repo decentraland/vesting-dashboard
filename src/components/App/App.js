@@ -12,6 +12,11 @@ import LoadingPage from '../LoadingPage/LoadingPage'
 import WrongNetworkModal from '../WrongNetworkModal/WrongNetworkModal'
 import { ChainId } from '@dcl/schemas/dist/dapps/chain-id'
 
+const MAINNET_CHAIN_ID_HEX = '0x1';
+function parseChainIdHex(chainId) {
+  return parseInt(String(chainId).substring(2), 16)
+}
+
 class App extends Component {
   static propTypes = {
     loadingMessage: PropTypes.string,
@@ -47,26 +52,24 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (typeof window.ethereum !== 'undefined' && window.ethereum.isConnected()) {
-      const expectedChainId = '0x1';
-
-      window.ethereum.request({ method: 'eth_chainId' })
-        .then(chainId => {
-          if (chainId !== expectedChainId) {
-            console.log('WRONG CHAIN ID: ', chainId)
-            this.setState({ showNetworkChangeModal: true, chainId: parseInt(String(chainId).substring(2), 16)});
-          }
-        })
-        .catch(error => console.log(error));
-
+    if (typeof window.ethereum !== 'undefined'){
       window.ethereum.on('chainChanged', (chainId) => {
-        console.log('CHANGED CHAIN ID', chainId)
-        if (chainId !== expectedChainId) {
-          this.setState({ showNetworkChangeModal: true, chainId: parseInt(String(chainId).substring(2), 16)});
+        if (chainId !== MAINNET_CHAIN_ID_HEX) {
+          this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
         }
       });
 
-    } else {
+      if(window.ethereum.isConnected()) {
+        window.ethereum.request({ method: 'eth_chainId' })
+          .then(chainId => {
+            if (chainId !== MAINNET_CHAIN_ID_HEX) {
+              this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
+            }
+          })
+          .catch(error => console.log(error));
+      }
+    }
+      else {
       console.log('Please install MetaMask to use this app');
     }
   }
@@ -75,7 +78,7 @@ class App extends Component {
     try {
       window.ethereum.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: '0x1' }],
+        params: [{ chainId: MAINNET_CHAIN_ID_HEX }],
       }).then(() => {
         window.location.reload()
       })
@@ -140,7 +143,6 @@ class App extends Component {
   }
 
   renderNetworkChangeModal() {
-    console.log('thisStateChainId', this.state.chainId)
     return (
       <div className="app start">
         <WrongNetworkModal
