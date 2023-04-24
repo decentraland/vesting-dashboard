@@ -5,6 +5,7 @@ import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Modal } from 'decentraland-ui/dist/components/Modal/Modal'
 import { ModalNavigation } from 'decentraland-ui/dist/components/ModalNavigation/ModalNavigation'
 import './WrongNetworkModal.css'
+import { FormattedMessage } from 'react-intl'
 
 const UNKNOWN_CHAIN_NAME = 'unknown chain'
 
@@ -31,10 +32,14 @@ function WrongNetworkModal(props){
       open={isOpen}
       style={{ position: 'absolute' }}
     >
-    <ModalNavigation title={"Wrong Network"} />
+    <ModalNavigation title={<FormattedMessage id={"wrong_network_modal.title"} />} />
     <Modal.Content>
-      {"You need to be connected to "}{expectedChainName()}
-      {" to use this app, but you are currently connected to "}{currentChainName()}.
+      <FormattedMessage id={"wrong_network_modal.content"}
+                        values={{
+                          expectedChainName: expectedChainName(),
+                          currentChainName: currentChainName()
+                        }}
+                        />
     </Modal.Content>
      <Modal.Content>
        <Button
@@ -42,7 +47,10 @@ function WrongNetworkModal(props){
          primary
          onClick={() => onSwitchNetwork && onSwitchNetwork(expectedNetwork)}
        >
-         {`Switch to `}{expectedChainName()}
+         <FormattedMessage id="wrong_network_modal.button"
+         values={{
+           expectedChainName: expectedChainName(),
+         }}/>
        </Button>
      </Modal.Content>
     </Modal>)

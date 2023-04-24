@@ -71,6 +71,9 @@
   "modal.button": "Transfer",
   "modal.error": "This is not a valid Ethereum address",
   "modal.success": "{address} {br} is the new beneficiary. Reload the page to see the reflected changes.",
+  "wrong_network_modal.title": "Wrong Network",
+  "wrong_network_modal.content": "You need to be connected to {expectedChainName} to use this app, but you are currently connected to {currentChainName}.",
+  "wrong_network_modal.button": "Switch to {expectedChainName}",
   "pending_funds.requires_more_funding": "The contract requires {pending} more {token} to cover the total vesting. Please contact the issuer to have it funded accordingly.",
   "pending_funds.over_funded": "The contract has {pending} more {token} than the amount required to fund the total vesting."
 }
