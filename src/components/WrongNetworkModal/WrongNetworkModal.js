@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { getChainName } from '@dcl/schemas/dist/dapps/chain-id' //TODO: solve dependency problems
+import { getChainName } from '@dcl/schemas/dist/dapps/chain-id'
 import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Modal } from 'decentraland-ui/dist/components/Modal/Modal'
 import { ModalNavigation } from 'decentraland-ui/dist/components/ModalNavigation/ModalNavigation'
