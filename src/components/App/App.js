@@ -25,6 +25,8 @@ class App extends Component {
     onConnect: PropTypes.func.isRequired,
   }
 
+  _isMounted = false;
+
   constructor(props) {
     super(props)
     this.state = {
@@ -32,6 +34,7 @@ class App extends Component {
       chainId: this.props.chainId || null,
       showNetworkChangeModal: false,
     }
+    this.handleWrongChain = this.handleWrongChain.bind(this)
   }
 
   componentWillMount() {
@@ -41,7 +44,11 @@ class App extends Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     document.removeEventListener('keydown', this.handleKeyDown)
+    if (typeof window.ethereum !== 'undefined'){
+      window.ethereum.removeListener('chainChanged', this.handleWrongChain)
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -52,21 +59,17 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     if (typeof window.ethereum !== 'undefined'){
       window.ethereum.on('chainChanged', (chainId) => {
-        if (chainId !== MAINNET_CHAIN_ID_HEX) {
-          this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
-        }
+        this.handleWrongChain(chainId)
       });
 
       if(window.ethereum.isConnected()) {
-        window.ethereum.request({ method: 'eth_chainId' })
-          .then(chainId => {
-            if (chainId !== MAINNET_CHAIN_ID_HEX) {
-              this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
-            }
-          })
-          .catch(error => console.log(error));
+        window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
+          this.handleWrongChain(chainId)
+        })
+        .catch(error => console.log(error));
       }
     }
       else {
@@ -87,7 +90,6 @@ class App extends Component {
     }
   }
 
-
   handleAddressChange = (e) => {
     const address = e.target.value.trim()
     localStorage.setItem('address', address)
@@ -105,6 +107,14 @@ class App extends Component {
       this.state.address !== address
     ) {
       onAccess(this.state.address)
+    }
+  }
+
+  handleWrongChain = (chainId) => {
+    if (this._isMounted) {
+      if (chainId !== MAINNET_CHAIN_ID_HEX) {
+        this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
+      }
     }
   }
 
