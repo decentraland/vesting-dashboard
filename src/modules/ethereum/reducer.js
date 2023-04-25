@@ -26,6 +26,7 @@ export default function reducer(state = INITIAL_STATE, action) {
           ...state.data,
           address: action.address?.toLowerCase(),
           network: action.network,
+          chainId: action.chainId
         },
       }
     }

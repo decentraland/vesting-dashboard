@@ -5,7 +5,7 @@ import { connect as connectToEthereum } from '../../modules/ethereum/actions'
 import {
   isLoading as isConnecting,
   getError as getConnectionError,
-  getNetwork,
+  getNetwork, getChainId
 } from '../../modules/ethereum/selectors'
 import {
   isLoading as isFetchingContract,
@@ -22,7 +22,7 @@ export const mapState = state => {
   const contract = getContract(state)
   const network = getNetwork(state)
   const address = getAddress(state)
-
+  const chainId = getChainId(state)
   const isNotFound = contract && contract.beneficiary === '0x'
   const showPrompt = isNotFound || !address
 
@@ -40,7 +40,8 @@ export const mapState = state => {
     showPrompt,
     isNotFound,
     isLoaded: !!contract,
-    network
+    network,
+    chainId
   }
 }
 
