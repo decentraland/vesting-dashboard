@@ -13,8 +13,7 @@ import { LineChart } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
 import { useIntl } from 'react-intl'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
-import useResponsive from '../../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { ContractVersion, TopicByVersion } from '../../../modules/constants'
 import {
   DAY_IN_SECONDS,
@@ -149,7 +148,7 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
     let releaseData = emptyDataArray(cliffEndDay)
     releaseData = releaseData.concat(
       toDataArray(releaseDays[0] - cliffEndDay, () => 0)
-      )
+    )
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1]
       releaseData = releaseData.concat(
@@ -268,7 +267,7 @@ function Chart(props) {
   const intl = useIntl()
 
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
   const toBeVestedLabel = intl.formatMessage({ id: 'chart.to_be_vested' })
 
   const option = {

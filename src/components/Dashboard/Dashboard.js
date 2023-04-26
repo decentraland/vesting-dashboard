@@ -8,13 +8,12 @@ import Beneficiary from './Beneficiary'
 import Schedule from './Schedule'
 import Chart from './Chart'
 import Summary from './Summary'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
-import useResponsive from '../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import PendingFunds from './PendingFunds'
 
 function Dashboard() {
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   return (
     <Container className="dashboard">

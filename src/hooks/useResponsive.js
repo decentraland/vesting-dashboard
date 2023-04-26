@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 
-let CURRENT_WIDTH = Responsive.onlyMobile.maxWidth
+export const onlyMobileMaxWidth = 767
+let CURRENT_WIDTH = onlyMobileMaxWidth
 
 function useResponsive() {
   const [width, setWidth] = useState(CURRENT_WIDTH)
