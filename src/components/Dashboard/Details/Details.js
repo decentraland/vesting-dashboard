@@ -6,11 +6,10 @@ import {
   FormattedNumber,
   FormattedPlural,
 } from 'react-intl'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
-import useResponsive from '../../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
 import './Details.css'
@@ -168,7 +167,7 @@ function Details(props) {
 
   const vestingCliff = getMonthDiff(start, cliff)
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const closeModalHandler = () => setIsModalOpen(false)

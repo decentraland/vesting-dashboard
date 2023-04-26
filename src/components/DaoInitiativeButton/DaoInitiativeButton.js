@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
-import useResponsive from '../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import { Button } from 'decentraland-ui'
 import { FormattedMessage } from 'react-intl'
 import ButtonIcon from '../../images/proposal_button_icon.svg'
@@ -10,7 +9,7 @@ import { openInNewTab } from '../../utils'
 function DaoInitiativeButton() {
   const { proposalUrl } = useContext(DaoInitiativeContext)
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
   return (
     <Button
       primary

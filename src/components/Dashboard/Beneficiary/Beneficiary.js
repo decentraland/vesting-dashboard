@@ -4,8 +4,7 @@ import { Grid } from 'semantic-ui-react'
 import Icon from '../../../images/grant_icon.svg'
 import { Header } from 'decentraland-ui'
 import { useIntl, FormattedMessage } from 'react-intl'
-import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { DaoInitiativeContext } from '../../../context/DaoInitiativeContext'
 import DaoInitiativeButton from '../../DaoInitiativeButton/DaoInitiativeButton'
 
@@ -15,7 +14,7 @@ function Beneficiary(props) {
   const { address } = props
 
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   const intl = useIntl()
 

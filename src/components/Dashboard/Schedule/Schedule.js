@@ -2,13 +2,12 @@ import './Schedule.css'
 import React, { useState, useEffect, useMemo } from 'react'
 import { Header } from 'decentraland-ui'
 import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 import Info from '../../Info/Info'
 import { getMonthDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
-import useResponsive from '../../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { TopicByVersion } from '../../../modules/constants'
 
 function addReleasedEvent(eventList, amount, token, timestamp) {
@@ -74,7 +73,13 @@ function Schedule(props) {
   const { symbol, start, cliff, duration, logs, version } = contract
   const vestingCliff = getMonthDiff(start, cliff)
 
-  const filteredLogs = useMemo(() => logs.filter((log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP), [logs, version])
+  const filteredLogs = useMemo(
+    () =>
+      logs.filter(
+        (log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP
+      ),
+    [logs, version]
+  )
 
   const [scheduleEvents, setScheduleEvents] = useState([])
   const [revokedOrPaused, setRevokedOrPaused] = useState(false)
@@ -228,7 +233,7 @@ function Schedule(props) {
   }, [Topic, filteredLogs])
 
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   return (
     <div className={`timeline ${revokedOrPaused && 'revoked'}`}>

@@ -1,10 +1,9 @@
 import { Logo, UserMenu } from 'decentraland-ui'
 import React, { useContext, useEffect, useState } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
 
 import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
-import useResponsive from '../../hooks/useResponsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import { openInNewTab } from '../../utils'
 import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
 
@@ -29,7 +28,7 @@ function Header(props) {
   const { proposalUrl } = useContext(DaoInitiativeContext)
 
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   useEffect(() => {
     if (address) {

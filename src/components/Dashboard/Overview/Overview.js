@@ -10,8 +10,7 @@ import {
 } from 'react-intl'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import ManaWidget from '../../ManaWidget'
-import useResponsive from '../../../hooks/useResponsive'
-import Responsive from 'semantic-ui-react/dist/commonjs/addons/Responsive'
+import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import Copy from '../../../images/copy.svg'
 import Link from '../../../images/link.svg'
 import DaiLogo from '../../../images/dai_logo.svg'
@@ -37,7 +36,7 @@ export default function Overview(props) {
   const [reviewUrl, handleClick] = useReviewUrl(address)
 
   const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: Responsive.onlyMobile.maxWidth })
+  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   const intl = useIntl()
 
