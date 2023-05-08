@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import './Footer.css'
 
 class Footer extends Component {
@@ -11,9 +11,7 @@ class Footer extends Component {
           <div className="footer-icons"></div>
         </div>
         <div className="footer-bottom">
-          <span className="footer-copyright">
-            © {new Date().getFullYear()} Decentraland
-          </span>
+          <span className="footer-copyright">© {new Date().getFullYear()} Decentraland</span>
         </div>
       </div>
     )
