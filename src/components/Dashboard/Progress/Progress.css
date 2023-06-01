@@ -12,15 +12,15 @@
 }
 
 #progress .amount {
- display: flex;
- align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 #progress .percentage {
- margin-left: 5px;
- color: white;
- padding: 0 5px;
- border-radius: 4px;
+  margin-left: 5px;
+  color: white;
+  padding: 0 5px;
+  border-radius: 4px;
 }
 
 #progress .percentage.vested {

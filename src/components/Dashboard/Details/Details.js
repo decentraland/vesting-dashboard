@@ -1,11 +1,6 @@
 import React, { useState } from 'react'
 import { Header, Popup, Button } from 'decentraland-ui'
-import {
-  FormattedDate,
-  FormattedMessage,
-  FormattedNumber,
-  FormattedPlural,
-} from 'react-intl'
+import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from 'react-intl'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
@@ -24,10 +19,7 @@ function getBeneficiary(addr) {
       <Header sub>
         <FormattedMessage id="details.beneficiary" />
       </Header>
-      <Header
-        onClick={() => copyToClipboard(addr)}
-        style={{ cursor: 'pointer' }}
-      >
+      <Header onClick={() => copyToClipboard(addr)} style={{ cursor: 'pointer' }}>
         <img src={AddressIcon} alt="" />
         <Popup
           content={<FormattedMessage id="global.copied" />}
@@ -35,10 +27,7 @@ function getBeneficiary(addr) {
           trigger={<span>{addressShortener(addr)}</span>}
           on="click"
         />
-        <Info
-          message={<FormattedMessage id="helper.beneficiary" />}
-          position="left center"
-        />
+        <Info message={<FormattedMessage id="helper.beneficiary" />} position="left center" />
       </Header>
     </div>
   )
@@ -51,12 +40,7 @@ function getDate(id, date) {
         <FormattedMessage id={id} />
       </Header>
       <Header>
-        <FormattedDate
-          value={new Date(date * 1000)}
-          year="numeric"
-          month="long"
-          day="numeric"
-        />
+        <FormattedDate value={new Date(date * 1000)} year="numeric" month="long" day="numeric" />
       </Header>
     </div>
   )
@@ -82,10 +66,7 @@ function getCliffPeriod(vestingCliff) {
             ),
           }}
         />
-        <Info
-          message={<FormattedMessage id="helper.cliff_period" />}
-          position="left center"
-        />
+        <Info message={<FormattedMessage id="helper.cliff_period" />} position="left center" />
       </Header>
     </div>
   )
@@ -99,10 +80,7 @@ function getAmount(id, value, symbol, helperId) {
       </Header>
       <Header>
         <FormattedNumber value={value} /> {symbol}
-        <Info
-          message={<FormattedMessage id={helperId} />}
-          position="left center"
-        />
+        <Info message={<FormattedMessage id={helperId} />} position="left center" />
       </Header>
     </div>
   )
@@ -114,13 +92,7 @@ function getRevocable(revocable) {
       <Header sub>
         <FormattedMessage id="details.revocable" />
       </Header>
-      <Header>
-        {revocable ? (
-          <FormattedMessage id="global.yes" />
-        ) : (
-          <FormattedMessage id="global.no" />
-        )}
-      </Header>
+      <Header>{revocable ? <FormattedMessage id="global.yes" /> : <FormattedMessage id="global.no" />}</Header>
     </div>
   )
 }
@@ -131,13 +103,7 @@ function getPausable(pausable) {
       <Header sub>
         <FormattedMessage id="details.pausable" />
       </Header>
-      <Header>
-        {pausable ? (
-          <FormattedMessage id="global.yes" />
-        ) : (
-          <FormattedMessage id="global.no" />
-        )}
-      </Header>
+      <Header>{pausable ? <FormattedMessage id="global.yes" /> : <FormattedMessage id="global.no" />}</Header>
     </div>
   )
 }
@@ -152,18 +118,7 @@ function getActionButton(text, onClick) {
 
 function Details(props) {
   const { contract, isBeneficiary, onRelease } = props
-  const {
-    version,
-    symbol,
-    released,
-    start,
-    cliff,
-    duration,
-    releasableAmount,
-    revocable,
-    pausable,
-    total,
-  } = contract
+  const { version, symbol, released, start, cliff, duration, releasableAmount, revocable, pausable, total } = contract
 
   const vestingCliff = getMonthDiff(start, cliff)
   const responsive = useResponsive()
@@ -178,36 +133,20 @@ function Details(props) {
         {getBeneficiary(contract.beneficiary)}
         {!isMobile &&
           isBeneficiary &&
-          getActionButton(
-            <FormattedMessage id="details.change_beneficiary" />,
-            () => setIsModalOpen(true)
-          )}
+          getActionButton(<FormattedMessage id="details.change_beneficiary" />, () => setIsModalOpen(true))}
         <div className="dates">
           {getDate('details.start', start)}
           {getDate('details.end', start + duration)}
         </div>
       </div>
       {getCliffPeriod(vestingCliff)}
-      {getAmount(
-        'details.total_vesting',
-        total,
-        symbol,
-        'helper.total_vesting'
-      )}
+      {getAmount('details.total_vesting', total, symbol, 'helper.total_vesting')}
       {getAmount('details.released', released, symbol, 'helper.released')}
-      {getAmount(
-        'details.releasable',
-        releasableAmount,
-        symbol,
-        'helper.releasable'
-      )}
+      {getAmount('details.releasable', releasableAmount, symbol, 'helper.releasable')}
       {!isMobile &&
         isBeneficiary &&
         releasableAmount > 0 &&
-        getActionButton(
-          <FormattedMessage id="details.release_funds" />,
-          onRelease
-        )}
+        getActionButton(<FormattedMessage id="details.release_funds" />, onRelease)}
       {getRevocable(revocable)}
       {version === ContractVersion.V2 && getPausable(pausable)}
       <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />

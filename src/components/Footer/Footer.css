@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: column nowrap;
   margin-bottom: 15px;
-  --footer-color: #736E7D;
+  --footer-color: #736e7d;
   color: var(--footer-color);
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-deprecated */
 import React, { Component } from 'react'
 import './App.css'
 import PropTypes from 'prop-types'
@@ -12,7 +13,7 @@ import LoadingPage from '../LoadingPage/LoadingPage'
 import WrongNetworkModal from '../WrongNetworkModal/WrongNetworkModal'
 import { ChainId } from '@dcl/schemas/dist/dapps/chain-id'
 
-const MAINNET_CHAIN_ID_HEX = '0x1';
+const MAINNET_CHAIN_ID_HEX = '0x1'
 function parseChainIdHex(chainId) {
   return parseInt(String(chainId).substring(2), 16)
 }
@@ -25,7 +26,7 @@ class App extends Component {
     onConnect: PropTypes.func.isRequired,
   }
 
-  _isMounted = false;
+  _isMounted = false
 
   constructor(props) {
     super(props)
@@ -44,9 +45,9 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
+    this._isMounted = false
     document.removeEventListener('keydown', this.handleKeyDown)
-    if (typeof window.ethereum !== 'undefined'){
+    if (typeof window.ethereum !== 'undefined') {
       window.ethereum.removeListener('chainChanged', this.handleWrongChain)
     }
   }
@@ -59,34 +60,37 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
-    if (typeof window.ethereum !== 'undefined'){
+    this._isMounted = true
+    if (typeof window.ethereum !== 'undefined') {
       window.ethereum.on('chainChanged', (chainId) => {
         this.handleWrongChain(chainId)
-      });
+      })
 
-      if(window.ethereum.isConnected()) {
-        window.ethereum.request({ method: 'eth_chainId' }).then(chainId => {
-          this.handleWrongChain(chainId)
-        })
-        .catch(error => console.log(error));
+      if (window.ethereum.isConnected()) {
+        window.ethereum
+          .request({ method: 'eth_chainId' })
+          .then((chainId) => {
+            this.handleWrongChain(chainId)
+          })
+          .catch((error) => console.log(error))
       }
-    }
-      else {
-      console.log('Please install MetaMask to use this app');
+    } else {
+      console.log('Please install MetaMask to use this app')
     }
   }
 
   async switchToMainnet() {
     try {
-      window.ethereum.request({
-        method: 'wallet_switchEthereumChain',
-        params: [{ chainId: MAINNET_CHAIN_ID_HEX }],
-      }).then(() => {
-        window.location.reload()
-      })
+      window.ethereum
+        .request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: MAINNET_CHAIN_ID_HEX }],
+        })
+        .then(() => {
+          window.location.reload()
+        })
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
@@ -113,7 +117,7 @@ class App extends Component {
   handleWrongChain = (chainId) => {
     if (this._isMounted) {
       if (chainId !== MAINNET_CHAIN_ID_HEX) {
-        this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId)});
+        this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId) })
       }
     }
   }
@@ -165,17 +169,11 @@ class App extends Component {
   }
 
   render() {
-    const {
-      loadingMessage,
-      connectionError,
-      contractError,
-      showPrompt,
-      isLoaded,
-    } = this.props
+    const { loadingMessage, connectionError, contractError, showPrompt, isLoaded } = this.props
     if (loadingMessage) {
       return this.renderLoading()
     }
-    if(!!this.state.showNetworkChangeModal) {
+    if (!!this.state.showNetworkChangeModal) {
       return this.renderNetworkChangeModal()
     }
     if (connectionError || contractError) {

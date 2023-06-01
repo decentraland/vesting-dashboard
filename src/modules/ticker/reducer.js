@@ -3,7 +3,7 @@ import { FETCH_TICKER_REQUEST, FETCH_TICKER_SUCCESS, FETCH_TICKER_FAILURE } from
 export const INITIAL_STATE = {
   data: null,
   loading: false,
-  error: null
+  error: null,
 }
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -12,7 +12,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         error: null,
-        loading: true
+        loading: true,
       }
     }
     case FETCH_TICKER_SUCCESS: {
@@ -20,14 +20,14 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         error: null,
         loading: false,
-        data: action.ticker
+        data: action.ticker,
       }
     }
     case FETCH_TICKER_FAILURE: {
       return {
         ...state,
         loading: false,
-        error: action.error
+        error: action.error,
       }
     }
     default:

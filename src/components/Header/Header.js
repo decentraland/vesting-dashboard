@@ -52,10 +52,7 @@ function Header(props) {
             <Grid.Column style={{ padding: 0 }}>
               <h1 className="header-title">Decentraland</h1>
             </Grid.Column>
-            <Grid.Column
-              floated="right"
-              style={{ width: 'fit-content', paddingRight: 0 }}
-            >
+            <Grid.Column floated="right" style={{ width: 'fit-content', paddingRight: 0 }}>
               {isMobile ? (
                 proposalUrl && <DaoInitiativeButton />
               ) : (
@@ -63,11 +60,7 @@ function Header(props) {
                   onSignIn={signInHandler}
                   isSignedIn={isSignedIn}
                   avatar={profile}
-                  onClickProfile={() =>
-                    openInNewTab(
-                      `https://governance.decentraland.org/profile/?address=${address}`
-                    )
-                  }
+                  onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
                 />
               )}
             </Grid.Column>

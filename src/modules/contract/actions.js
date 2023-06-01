@@ -12,21 +12,21 @@ export const CHANGE_BENEFICIARY_FAILURE = '[Failure] Change Beneficiary'
 
 export function fetchContractRequest() {
   return {
-    type: FETCH_CONTRACT_REQUEST
+    type: FETCH_CONTRACT_REQUEST,
   }
 }
 
 export function fetchContractSuccess(contract) {
   return {
     type: FETCH_CONTRACT_SUCCESS,
-    contract
+    contract,
   }
 }
 
 export function fetchContractFailure(error) {
   return {
     type: FETCH_CONTRACT_FAILURE,
-    error
+    error,
   }
 }
 
@@ -45,20 +45,20 @@ export function fetchContract() {
 
 export function releaseRequest() {
   return {
-    type: RELEASE_REQUEST
+    type: RELEASE_REQUEST,
   }
 }
 
 export function releaseSuccess() {
   return {
-    type: RELEASE_SUCCESS
+    type: RELEASE_SUCCESS,
   }
 }
 
 export function releaseFailure(error) {
   return {
     type: RELEASE_FAILURE,
-    error
+    error,
   }
 }
 
@@ -78,14 +78,14 @@ export function release() {
 export function changeBeneficiaryRequest(address) {
   return {
     type: CHANGE_BENEFICIARY_REQUEST,
-    address
+    address,
   }
 }
 
 export function changeBeneficiarySuccess(address) {
   return {
     type: CHANGE_BENEFICIARY_SUCCESS,
-    address
+    address,
   }
 }
 
@@ -93,7 +93,7 @@ export function changeBeneficiaryFailure(address, error) {
   return {
     type: CHANGE_BENEFICIARY_FAILURE,
     address,
-    error
+    error,
   }
 }
 
@@ -113,6 +113,5 @@ export function changeBeneficiary(address) {
           reject(e)
         })
     })
-
   }
 }

@@ -2,12 +2,7 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Grid } from 'semantic-ui-react'
 import { Logo, Header, Popup } from 'decentraland-ui'
-import {
-  FormattedMessage,
-  FormattedPlural,
-  FormattedNumber,
-  useIntl,
-} from 'react-intl'
+import { FormattedMessage, FormattedPlural, FormattedNumber, useIntl } from 'react-intl'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import ManaWidget from '../../ManaWidget'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
@@ -43,24 +38,15 @@ export default function Overview(props) {
   return (
     <>
       <Helmet>
-        <title>
-          {intl.formatMessage({ id: 'global.title' }, { token: symbol })}
-        </title>
+        <title>{intl.formatMessage({ id: 'global.title' }, { token: symbol })}</title>
       </Helmet>
-      <Grid
-        columns={symbol === 'MANA' && !isMobile ? 2 : 1}
-        className="overview"
-      >
+      <Grid columns={symbol === 'MANA' && !isMobile ? 2 : 1} className="overview">
         <Grid.Row>
           <Grid.Column floated="left" style={{ padding: 0 }}>
             <Grid className="contract" style={{ width: '100%' }}>
               {symbol !== 'MANA' ? (
                 <Grid.Column className="TokenLogo">
-                  <img
-                    src={logo[symbol]}
-                    style={{ width: isMobile ? '48px' : '72px' }}
-                    alt=""
-                  />
+                  <img src={logo[symbol]} style={{ width: isMobile ? '48px' : '72px' }} alt="" />
                 </Grid.Column>
               ) : (
                 isMobile && (
@@ -71,10 +57,7 @@ export default function Overview(props) {
               )}
               <Grid.Column className="Info">
                 <Header size="large" className={`TokenContract ${symbol}`}>
-                  <FormattedMessage
-                    id="overview.title"
-                    values={{ token: symbol }}
-                  />
+                  <FormattedMessage id="overview.title" values={{ token: symbol }} />
                 </Header>
                 <Header sub>
                   {address}{' '}
@@ -84,23 +67,13 @@ export default function Overview(props) {
                   <Popup
                     content={<FormattedMessage id="global.copied" />}
                     position="bottom center"
-                    trigger={
-                      <img
-                        src={Copy}
-                        alt=""
-                        onClick={() => copyToClipboard(address)}
-                      />
-                    }
+                    trigger={<img src={Copy} alt="" onClick={() => copyToClipboard(address)} />}
                     on="click"
                   />
                 </Header>
               </Grid.Column>
             </Grid>
-            <Header
-              style={
-                (symbol === 'MANA' && !isMobile && { maxWidth: '500px' }) || {}
-              }
-            >
+            <Header style={(symbol === 'MANA' && !isMobile && { maxWidth: '500px' }) || {}}>
               <FormattedMessage
                 id="overview.details"
                 values={{

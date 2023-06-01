@@ -2,10 +2,10 @@ import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE } from './actions'
 
 export const INITIAL_STATE = {
   data: {
-    address: null
+    address: null,
   },
   loading: false,
-  error: null
+  error: null,
 }
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -14,7 +14,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         error: null,
-        loading: true
+        loading: true,
       }
     }
     case CONNECT_SUCCESS: {
@@ -26,7 +26,7 @@ export default function reducer(state = INITIAL_STATE, action) {
           ...state.data,
           address: action.address?.toLowerCase(),
           network: action.network,
-          chainId: action.chainId
+          chainId: action.chainId,
         },
       }
     }
@@ -34,13 +34,13 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         loading: false,
-        error: action.error
+        error: action.error,
       }
     }
     case '@@router/LOCATION_CHANGE': {
       return {
         ...state,
-        error: null
+        error: null,
       }
     }
     default:

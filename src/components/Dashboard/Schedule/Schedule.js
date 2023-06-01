@@ -30,42 +30,22 @@ function addReleasedEvent(eventList, amount, token, timestamp) {
 
 function addFulfilledEvent(eventList, timestamp, future = false) {
   const props = { timestamp, future, key: 'fulfilled' }
-  eventList.push(
-    <ScheduleEvent
-      message={<FormattedMessage id="schedule.fulfilled" />}
-      {...props}
-    />
-  )
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.fulfilled" />} {...props} />)
 }
 
 function addRevokedEvent(eventList, timestamp) {
   const props = { timestamp, key: 'revoked' }
-  eventList.push(
-    <ScheduleEvent
-      message={<FormattedMessage id="schedule.revoked" />}
-      {...props}
-    />
-  )
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.revoked" />} {...props} />)
 }
 
 function addPausedEvent(eventList, timestamp) {
   const props = { timestamp, key: `paused-${timestamp}` }
-  eventList.push(
-    <ScheduleEvent
-      message={<FormattedMessage id="schedule.paused" />}
-      {...props}
-    />
-  )
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.paused" />} {...props} />)
 }
 
 function addUnpausedEvent(eventList, timestamp) {
   const props = { timestamp, key: `unpaused-${timestamp}` }
-  eventList.push(
-    <ScheduleEvent
-      message={<FormattedMessage id="schedule.unpaused" />}
-      {...props}
-    />
-  )
+  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.unpaused" />} {...props} />)
 }
 
 function Schedule(props) {
@@ -74,10 +54,7 @@ function Schedule(props) {
   const vestingCliff = getMonthDiff(start, cliff)
 
   const filteredLogs = useMemo(
-    () =>
-      logs.filter(
-        (log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP
-      ),
+    () => logs.filter((log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP),
     [logs, version]
   )
 
@@ -119,11 +96,7 @@ function Schedule(props) {
 
     if (new Date(cliff * 1000) < new Date()) {
       eventList.push(
-        <ScheduleEvent
-          message={<FormattedMessage id="schedule.cliff_ended" />}
-          timestamp={cliff}
-          key="cliff_ended"
-        />
+        <ScheduleEvent message={<FormattedMessage id="schedule.cliff_ended" />} timestamp={cliff} key="cliff_ended" />
       )
       eventList.push(
         <ScheduleEvent
@@ -164,9 +137,7 @@ function Schedule(props) {
 
     if (filteredLogs.length > 0) {
       if (filteredLogs.length > 1 && !fullShow) {
-        eventList.push(
-          <ShowMore key="showMore" onClick={() => scheduleEventsSetpUp(true)} />
-        )
+        eventList.push(<ShowMore key="showMore" onClick={() => scheduleEventsSetpUp(true)} />)
         const latestLog = filteredLogs[filteredLogs.length - 1]
         const { timestamp } = latestLog.data
 

@@ -54,9 +54,7 @@ export const createDefaultProfile = (address) => ({
 
 export async function getDclProfile(address) {
   try {
-    const response = await fetch(
-      `https://peer.decentral.io/lambdas/profiles?id=${address}`
-    )
+    const response = await fetch(`https://peer.decentral.io/lambdas/profiles?id=${address}`)
     const profileResponse = await response.json()
 
     if (profileResponse.length > 0) {

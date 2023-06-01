@@ -16,12 +16,9 @@ function ChangeBeneficiaryModal(props) {
   })
 
   const setAddress = (addr) => setState((prev) => ({ ...prev, address: addr }))
-  const setError = (isError, msg = '') =>
-    setState((prev) => ({ ...prev, error: isError, errorMessage: msg }))
-  const setLoading = (isLoading) =>
-    setState((prev) => ({ ...prev, loading: isLoading }))
-  const setSuccess = (msg = '') =>
-    setState((prev) => ({ ...prev, successMessage: msg }))
+  const setError = (isError, msg = '') => setState((prev) => ({ ...prev, error: isError, errorMessage: msg }))
+  const setLoading = (isLoading) => setState((prev) => ({ ...prev, loading: isLoading }))
+  const setSuccess = (msg = '') => setState((prev) => ({ ...prev, successMessage: msg }))
 
   const transfer = () => {
     if (isValidAddress(state.address)) {
@@ -50,13 +47,7 @@ function ChangeBeneficiaryModal(props) {
   }
 
   return (
-    <Modal
-      className="changeBeneficiaryModal"
-      size="small"
-      open={open}
-      onClose={onClose}
-      closeIcon={<Close />}
-    >
+    <Modal className="changeBeneficiaryModal" size="small" open={open} onClose={onClose} closeIcon={<Close />}>
       <Modal.Header>
         <FormattedMessage id="modal.title" />
       </Modal.Header>

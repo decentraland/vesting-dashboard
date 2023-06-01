@@ -1,4 +1,6 @@
-.Landing, .Error, .Loading {
+.Landing,
+.Error,
+.Loading {
   height: 100%;
   display: flex !important;
   flex-direction: column;
@@ -12,7 +14,8 @@
   margin-bottom: 50px;
 }
 
-.Landing h3, .Error h3 {
+.Landing h3,
+.Error h3 {
   font-size: 20px;
   font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
