@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
 import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import { Button } from 'decentraland-ui'

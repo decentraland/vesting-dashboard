@@ -1,5 +1,5 @@
 import { Close, Field, Modal, Button } from 'decentraland-ui'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'

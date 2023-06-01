@@ -1,4 +1,3 @@
-import React from 'react'
 import { Grid } from 'semantic-ui-react'
 import { Header } from 'decentraland-ui'
 import Bar from './Bar/Bar'

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-deprecated */
-import React, { Component } from 'react'
+import { Component } from 'react'
 import './App.css'
 import PropTypes from 'prop-types'
 import Header from '../Header'
@@ -173,7 +173,7 @@ class App extends Component {
     if (loadingMessage) {
       return this.renderLoading()
     }
-    if (!!this.state.showNetworkChangeModal) {
+    if (this.state.showNetworkChangeModal) {
       return this.renderNetworkChangeModal()
     }
     if (connectionError || contractError) {

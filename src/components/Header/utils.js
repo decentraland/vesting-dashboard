@@ -62,7 +62,7 @@ export async function getDclProfile(address) {
       const snapshots = profileData.avatar.snapshots
       const face256 = snapshots.face256
 
-      if (!!face256) {
+      if (face256) {
         profileData.avatar.snapshots = {
           ...snapshots,
           face: face256,

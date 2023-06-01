@@ -1,4 +1,3 @@
-import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Grid } from 'semantic-ui-react'
 import { Logo, Header, Popup } from 'decentraland-ui'

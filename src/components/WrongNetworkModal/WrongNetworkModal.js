@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { getChainName } from '@dcl/schemas/dist/dapps/chain-id'
 import { Button } from 'decentraland-ui/dist/components/Button/Button'
 import { Modal } from 'decentraland-ui/dist/components/Modal/Modal'
