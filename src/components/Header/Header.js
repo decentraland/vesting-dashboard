@@ -1,4 +1,4 @@
-import { Logo, UserMenu } from 'decentraland-ui'
+import { LoginModal, Logo, UserMenu, LoginModalOptionType } from 'decentraland-ui'
 import React, { useContext, useEffect, useState } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 
@@ -10,7 +10,7 @@ import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
 import './Header.css'
 import { getDclProfile } from './utils'
 
-function signInHandler() {
+function MetaMaskHandler() {
   if (window.ethereum) {
     window.ethereum.enable().then(() => {
       window.location.reload()
@@ -23,6 +23,7 @@ function signInHandler() {
 function Header(props) {
   const { address } = props
   const [isSignedIn, setIsSignedIn] = useState(false)
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
   const [profile, setProfile] = useState(undefined)
 
   const { proposalUrl } = useContext(DaoInitiativeContext)
@@ -57,7 +58,7 @@ function Header(props) {
                 proposalUrl && <DaoInitiativeButton />
               ) : (
                 <UserMenu
-                  onSignIn={signInHandler}
+                  onSignIn={() => setIsSignInModalOpen(true)}
                   isSignedIn={isSignedIn}
                   avatar={profile}
                   onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
@@ -67,6 +68,9 @@ function Header(props) {
           </Grid.Row>
         </Grid>
       </Container>
+      <LoginModal open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)}>
+        <LoginModal.Option type={LoginModalOptionType.METAMASK} onClick={MetaMaskHandler} />
+      </LoginModal>
     </div>
   )
 }
