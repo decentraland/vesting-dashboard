@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   min-height: 100% !important;
   height: 100%;
 }
@@ -17,8 +19,8 @@ h3 {
   --dark-gray: #222222;
   --light-blue: #ff2d55;
   --dark-purple: #16141a;
-  --green: #44B600;
-  --orange: #FF7439;
+  --green: #44b600;
+  --orange: #ff7439;
 }
 
 h1,

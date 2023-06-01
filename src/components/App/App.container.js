@@ -5,7 +5,8 @@ import { connect as connectToEthereum } from '../../modules/ethereum/actions'
 import {
   isLoading as isConnecting,
   getError as getConnectionError,
-  getNetwork, getChainId
+  getNetwork,
+  getChainId,
 } from '../../modules/ethereum/selectors'
 import {
   isLoading as isFetchingContract,
@@ -15,7 +16,7 @@ import {
 } from '../../modules/contract/selectors'
 import App from './App'
 
-export const mapState = state => {
+export const mapState = (state) => {
   let loadingMessage = null
   let connectionError = getConnectionError(state)
   let contractError = getContractError(state)
@@ -41,13 +42,13 @@ export const mapState = state => {
     isNotFound,
     isLoaded: !!contract,
     network,
-    chainId
+    chainId,
   }
 }
 
-export const mapDispatch = dispatch => ({
+export const mapDispatch = (dispatch) => ({
   onConnect: () => dispatch(connectToEthereum()),
-  onAccess: address => dispatch(push(address))
+  onAccess: (address) => dispatch(push(address)),
 })
 
 export default withRouter(connect(mapState, mapDispatch)(App))

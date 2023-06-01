@@ -21,5 +21,5 @@ export function toDataArray(length, callback) {
 }
 
 export function emptyDataArray(length) {
-  return toDataArray(length, (x, i) => '-')
+  return toDataArray(length, () => '-')
 }

@@ -8,10 +8,7 @@ function ErrorPage(props) {
 
   const intl = useIntl()
 
-  let errorText = intl.formatMessage(
-    { id: 'helper.error_page' },
-    { error: connectionError || 'null' }
-  )
+  let errorText = intl.formatMessage({ id: 'helper.error_page' }, { error: connectionError || 'null' })
   if (connectionError && connectionError.indexOf('Failed to fetch') !== -1) {
     errorText = (
       <p className="error">

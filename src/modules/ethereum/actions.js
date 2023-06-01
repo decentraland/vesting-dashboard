@@ -18,7 +18,7 @@ export function connectSuccess(address, network, chainId) {
     type: CONNECT_SUCCESS,
     address,
     network,
-    chainId
+    chainId,
   }
 }
 

@@ -35,17 +35,8 @@ export default class Modal extends React.PureComponent {
 
     return (
       <div className={containerClassName} onKeyDown={this.handleKeyDown}>
-        <div
-          className={modalClassName}
-          tabIndex="-1"
-          role="dialog"
-          onClick={onOverlayClick}
-        >
-          <div
-            className="modal-dialog"
-            role="document"
-            onClick={this.handleClick}
-          >
+        <div className={modalClassName} tabIndex="-1" role="dialog" onClick={onOverlayClick}>
+          <div className="modal-dialog" role="document" onClick={this.handleClick}>
             <div className="modal-content">{children}</div>
           </div>
         </div>
@@ -59,12 +50,7 @@ export class ModalCloseButton extends React.PureComponent {
   render() {
     const { onClose, children } = this.props
     return (
-      <button
-        type="button"
-        className="close btn btn-secondary"
-        data-dismiss="modal"
-        onClick={onClose}
-      >
+      <button type="button" className="close btn btn-secondary" data-dismiss="modal" onClick={onClose}>
         {children}
       </button>
     )

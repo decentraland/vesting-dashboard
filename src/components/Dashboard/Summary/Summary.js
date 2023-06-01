@@ -1,12 +1,7 @@
 import './Summary.css'
 import React from 'react'
 import { getMonthDiff } from '../../../utils'
-import {
-  FormattedDate,
-  FormattedMessage,
-  FormattedNumber,
-  FormattedPlural,
-} from 'react-intl'
+import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from 'react-intl'
 import useReviewUrl from '../../../hooks/useReviewUrl'
 
 function Summary(props) {
@@ -38,14 +33,7 @@ function Summary(props) {
               other={<FormattedMessage id="global.month.plural" />}
             />
           ),
-          cliffEnd: (
-            <FormattedDate
-              value={new Date(cliff * 1000)}
-              year="numeric"
-              month="long"
-              day="numeric"
-            />
-          ),
+          cliffEnd: <FormattedDate value={new Date(cliff * 1000)} year="numeric" month="long" day="numeric" />,
           nearly:
             percentage > 0 ? (
               <>
@@ -57,11 +45,7 @@ function Summary(props) {
               <>&nbsp;</>
             ),
           percentage: <FormattedNumber value={percentage} />,
-          amount: (
-            <FormattedNumber
-              value={symbol === 'MANA' ? total * ticker : total}
-            />
-          ),
+          amount: <FormattedNumber value={symbol === 'MANA' ? total * ticker : total} />,
         }}
       />
       <a href={reviewUrl} onClick={handleClick}>

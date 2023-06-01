@@ -6,8 +6,7 @@ import { isValidAddress } from '../../utils'
 import Input from '../Input'
 
 function LandingPage(props) {
-  const { stateAddress, isNotFound, address, network, handleAddressChange } =
-    props
+  const { stateAddress, isNotFound, address, network, handleAddressChange } = props
 
   const intl = useIntl()
 
@@ -37,11 +36,7 @@ function LandingPage(props) {
       <h3>
         <FormattedMessage id="landing_page.title" />
       </h3>
-      <Input
-        value={stateAddress}
-        placeholder="0x..."
-        onChange={handleAddressChange}
-      />
+      <Input value={stateAddress} placeholder="0x..." onChange={handleAddressChange} />
       <p className="help">{helpText}</p>
     </Container>
   )

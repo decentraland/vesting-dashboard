@@ -5,7 +5,7 @@ import './Card.css'
 export default class Card extends React.PureComponent {
   static propTypes = {
     title: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
   }
   render() {
     const { children, title } = this.props

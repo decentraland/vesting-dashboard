@@ -27,19 +27,13 @@ import {
 
 function getRevokedData(revokeLog, start) {
   const isRevoked = revokeLog.length > 0
-  const revokedDay = isRevoked
-    ? getDaysFromRevoke(revokeLog[0].data.timestamp, start)
-    : -1
+  const revokedDay = isRevoked ? getDaysFromRevoke(revokeLog[0].data.timestamp, start) : -1
 
   return [isRevoked, revokedDay]
 }
 
 function getPausedAndRevokedData(start, paused, revoked, stop) {
-  return [
-    revoked,
-    revoked || paused ? getDaysFromRevoke(stop, start) : -1,
-    paused,
-  ]
+  return [revoked, revoked || paused ? getDaysFromRevoke(stop, start) : -1, paused]
 }
 
 function getXAxisData(start, duration, intl) {
@@ -67,10 +61,7 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
       vestingData = new Array(revokedDay).fill(0)
     } else {
       vestingData = vestingData.concat(
-        toDataArray(
-          revokedDay,
-          (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
-        )
+        toDataArray(revokedDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
       )
     }
 
@@ -80,21 +71,11 @@ function getVestingData(start, cliff, duration, total, revokeLog) {
   }
 
   return vestingData.concat(
-    toDataArray(
-      vestingDays - cliffEndDay,
-      (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100
-    )
+    toDataArray(vestingDays - cliffEndDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
   )
 }
 
-function getVestingDataV2(
-  start,
-  cliff,
-  duration,
-  periodDuration,
-  vestedPerPeriod,
-  linear
-) {
+function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear) {
   const cliffEndDay = getCliffEndDay(start, cliff)
   const vestingDays = getDurationInDays(duration)
 
@@ -114,9 +95,7 @@ function getVestingDataV2(
       const elapsedPeriods = (DAY_IN_SECONDS * i) / periodDuration
       const elapsedPeriodsTrunc = Math.trunc(elapsedPeriods)
 
-      vestedThatDay = vestedPerPeriod
-        .slice(0, elapsedPeriodsTrunc)
-        .reduce((a, b) => a + b, 0)
+      vestedThatDay = vestedPerPeriod.slice(0, elapsedPeriodsTrunc).reduce((a, b) => a + b, 0)
 
       if (linear && elapsedPeriodsTrunc < vestedPerPeriod.length) {
         const toVestThisPeriod = vestedPerPeriod[elapsedPeriodsTrunc]
@@ -140,22 +119,15 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
 
   const today = getDaysFromStart(start) + 1
   const cliffEndDay = getCliffEndDay(start, cliff)
-  const releaseDays = releaseLogs.map((log) =>
-    Math.round((log.timestamp - start) / DAY_IN_SECONDS)
-  )
+  const releaseDays = releaseLogs.map((log) => Math.round((log.timestamp - start) / DAY_IN_SECONDS))
 
   if (releaseDays.length > 0) {
     let releaseData = emptyDataArray(cliffEndDay)
-    releaseData = releaseData.concat(
-      toDataArray(releaseDays[0] - cliffEndDay, () => 0)
-    )
+    releaseData = releaseData.concat(toDataArray(releaseDays[0] - cliffEndDay, () => 0))
     for (let i = 1; i < releaseDays.length; i++) {
       const { acum } = releaseLogs[i - 1]
       releaseData = releaseData.concat(
-        toDataArray(
-          releaseDays[i] - releaseDays[i - 1],
-          () => Math.round(acum * 100) / 100
-        )
+        toDataArray(releaseDays[i] - releaseDays[i - 1], () => Math.round(acum * 100) / 100)
       )
     }
 
@@ -164,10 +136,7 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
 
     const { acum } = releaseLogs[releaseLogs.length - 1]
     releaseData = releaseData.concat(
-      toDataArray(
-        finalDataPoint - releaseDays[releaseDays.length - 1],
-        (x, i) => Math.round(acum * 100) / 100
-      )
+      toDataArray(finalDataPoint - releaseDays[releaseDays.length - 1], () => Math.round(acum * 100) / 100)
     )
     return releaseData
   }
@@ -183,19 +152,13 @@ function getLabelInterval(duration, isMobile) {
   const durationInMonths = getDurationInDays(duration) / 30
   const maxLabels = 7
 
-  return (
-    30 *
-    (durationInMonths <= maxLabels
-      ? 1
-      : Math.ceil(durationInMonths / maxLabels))
-  )
+  return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels))
 }
 
 function getTooltipFormatter(today, newName, intl, args, symbol, ticker) {
   let tooltip = `<div class='tooltip'><p>${args[0].axisValue}</p><table>`
 
-  const getFormattedValue = (value) =>
-    isNaN(value) ? value : intl.formatNumber(Math.round(value))
+  const getFormattedValue = (value) => (isNaN(value) ? value : intl.formatNumber(Math.round(value)))
 
   args.forEach(({ marker, seriesName, value }) => {
     // prettier-ignore
@@ -245,9 +208,7 @@ function Chart(props) {
   const daysFromStart = start > today ? 0 : getDaysFromStart(start)
   const Topic = TopicByVersion[version]
 
-  const releaseLogs = logs
-    .filter((log) => log.topic === Topic.RELEASE)
-    .map((log) => log.data)
+  const releaseLogs = logs.filter((log) => log.topic === Topic.RELEASE).map((log) => log.data)
   const revokeLog = logs.filter((log) => log.topic === Topic.REVOKE)
 
   let isRevoked, revokeOrPauseDay
@@ -256,12 +217,7 @@ function Chart(props) {
   if (version === ContractVersion.V1) {
     ;[isRevoked, revokeOrPauseDay] = getRevokedData(revokeLog, start)
   } else {
-    ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(
-      start,
-      paused,
-      revoked,
-      stop
-    )
+    ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(start, paused, revoked, stop)
   }
 
   const intl = useIntl()
@@ -291,10 +247,7 @@ function Chart(props) {
         ),
     },
     legend: {
-      data: [
-        intl.formatMessage({ id: 'chart.vested' }),
-        intl.formatMessage({ id: 'chart.released' }),
-      ],
+      data: [intl.formatMessage({ id: 'chart.vested' }), intl.formatMessage({ id: 'chart.released' })],
     },
     grid: {
       left: '0',
@@ -339,9 +292,7 @@ function Chart(props) {
           const minNumber = Math.min(...diffArr)
           const idx = diffArr.findIndex((x) => x === minNumber)
 
-          return `${intl.formatNumber(value / lookup[idx].magnitude)}${
-            lookup[idx].abv
-          } ${symbol}`
+          return `${intl.formatNumber(value / lookup[idx].magnitude)}${lookup[idx].abv} ${symbol}`
         },
         inside: true,
         margin: 0,
@@ -357,14 +308,7 @@ function Chart(props) {
         data:
           version === ContractVersion.V1
             ? getVestingData(start, cliff, duration, total, revokeLog)
-            : getVestingDataV2(
-                start,
-                cliff,
-                duration,
-                periodDuration,
-                vestedPerPeriod,
-                linear
-              ),
+            : getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear),
         symbol: 'none',
         markLine: {
           symbol: 'none',
@@ -377,10 +321,7 @@ function Chart(props) {
                   ? intl.formatMessage({ id: 'chart.paused' })
                   : intl.formatMessage({ id: 'chart.today' })
               }`,
-              xAxis:
-                isRevoked || isPaused
-                  ? revokeOrPauseDay
-                  : getDaysFromStart(start),
+              xAxis: isRevoked || isPaused ? revokeOrPauseDay : getDaysFromStart(start),
               label: {
                 formatter: '{b}',
                 show: true,
