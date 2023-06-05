@@ -4,6 +4,8 @@ import { routerReducer, routerMiddleware } from 'react-router-redux'
 import appReducer from './reducer'
 import thunk from 'redux-thunk'
 import API from './api'
+import createSagaMiddleware from 'redux-saga'
+import { rootSaga as appSaga } from './saga'
 
 export default function configureStore(history, initialState) {
   // reducer
@@ -19,7 +21,11 @@ export default function configureStore(history, initialState) {
     predicate: () => true,
     collapsed: () => true,
   })
-  const middleware = applyMiddleware(thunk.withExtraArgument(api), router, logger)
+
+  // create the saga middleware
+  const sagaMiddleware = createSagaMiddleware()
+
+  const middleware = applyMiddleware(thunk.withExtraArgument(api), router, logger, sagaMiddleware)
 
   // enhancer
   const devtools = window.devToolsExtension ? window.devToolsExtension() : (f) => f
@@ -28,6 +34,9 @@ export default function configureStore(history, initialState) {
   // store
   const store = createStore(reducer, initialState, enhancer)
   api.setStore(store)
+
+  // then run the saga
+  sagaMiddleware.run(appSaga)
 
   return store
 }

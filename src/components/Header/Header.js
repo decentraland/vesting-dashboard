@@ -1,4 +1,4 @@
-import { LoginModal, Logo, UserMenu, LoginModalOptionType } from 'decentraland-ui'
+import { Logo, UserMenu } from 'decentraland-ui'
 import React, { useContext, useEffect, useState } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 
@@ -6,19 +6,10 @@ import { DaoInitiativeContext } from '../../context/DaoInitiativeContext'
 import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import { openInNewTab } from '../../utils'
 import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
+import WalletSelector from '../WalletSelector'
 
 import './Header.css'
 import { getDclProfile } from './utils'
-
-function MetaMaskHandler() {
-  if (window.ethereum) {
-    window.ethereum.enable().then(() => {
-      window.location.reload()
-    })
-  } else {
-    openInNewTab('https://metamask.io/download/')
-  }
-}
 
 function Header(props) {
   const { address } = props
@@ -68,9 +59,7 @@ function Header(props) {
           </Grid.Row>
         </Grid>
       </Container>
-      <LoginModal open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)}>
-        <LoginModal.Option type={LoginModalOptionType.METAMASK} onClick={MetaMaskHandler} />
-      </LoginModal>
+      <WalletSelector open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)} />
     </div>
   )
 }
