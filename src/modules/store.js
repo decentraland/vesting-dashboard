@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { createLogger } from 'redux-logger'
 import { routerReducer, routerMiddleware } from 'react-router-redux'
 import appReducer from './reducer'
+import { walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
 import thunk from 'redux-thunk'
 import API from './api'
 import createSagaMiddleware from 'redux-saga'
@@ -12,6 +13,7 @@ export default function configureStore(history, initialState) {
   const reducer = combineReducers({
     app: appReducer,
     routing: routerReducer,
+    wallet,
   })
 
   // middleware
