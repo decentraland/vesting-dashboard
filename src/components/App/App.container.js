@@ -2,12 +2,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { connect as connectToEthereum } from '../../modules/ethereum/actions'
-import {
-  isLoading as isConnecting,
-  getError as getConnectionError,
-  getNetwork,
-  getChainId,
-} from '../../modules/ethereum/selectors'
+import { getNetwork, getChainId, getError, isConnecting } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import {
   isLoading as isFetchingContract,
   getError as getContractError,
@@ -18,7 +13,7 @@ import App from './App'
 
 export const mapState = (state) => {
   let loadingMessage = null
-  let connectionError = getConnectionError(state)
+  let connectionError = getError(state)
   let contractError = getContractError(state)
   const contract = getContract(state)
   const network = getNetwork(state)

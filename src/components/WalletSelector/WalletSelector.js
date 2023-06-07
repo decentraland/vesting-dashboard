@@ -1,30 +1,26 @@
-import { useState } from 'react'
-import { LoginModal, LoginModalOptionType } from 'decentraland-ui'
-import { openInNewTab } from '../../utils'
+import { LoginModal } from 'decentraland-ui'
+import { connection } from 'decentraland-connect'
+import { toModalOptionType, toProviderType } from './utils'
 
 function WalletSelector(props) {
-  const { open, onClose } = props
-  const [isLoading, setIsLoading] = useState(false)
+  const { open, onClose, onConnect } = props
 
-  const metamaskHandler = () => {
-    if (window.ethereum) {
-      setIsLoading(true)
-      window.ethereum
-        .enable()
-        .then(() => {
-          window.location.reload()
-        })
-        .catch(() => {
-          setIsLoading(false)
-        })
-    } else {
-      openInNewTab('https://metamask.io/download/')
-    }
+  const handleOnConnect = (loginType) => {
+    const providerType = toProviderType(loginType)
+    onConnect(providerType)
+  }
+
+  const renderLoginModalOption = (provider) => {
+    const loginType = toModalOptionType(provider)
+
+    return loginType ? (
+      <LoginModal.Option key={loginType} type={loginType} onClick={() => handleOnConnect(loginType)} />
+    ) : null
   }
 
   return (
-    <LoginModal open={open} onClose={onClose} loading={isLoading}>
-      <LoginModal.Option type={LoginModalOptionType.METAMASK} onClick={metamaskHandler} />
+    <LoginModal open={open} onClose={onClose}>
+      {connection.getAvailableProviders().map(renderLoginModalOption)}
     </LoginModal>
   )
 }

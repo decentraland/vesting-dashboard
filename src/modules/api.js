@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { getAddress, getContract } from './contract/selectors'
-import { getAddress as getFrom } from './ethereum/selectors'
+import { getAddress as getFrom } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import Web3 from 'web3'
 import Big from 'big.js'
 import manaAbi from '../abi/mana.json'
@@ -33,21 +33,7 @@ export default class API {
     return this.getWeb3().eth
   }
 
-  async logIn() {
-    const ethereum = window.ethereum
-    const accounts = await ethereum.request({ method: 'eth_accounts' })
-    this.localWallet = accounts.length > 0 ? accounts[0] : null
-
-    this.web3 = new Web3(ethereum)
-  }
-
   async connect() {
-    try {
-      await this.logIn()
-    } catch {
-      console.error('Metamask not found')
-    }
-
     const eth = this.getEth()
     const chainId = await eth.getChainId()
 

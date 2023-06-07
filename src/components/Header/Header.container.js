@@ -1,10 +1,12 @@
 import { connect } from 'react-redux'
-import { getAddress } from '../../modules/ethereum/selectors'
+import { getAddress } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import Header from './Header'
 
 export const mapState = (state) => {
+  const address = getAddress(state)
+
   return {
-    address: getAddress(state),
+    address,
   }
 }
 

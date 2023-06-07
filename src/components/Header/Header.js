@@ -1,4 +1,4 @@
-import { UserMenu } from 'decentraland-ui'
+import UserMenu from 'decentraland-dapps/dist/containers/UserMenu'
 import React, { useEffect, useState } from 'react'
 import { openInNewTab } from '../../utils'
 import WalletSelector from '../WalletSelector'
@@ -9,7 +9,7 @@ import { Navbar as BaseNavbar } from 'decentraland-dapps/dist/containers'
 import './Header.css'
 
 function Header(props) {
-  const { address } = props
+  const { address, fetchProfile } = props
 
   const [isSignedIn, setIsSignedIn] = useState(false)
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false)
@@ -23,21 +23,19 @@ function Header(props) {
     } else {
       setIsSignedIn(false)
     }
-  }, [address])
+  }, [address, fetchProfile])
 
   return (
     <>
       <BaseNavbar
         isSignIn={!isSignedIn}
-        onSignIn={() => setIsSignInModalOpen(true)}
         rightMenu={
-          isSignedIn ? (
-            <UserMenu
-              isSignedIn
-              avatar={profile}
-              onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
-            />
-          ) : undefined
+          <UserMenu
+            onSignIn={() => setIsSignInModalOpen(true)}
+            isSignedIn={isSignedIn}
+            avatar={profile}
+            onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
+          />
         }
       />
       <WalletSelector open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)} />
