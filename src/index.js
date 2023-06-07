@@ -7,7 +7,6 @@ import { createHashHistory } from 'history'
 import configureStore from './modules/store'
 
 import App from './components/App'
-import Routes from './components/Routes/Routes'
 import { Router, Route } from 'react-router'
 import { IntlProvider } from 'react-intl'
 import i18n_en from './i18n/en.json'
@@ -26,7 +25,6 @@ ReactDOM.render(
           <Route path="*">
             <IntlProvider locale="en" messages={i18n_en}>
               <App />
-              <Routes />
             </IntlProvider>
           </Route>
         </Router>

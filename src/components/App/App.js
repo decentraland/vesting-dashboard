@@ -183,7 +183,7 @@ class App extends Component {
       return this.renderPrompt()
     }
     if (!isLoaded) {
-      return <></>
+      return null
     }
     return (
       <div className="app">
