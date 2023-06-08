@@ -33,7 +33,23 @@ export default class API {
     return this.getWeb3().eth
   }
 
+  async logIn() {
+    const ethereum = window.ethereum
+    const accounts = await ethereum.request({ method: 'eth_accounts' })
+
+    if (accounts.length > 0) {
+      this.localWallet = accounts[0]
+      this.web3 = new Web3(ethereum)
+    }
+  }
+
   async connect() {
+    try {
+      await this.logIn()
+    } catch {
+      console.error('Wallet not found')
+    }
+
     const eth = this.getEth()
     const chainId = await eth.getChainId()
 

@@ -1,6 +1,10 @@
 import { all, takeEvery } from 'redux-saga/effects'
 import { createWalletSaga } from 'decentraland-dapps/dist/modules/wallet/sagas'
-import { CHANGE_ACCOUNT, DISCONNECT_WALLET } from 'decentraland-dapps/dist/modules/wallet/actions'
+import {
+  CHANGE_ACCOUNT,
+  DISCONNECT_WALLET,
+  ENABLE_WALLET_SUCCESS,
+} from 'decentraland-dapps/dist/modules/wallet/actions'
 
 const baseWalletSaga = createWalletSaga({
   CHAIN_ID: 1,
@@ -14,6 +18,7 @@ export function* walletSaga() {
 function* customWalletSaga() {
   yield takeEvery(CHANGE_ACCOUNT, handleChangeOrDisconnectAccount)
   yield takeEvery(DISCONNECT_WALLET, handleChangeOrDisconnectAccount)
+  yield takeEvery(ENABLE_WALLET_SUCCESS, handleChangeOrDisconnectAccount)
 }
 
 // eslint-disable-next-line require-yield

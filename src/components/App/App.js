@@ -33,9 +33,7 @@ class App extends Component {
     this.state = {
       address: this.props.address || localStorage.getItem('address') || null,
       chainId: this.props.chainId || null,
-      // showNetworkChangeModal: false,
     }
-    // this.handleWrongChain = this.handleWrongChain.bind(this)
   }
 
   componentWillMount() {
@@ -57,38 +55,7 @@ class App extends Component {
 
   componentDidMount() {
     this._isMounted = true
-    // if (typeof window.ethereum !== 'undefined') {
-    //   window.ethereum.on('chainChanged', (chainId) => {
-    //     this.handleWrongChain(chainId)
-    //   })
-
-    //   if (isConnected) {
-    //     window.ethereum
-    //       .request({ method: 'eth_chainId' })
-    //       .then((chainId) => {
-    //         this.handleWrongChain(chainId)
-    //       })
-    //       .catch((error) => console.log(error))
-    //   }
-    // } else {
-    //   console.log('Please install MetaMask to use this app')
-    // }
   }
-
-  // async switchToMainnet() {
-  //   try {
-  //     window.ethereum
-  //       .request({
-  //         method: 'wallet_switchEthereumChain',
-  //         params: [{ chainId: MAINNET_CHAIN_ID_HEX }],
-  //       })
-  //       .then(() => {
-  //         window.location.reload()
-  //       })
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-  // }
 
   handleAddressChange = (e) => {
     const address = e.target.value.trim()
@@ -109,14 +76,6 @@ class App extends Component {
       onAccess(this.state.address)
     }
   }
-
-  // handleWrongChain = (chainId) => {
-  //   if (this._isMounted) {
-  //     if (chainId !== MAINNET_CHAIN_ID_HEX) {
-  //       this.setState({ showNetworkChangeModal: true, chainId: parseChainIdHex(chainId) })
-  //     }
-  //   }
-  // }
 
   renderPrompt() {
     const { isNotFound, address, network } = this.props
@@ -169,9 +128,6 @@ class App extends Component {
     if (loadingMessage) {
       return this.renderLoading()
     }
-    // if (this.state.showNetworkChangeModal) {
-    //   return this.renderNetworkChangeModal()
-    // }
     if (connectionError || contractError) {
       return this.renderError()
     }
