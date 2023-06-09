@@ -3,7 +3,7 @@ import { FETCH_CONTRACT_REQUEST, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILURE 
 export const INITIAL_STATE = {
   data: null,
   loading: false,
-  error: null
+  error: null,
 }
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -12,7 +12,7 @@ export default function reducer(state = INITIAL_STATE, action) {
       return {
         ...state,
         error: null,
-        loading: true
+        loading: true,
       }
     }
     case FETCH_CONTRACT_SUCCESS: {
@@ -20,14 +20,14 @@ export default function reducer(state = INITIAL_STATE, action) {
         ...state,
         error: null,
         loading: false,
-        data: action.contract
+        data: action.contract,
       }
     }
     case FETCH_CONTRACT_FAILURE: {
       return {
         ...state,
         loading: false,
-        error: action.error
+        error: action.error,
       }
     }
     default:

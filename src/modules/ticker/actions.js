@@ -5,21 +5,21 @@ export const FETCH_TICKER_FAILURE = '[Failure] Fetch Ticker'
 
 export function fetchTickerRequest() {
   return {
-    type: FETCH_TICKER_REQUEST
+    type: FETCH_TICKER_REQUEST,
   }
 }
 
 export function fetchTickerSuccess(ticker) {
   return {
     type: FETCH_TICKER_SUCCESS,
-    ticker
+    ticker,
   }
 }
 
 export function fetchTickerFailure(error) {
   return {
     type: FETCH_TICKER_FAILURE,
-    error
+    error,
   }
 }
 

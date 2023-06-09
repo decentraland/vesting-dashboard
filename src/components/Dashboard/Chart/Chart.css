@@ -4,7 +4,7 @@
   margin-bottom: 30px;
 }
 
-.tooltip>p {
+.tooltip > p {
   text-align: center;
   font-weight: 600;
   color: rgba(22, 20, 26, 0.5);
@@ -24,25 +24,25 @@
   display: block;
 }
 
-.tooltip table tr>td div {
+.tooltip table tr > td div {
   text-align: right;
 }
 
-.tooltip table tr>td {
+.tooltip table tr > td {
   padding-bottom: 5px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.tooltip table tr:last-child>td {
+.tooltip table tr:last-child > td {
   padding-top: 5px;
   padding-bottom: 0;
   border-bottom: none;
 }
 
-.tooltip table tr:only-child>td {
+.tooltip table tr:only-child > td {
   padding-top: 0px;
 }
 
-.tooltip table tr>td:first-child {
+.tooltip table tr > td:first-child {
   padding-right: 15px;
 }

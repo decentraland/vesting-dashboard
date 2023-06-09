@@ -5,11 +5,11 @@ import './Input.css'
 
 export default class Button extends React.PureComponent {
   static propTypes = {
-    className: PropTypes.string
+    className: PropTypes.string,
   }
 
   static defaultProps = {
-    className: ''
+    className: '',
   }
 
   render() {

@@ -8,9 +8,7 @@ if (fs.existsSync('.env')) {
 }
 
 const packageJson = JSON.parse(fs.readFileSync('./package.json').toString())
-const publicPackageJson = JSON.parse(
-  fs.readFileSync('./public/package.json').toString()
-)
+const publicPackageJson = JSON.parse(fs.readFileSync('./public/package.json').toString())
 
 ENV_CONTENT['REACT_APP_WEBSITE_VERSION'] = packageJson.version
 
@@ -21,9 +19,7 @@ packageJson.homepage = ENV_CONTENT['PUBLIC_URL']
 if (packageJson.homepage) {
   // github action outputs. Do not touch.
   console.log('::set-output name=public_url::' + packageJson.homepage)
-  console.log(
-    '::set-output name=public_path::' + new URL(packageJson.homepage).pathname
-  )
+  console.log('::set-output name=public_path::' + new URL(packageJson.homepage).pathname)
 }
 
 console.log('VERSIONS: ', Object.entries(ENV_CONTENT), '\n')
@@ -39,10 +35,7 @@ publicPackageJson.homepage = packageJson.homepage
 publicPackageJson.version = packageJson.version
 
 fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
-fs.writeFileSync(
-  './public/package.json',
-  JSON.stringify(publicPackageJson, null, 2)
-)
+fs.writeFileSync('./public/package.json', JSON.stringify(publicPackageJson, null, 2))
 
 function getPublicUrls() {
   if (!process.env.GEN_STATIC_LOCAL) {

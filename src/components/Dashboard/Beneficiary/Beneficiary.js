@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import { useEffect, useContext } from 'react'
 import { areSameAddress } from '../../../modules/ethereum/utils'
 import { Grid } from 'semantic-ui-react'
 import Icon from '../../../images/grant_icon.svg'
@@ -22,14 +22,10 @@ function Beneficiary(props) {
 
   useEffect(() => {
     const getProposal = async () => {
-      const proposals = await (
-        await fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)
-      ).json()
+      const proposals = await (await fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)).json()
 
-      if (!!proposals) {
-        let proposal = proposals.filter((p) =>
-          areSameAddress(p['vesting_address'], address)
-        )
+      if (proposals) {
+        let proposal = proposals.filter((p) => areSameAddress(p['vesting_address'], address))
         if (proposal.length === 1) {
           proposal = proposal[0]
           const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
@@ -62,11 +58,7 @@ function Beneficiary(props) {
               </Header>
             </Grid.Column>
           </Grid.Column>
-          <Grid.Column
-            className="button__column"
-            floated="right"
-            textAlign="right"
-          >
+          <Grid.Column className="button__column" floated="right" textAlign="right">
             <DaoInitiativeButton />
           </Grid.Column>
         </Grid>

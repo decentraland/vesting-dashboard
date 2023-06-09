@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 // Source: https://crypto.com/price/widget
 
@@ -14,14 +14,7 @@ function ManaWidget() {
     return () => document.body.removeChild(script)
   }, [])
 
-  return (
-    <div
-      id="crypto-widget-CoinList"
-      data-design="classic"
-      data-coins="decentraland"
-      style={{ width: '100%' }}
-    />
-  )
+  return <div id="crypto-widget-CoinList" data-design="classic" data-coins="decentraland" style={{ width: '100%' }} />
 }
 
 export default ManaWidget

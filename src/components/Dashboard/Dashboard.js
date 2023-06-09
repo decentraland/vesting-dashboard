@@ -1,5 +1,4 @@
 import './Dashboard.css'
-import React from 'react'
 import Progress from './Progress'
 import Details from './Details'
 import { Container, Grid } from 'semantic-ui-react'

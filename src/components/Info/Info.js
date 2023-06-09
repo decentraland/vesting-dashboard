@@ -1,4 +1,3 @@
-import React from 'react'
 import { Popup } from 'decentraland-ui'
 import InfoSVG from '../../images/info.svg'
 

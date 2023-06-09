@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { getAddress, getContract } from './contract/selectors'
 import { getAddress as getFrom } from './ethereum/selectors'
 import Web3 from 'web3'
@@ -22,9 +23,7 @@ export default class API {
 
   getWeb3() {
     if (this.web3 === null) {
-      this.web3 = new Web3(
-        new Web3.providers.HttpProvider('https://rpc.decentraland.org/mainnet')
-      )
+      this.web3 = new Web3(new Web3.providers.HttpProvider('https://rpc.decentraland.org/mainnet'))
     }
 
     return this.web3
@@ -52,7 +51,7 @@ export default class API {
     const eth = this.getEth()
     const chainId = await eth.getChainId()
 
-    if(chainId !== 1) {
+    if (chainId !== 1) {
       throw new Error(`Unsupported chain id ${chainId}`)
     }
 
@@ -65,7 +64,11 @@ export default class API {
       [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
     }
 
-    return {address: this.localWallet, network: { name: chainId === 1 ? 'mainnet' : 'unknown', chainId }, chainId: chainId }
+    return {
+      address: this.localWallet,
+      network: { name: chainId === 1 ? 'mainnet' : 'unknown', chainId },
+      chainId: chainId,
+    }
   }
 
   async fetchContract() {
@@ -98,9 +101,7 @@ export default class API {
       throw new Error('Token not supported')
     }
 
-    const decimals = await tokenContracts[tokenContractAddress].methods
-      .decimals()
-      .call()
+    const decimals = await tokenContracts[tokenContractAddress].methods.decimals().call()
 
     const promises = {
       v1: {
@@ -187,13 +188,8 @@ export default class API {
       address,
       balance: parseInt(balance, 10) / 10 ** decimals,
       duration:
-        version === ContractVersion.V1
-          ? parseInt(duration, 10)
-          : vestedPerPeriod.length * parseInt(periodDuration, 10),
-      cliff:
-        version === ContractVersion.V1
-          ? parseInt(cliff, 10)
-          : parseInt(cliff, 10) + parseInt(start, 10),
+        version === ContractVersion.V1 ? parseInt(duration, 10) : vestedPerPeriod.length * parseInt(periodDuration, 10),
+      cliff: version === ContractVersion.V1 ? parseInt(cliff, 10) : parseInt(cliff, 10) + parseInt(start, 10),
       beneficiary,
       vestedAmount: parseInt(vestedAmount, 10) / 10 ** decimals,
       releasableAmount: parseInt(releasableAmount, 10) / 10 ** decimals,
@@ -204,9 +200,7 @@ export default class API {
       start: parseInt(start, 10),
       logs,
       periodDuration,
-      vestedPerPeriod: vestedPerPeriod.map(
-        (amount) => parseInt(amount, 10) / 10 ** decimals
-      ),
+      vestedPerPeriod: vestedPerPeriod.map((amount) => parseInt(amount, 10) / 10 ** decimals),
       paused,
       pausable,
       stop: parseInt(stop, 10),
@@ -232,9 +226,7 @@ export default class API {
       toBlock: 'latest',
     })
 
-    const blocks = await Promise.all(
-      web3Logs.map((log) => eth.getBlock(log.blockNumber))
-    )
+    const blocks = await Promise.all(web3Logs.map((log) => eth.getBlock(log.blockNumber)))
     const logs = []
     let cumulativeReleased = 0
 
@@ -243,13 +235,7 @@ export default class API {
     for (const idx in web3Logs) {
       switch (web3Logs[idx].topics[0]) {
         case Topic.TRANSFER_OWNERSHIP:
-          logs.push(
-            this.getTransferOwnershipLog(
-              [...web3Logs[idx].topics],
-              blocks[idx].timestamp,
-              Topic
-            )
-          )
+          logs.push(this.getTransferOwnershipLog([...web3Logs[idx].topics], blocks[idx].timestamp, Topic))
           break
         case Topic.RELEASE:
           const log = this.getReleaseLog(
@@ -261,7 +247,9 @@ export default class API {
             Topic
           )
           logs.push(log)
-          cumulativeReleased = Big(log.data.acum).mul(10 ** decimals).toNumber()
+          cumulativeReleased = Big(log.data.acum)
+            .mul(10 ** decimals)
+            .toNumber()
           break
         case Topic.REVOKE:
           logs.push(this.getRevokeLog(blocks[idx].timestamp, Topic))
@@ -370,12 +358,9 @@ export default class API {
 
   async fetchTicker(ticker = 'decentraland') {
     try {
-      const resp = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${ticker}&vs_currencies=usd`,
-        {
-          mode: 'cors',
-        }
-      )
+      const resp = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ticker}&vs_currencies=usd`, {
+        mode: 'cors',
+      })
       const json = await resp.json()
       const { usd } = json[ticker]
       return usd
