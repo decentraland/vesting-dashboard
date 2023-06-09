@@ -13,11 +13,6 @@ import LoadingPage from '../LoadingPage/LoadingPage'
 import WrongNetworkModal from '../WrongNetworkModal/WrongNetworkModal'
 import { ChainId } from '@dcl/schemas/dist/dapps/chain-id'
 
-const MAINNET_CHAIN_ID_HEX = '0x1'
-function parseChainIdHex(chainId) {
-  return parseInt(String(chainId).substring(2), 16)
-}
-
 class App extends Component {
   static propTypes = {
     loadingMessage: PropTypes.string,

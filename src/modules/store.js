@@ -5,10 +5,13 @@ import appReducer from './reducer'
 import { walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
 import { profileReducer as profile } from 'decentraland-dapps/dist/modules/profile/reducer'
 import { transactionReducer as transaction } from 'decentraland-dapps/dist/modules/transaction/reducer'
+import { translationReducer as translation } from 'decentraland-dapps/dist/modules/translation/reducer'
+import { storageReducer as storage } from 'decentraland-dapps/dist/modules/storage/reducer'
 import thunk from 'redux-thunk'
 import API from './api'
 import createSagaMiddleware from 'redux-saga'
 import { createTransactionMiddleware } from 'decentraland-dapps/dist/modules/transaction/middleware'
+import { createStorageMiddleware } from 'decentraland-dapps/dist/modules/storage/middleware'
 import { rootSaga as appSaga } from './saga'
 
 export default function configureStore(history, initialState) {
@@ -19,6 +22,8 @@ export default function configureStore(history, initialState) {
     wallet,
     profile,
     transaction,
+    translation,
+    storage,
   })
 
   // middleware
@@ -32,13 +37,17 @@ export default function configureStore(history, initialState) {
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware()
   const transactionMiddleware = createTransactionMiddleware()
+  const { storageMiddleware, loadStorageMiddleware } = createStorageMiddleware({
+    storageKey: 'dcl-vesting-dashboard',
+  })
 
   const middleware = applyMiddleware(
     thunk.withExtraArgument(api),
     router,
     logger,
     sagaMiddleware,
-    transactionMiddleware
+    transactionMiddleware,
+    storageMiddleware
   )
 
   // enhancer
@@ -51,6 +60,8 @@ export default function configureStore(history, initialState) {
 
   // then run the saga
   sagaMiddleware.run(appSaga)
+
+  loadStorageMiddleware(store)
 
   return store
 }
