@@ -3,7 +3,7 @@ import { walletSaga } from './wallet/sagas'
 import { createProfileSaga } from 'decentraland-dapps/dist/modules/profile/sagas'
 import { transactionSaga } from 'decentraland-dapps/dist/modules/transaction/sagas'
 import { createTranslationSaga } from 'decentraland-dapps/dist/modules/translation/sagas'
-import en from 'decentraland-dapps/dist/modules/translation/defaults/en.json'
+import en from '../i18n/en.json'
 
 const translationSaga = createTranslationSaga({
   translations: { en },

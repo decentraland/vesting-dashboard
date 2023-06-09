@@ -1,7 +1,8 @@
 import './Summary.css'
 import React from 'react'
 import { getMonthDiff } from '../../../utils'
-import { FormattedDate, FormattedMessage, FormattedNumber, FormattedPlural } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
 import useReviewUrl from '../../../hooks/useReviewUrl'
 
 function Summary(props) {
@@ -20,36 +21,18 @@ function Summary(props) {
 
   return (
     <div id="summary" style={{ textAlign: 'justify' }}>
-      <FormattedMessage
-        id="summary.text"
-        values={{
-          b: (chunks) => <b>{chunks}</b>,
-          br: <br />,
-          cliff: vestingCliff,
-          monthPl: (
-            <FormattedPlural
-              value={vestingCliff}
-              one={<FormattedMessage id="global.month" />}
-              other={<FormattedMessage id="global.month.plural" />}
-            />
-          ),
-          cliffEnd: <FormattedDate value={new Date(cliff * 1000)} year="numeric" month="long" day="numeric" />,
-          nearly:
-            percentage > 0 ? (
-              <>
-                ,&nbsp;
-                <FormattedMessage id="summary.nearly" />
-                &nbsp;
-              </>
-            ) : (
-              <>&nbsp;</>
-            ),
-          percentage: <FormattedNumber value={percentage} />,
-          amount: <FormattedNumber value={symbol === 'MANA' ? total * ticker : total} />,
-        }}
-      />
+      {t('summary.text', {
+        b: (chunks) => <b>{chunks}</b>,
+        br: <br />,
+        cliff: vestingCliff,
+        monthPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+        cliffEnd: formatDate(new Date(cliff * 1000), 'MMMM D, YYYY'),
+        nearly: percentage > 0 ? `, ${t('summary.nearly')} ` : ' ',
+        percentage: formatNumber(percentage, 0),
+        amount: formatNumber(symbol === 'MANA' ? total * ticker : total, 0),
+      })}
       <a href={reviewUrl} onClick={handleClick}>
-        <FormattedMessage id="summary.review_contract" />
+        {t('summary.review_contract')}
       </a>
     </div>
   )

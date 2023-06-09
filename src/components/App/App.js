@@ -10,8 +10,6 @@ import DaoInitiativeContextProvider from '../../context/DaoInitiativeContext'
 import LandingPage from '../LandingPage/LandingPage'
 import ErrorPage from '../ErrorPage/ErrorPage'
 import LoadingPage from '../LoadingPage/LoadingPage'
-import WrongNetworkModal from '../WrongNetworkModal/WrongNetworkModal'
-import { ChainId } from '@dcl/schemas/dist/dapps/chain-id'
 
 class App extends Component {
   static propTypes = {
@@ -102,18 +100,6 @@ class App extends Component {
     return (
       <div className="app start">
         <LoadingPage msg={loadingMessage} />
-      </div>
-    )
-  }
-
-  renderNetworkChangeModal() {
-    return (
-      <div className="app start">
-        <WrongNetworkModal
-          currentNetwork={this.state.chainId}
-          expectedNetwork={ChainId.ETHEREUM_MAINNET}
-          onSwitchNetwork={this.switchToMainnet}
-        />
       </div>
     )
   }

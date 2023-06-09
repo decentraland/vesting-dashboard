@@ -1,6 +1,6 @@
 import React from 'react'
 import { Header } from 'decentraland-ui'
-import { FormattedMessage } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 
 function ShowMore(props) {
   const { onClick } = props
@@ -8,7 +8,7 @@ function ShowMore(props) {
     <li className="more" style={{ cursor: 'pointer' }} onClick={onClick}>
       <div className="timeline__event">
         <Header sub style={{ fontSize: '11px' }}>
-          <FormattedMessage id="schedule.show_more" />
+          {t('schedule.show_more')}
         </Header>
       </div>
     </li>

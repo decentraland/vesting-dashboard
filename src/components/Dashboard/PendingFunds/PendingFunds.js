@@ -1,5 +1,6 @@
 import { Segment } from 'decentraland-ui'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import { ContractVersion } from '../../../modules/constants'
 
 function PendingFunds(props) {
@@ -23,17 +24,10 @@ function PendingFunds(props) {
   return (
     <Segment>
       <p>
-        <FormattedMessage
-          id={formattedMessageId}
-          values={{
-            pending: (
-              <b>
-                <FormattedNumber value={Math.abs(diff)} />
-              </b>
-            ),
-            token: <b>{symbol}</b>,
-          }}
-        />
+        {t(formattedMessageId, {
+          pending: <b>{formatNumber(Math.abs(diff), 0)}</b>,
+          token: <b>{symbol}</b>,
+        })}
       </p>
     </Segment>
   )

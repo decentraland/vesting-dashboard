@@ -10,8 +10,6 @@ import configureStore from './modules/store'
 
 import App from './components/App'
 import { Router, Route } from 'react-router'
-import { IntlProvider } from 'react-intl'
-import i18n_en from './i18n/en.json'
 
 import './index.css'
 import 'decentraland-ui/lib/styles.css'
@@ -26,9 +24,7 @@ ReactDOM.render(
         <ConnectedRouter store={store} history={history}>
           <Router history={history}>
             <Route path="*">
-              <IntlProvider locale="en" messages={i18n_en}>
-                <App />
-              </IntlProvider>
+              <App />
             </Route>
           </Router>
         </ConnectedRouter>

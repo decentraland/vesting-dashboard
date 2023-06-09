@@ -12,7 +12,8 @@ import {
 import { LineChart } from 'echarts/charts'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
-import { useIntl } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { ContractVersion, TopicByVersion } from '../../../modules/constants'
 import {
@@ -36,12 +37,11 @@ function getPausedAndRevokedData(start, paused, revoked, stop) {
   return [revoked, revoked || paused ? getDaysFromRevoke(stop, start) : -1, paused]
 }
 
-function getXAxisData(start, duration, intl) {
+function getXAxisData(start, duration) {
   const durationInDays = getDurationInDays(duration)
-  const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }
 
   const xData = toDataArray(durationInDays, (x, i) =>
-    intl.formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), dateOptions)
+    formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), 'MMM D, YYYY')
   )
 
   return xData
@@ -155,10 +155,10 @@ function getLabelInterval(duration, isMobile) {
   return 30 * (durationInMonths <= maxLabels ? 1 : Math.ceil(durationInMonths / maxLabels))
 }
 
-function getTooltipFormatter(today, newName, intl, args, symbol, ticker) {
+function getTooltipFormatter(today, newName, args, symbol, ticker) {
   let tooltip = `<div class='tooltip'><p>${args[0].axisValue}</p><table>`
 
-  const getFormattedValue = (value) => (isNaN(value) ? value : intl.formatNumber(Math.round(value)))
+  const getFormattedValue = (value) => (isNaN(value) ? value : formatNumber(Math.round(value), 0))
 
   args.forEach(({ marker, seriesName, value }) => {
     // prettier-ignore
@@ -220,15 +220,13 @@ function Chart(props) {
     ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(start, paused, revoked, stop)
   }
 
-  const intl = useIntl()
-
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-  const toBeVestedLabel = intl.formatMessage({ id: 'chart.to_be_vested' })
+  const toBeVestedLabel = t('chart.to_be_vested')
 
   const option = {
     title: {
-      text: intl.formatMessage({ id: 'chart.title' }),
+      text: t('chart.title'),
       textStyle: {
         fontSize: '13px',
       },
@@ -237,17 +235,10 @@ function Chart(props) {
     tooltip: {
       trigger: 'axis',
       formatter: (args) =>
-        getTooltipFormatter(
-          getDaysFromStart(start) + 1,
-          toBeVestedLabel,
-          intl,
-          args,
-          symbol,
-          symbol === 'MANA' ? ticker : 0
-        ),
+        getTooltipFormatter(getDaysFromStart(start) + 1, toBeVestedLabel, args, symbol, symbol === 'MANA' ? ticker : 0),
     },
     legend: {
-      data: [intl.formatMessage({ id: 'chart.vested' }), intl.formatMessage({ id: 'chart.released' })],
+      data: [t('chart.vested'), t('chart.released')],
     },
     grid: {
       left: '0',
@@ -258,7 +249,7 @@ function Chart(props) {
     xAxis: {
       type: 'category',
       boundaryGap: false,
-      data: getXAxisData(start, duration, intl),
+      data: getXAxisData(start, duration),
       axisLabel: {
         align: 'left',
         lineHeight: 30,
@@ -274,7 +265,7 @@ function Chart(props) {
       axisLabel: {
         formatter: (value) => {
           if (!isMobile) {
-            return `${intl.formatNumber(value)} ${symbol}`
+            return `${formatNumber(value, 0)} ${symbol}`
           }
 
           const lookup = [
@@ -292,7 +283,7 @@ function Chart(props) {
           const minNumber = Math.min(...diffArr)
           const idx = diffArr.findIndex((x) => x === minNumber)
 
-          return `${intl.formatNumber(value / lookup[idx].magnitude)}${lookup[idx].abv} ${symbol}`
+          return `${formatNumber(value / lookup[idx].magnitude, 0)}${lookup[idx].abv} ${symbol}`
         },
         inside: true,
         margin: 0,
@@ -303,7 +294,7 @@ function Chart(props) {
     },
     series: [
       {
-        name: intl.formatMessage({ id: 'chart.vested' }),
+        name: t('chart.vested'),
         type: 'line',
         data:
           version === ContractVersion.V1
@@ -314,13 +305,7 @@ function Chart(props) {
           symbol: 'none',
           data: [
             {
-              name: `${
-                isRevoked
-                  ? intl.formatMessage({ id: 'chart.revoked' })
-                  : isPaused
-                  ? intl.formatMessage({ id: 'chart.paused' })
-                  : intl.formatMessage({ id: 'chart.today' })
-              }`,
+              name: `${isRevoked ? t('chart.revoked') : isPaused ? t('chart.paused') : t('chart.today')}`,
               xAxis: isRevoked || isPaused ? revokeOrPauseDay : getDaysFromStart(start),
               label: {
                 formatter: '{b}',
@@ -339,7 +324,7 @@ function Chart(props) {
         },
       },
       {
-        name: intl.formatMessage({ id: 'chart.released' }),
+        name: t('chart.released'),
         type: 'line',
         data: getReleaseData(start, cliff, releaseLogs, revokeLog),
         symbol: 'none',
