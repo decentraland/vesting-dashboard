@@ -1,6 +1,6 @@
 import { Close, Field, Modal, Button } from 'decentraland-ui'
 import { useState } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
 
@@ -28,13 +28,10 @@ function ChangeBeneficiaryModal(props) {
         .then((addr) => {
           setLoading(false)
           setSuccess(
-            <FormattedMessage
-              id="modal.success"
-              values={{
-                address: addr,
-                br: <br />,
-              }}
-            />
+            t('modal.success', {
+              address: addr,
+              br: <br />,
+            })
           )
         })
         .catch((e) => {
@@ -42,25 +39,21 @@ function ChangeBeneficiaryModal(props) {
           setError(true, e.message)
         })
     } else {
-      setError(true, <FormattedMessage id="modal.error" />)
+      setError(true, t('modal.error'))
     }
   }
 
   return (
     <Modal className="changeBeneficiaryModal" size="small" open={open} onClose={onClose} closeIcon={<Close />}>
-      <Modal.Header>
-        <FormattedMessage id="modal.title" />
-      </Modal.Header>
+      <Modal.Header>{t('modal.title')}</Modal.Header>
       <Modal.Content>
-        <p>
-          <FormattedMessage id="modal.warning" />
-        </p>
+        <p>{t('modal.warning')}</p>
         <Field
           onChange={(_, data) => {
             setAddress(data.value)
             setError(false)
           }}
-          label={<FormattedMessage id="modal.label" />}
+          label={t('modal.label')}
           placeholder="0x..."
           error={state.error}
           message={state.errorMessage}
@@ -70,7 +63,7 @@ function ChangeBeneficiaryModal(props) {
       </Modal.Content>
       <Modal.Actions>
         <Button primary onClick={transfer} disabled={state.loading}>
-          <FormattedMessage id="modal.button" />
+          {t('modal.button')}
         </Button>
       </Modal.Actions>
       <Modal.Content>

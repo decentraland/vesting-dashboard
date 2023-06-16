@@ -1,7 +1,8 @@
 import './Schedule.css'
 import React, { useState, useEffect, useMemo } from 'react'
 import { Header } from 'decentraland-ui'
-import { FormattedMessage, FormattedPlural, FormattedNumber } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import Info from '../../Info/Info'
 import { getMonthDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
@@ -14,15 +15,10 @@ function addReleasedEvent(eventList, amount, token, timestamp) {
   const props = { timestamp, key: timestamp }
   eventList.push(
     <ScheduleEvent
-      message={
-        <FormattedMessage
-          id="schedule.released"
-          values={{
-            amount: <FormattedNumber value={Math.round(amount)} />,
-            token: token,
-          }}
-        />
-      }
+      message={t('schedule.released', {
+        amount: formatNumber(Math.round(amount), 0),
+        token: token,
+      })}
       {...props}
     />
   )
@@ -30,22 +26,22 @@ function addReleasedEvent(eventList, amount, token, timestamp) {
 
 function addFulfilledEvent(eventList, timestamp, future = false) {
   const props = { timestamp, future, key: 'fulfilled' }
-  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.fulfilled" />} {...props} />)
+  eventList.push(<ScheduleEvent message={t('schedule.fulfilled')} {...props} />)
 }
 
 function addRevokedEvent(eventList, timestamp) {
   const props = { timestamp, key: 'revoked' }
-  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.revoked" />} {...props} />)
+  eventList.push(<ScheduleEvent message={t('schedule.revoked')} {...props} />)
 }
 
 function addPausedEvent(eventList, timestamp) {
   const props = { timestamp, key: `paused-${timestamp}` }
-  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.paused" />} {...props} />)
+  eventList.push(<ScheduleEvent message={t('schedule.paused')} {...props} />)
 }
 
 function addUnpausedEvent(eventList, timestamp) {
   const props = { timestamp, key: `unpaused-${timestamp}` }
-  eventList.push(<ScheduleEvent message={<FormattedMessage id="schedule.unpaused" />} {...props} />)
+  eventList.push(<ScheduleEvent message={t('schedule.unpaused')} {...props} />)
 }
 
 function Schedule(props) {
@@ -65,46 +61,21 @@ function Schedule(props) {
 
   const scheduleEventsSetpUp = (fullShow = false) => {
     const eventList = []
+    eventList.push(<ScheduleEvent message={t('schedule.contract_started')} timestamp={start} key="contract_started" />)
     eventList.push(
       <ScheduleEvent
-        message={<FormattedMessage id={'schedule.contract_started'} />}
-        timestamp={start}
-        key="contract_started"
-      />
-    )
-    eventList.push(
-      <ScheduleEvent
-        message={
-          <FormattedMessage
-            id={'schedule.cliff_started'}
-            values={{
-              months: vestingCliff,
-              monthsPl: (
-                <FormattedPlural
-                  value={vestingCliff}
-                  one={<FormattedMessage id="global.month" />}
-                  other={<FormattedMessage id="global.month.plural" />}
-                />
-              ),
-            }}
-          />
-        }
+        message={t('schedule.cliff_started', {
+          months: vestingCliff,
+          monthsPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+        })}
         timestamp={start}
         key={'cliff_started'}
       />
     )
 
     if (new Date(cliff * 1000) < new Date()) {
-      eventList.push(
-        <ScheduleEvent message={<FormattedMessage id="schedule.cliff_ended" />} timestamp={cliff} key="cliff_ended" />
-      )
-      eventList.push(
-        <ScheduleEvent
-          message={<FormattedMessage id="schedule.vesting_begins" />}
-          timestamp={cliff}
-          key="vesting_begins"
-        />
-      )
+      eventList.push(<ScheduleEvent message={t('schedule.cliff_ended')} timestamp={cliff} key="cliff_ended" />)
+      eventList.push(<ScheduleEvent message={t('schedule.vesting_begins')} timestamp={cliff} key="vesting_begins" />)
     }
 
     const endContractTs = start + duration
@@ -209,11 +180,8 @@ function Schedule(props) {
   return (
     <div className={`timeline ${revokedOrPaused && 'revoked'}`}>
       <Header sub>
-        <FormattedMessage id="schedule.title" />
-        <Info
-          message={<FormattedMessage id="helper.vesting_schedule" />}
-          position={`${isMobile ? 'right' : 'top'} center`}
-        />
+        {t('schedule.title')}
+        <Info message={t('helper.vesting_schedule')} position={`${isMobile ? 'right' : 'top'} center`} />
       </Header>
       <ul>{scheduleEvents}</ul>
     </div>

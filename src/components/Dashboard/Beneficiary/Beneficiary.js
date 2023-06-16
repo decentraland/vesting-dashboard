@@ -1,9 +1,9 @@
 import { useEffect, useContext } from 'react'
 import { areSameAddress } from '../../../modules/ethereum/utils'
 import { Grid } from 'semantic-ui-react'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import Icon from '../../../images/grant_icon.svg'
 import { Header } from 'decentraland-ui'
-import { useIntl, FormattedMessage } from 'react-intl'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { DaoInitiativeContext } from '../../../context/DaoInitiativeContext'
 import DaoInitiativeButton from '../../DaoInitiativeButton/DaoInitiativeButton'
@@ -15,8 +15,6 @@ function Beneficiary(props) {
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-
-  const intl = useIntl()
 
   const { proposalUrl, setProposalUrl } = useContext(DaoInitiativeContext)
 
@@ -32,7 +30,7 @@ function Beneficiary(props) {
           proposalUrl.searchParams.append('id', proposal.id)
           setProposalUrl(proposalUrl)
         } else {
-          console.error(intl.formatMessage({ id: 'error.dao_proposal_url' }))
+          console.error(t('error.dao_proposal_url'))
         }
       }
     }
@@ -50,12 +48,8 @@ function Beneficiary(props) {
               <img src={Icon} alt="" style={{ marginTop: '5px' }} />
             </Grid.Column>
             <Grid.Column className="beneficiaryText" width={isMobile ? 12 : 9}>
-              <Header>
-                <FormattedMessage id="beneficiary.title" />
-              </Header>
-              <Header sub>
-                <FormattedMessage id="beneficiary.subtitle" />
-              </Header>
+              <Header>{t('beneficiary.title')}</Header>
+              <Header sub>{t('beneficiary.subtitle')}</Header>
             </Grid.Column>
           </Grid.Column>
           <Grid.Column className="button__column" floated="right" textAlign="right">

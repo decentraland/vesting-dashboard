@@ -1,7 +1,8 @@
 import { Grid } from 'semantic-ui-react'
 import { Header } from 'decentraland-ui'
 import Bar from './Bar/Bar'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import Info from '../../Info/Info'
 import './Progress.css'
 
@@ -15,36 +16,33 @@ function Progress(props) {
       <Grid>
         <Grid.Column floated="left">
           <Header sub>
-            <FormattedMessage id="progress.vested" />
-            <Info message={<FormattedMessage id="helper.vesting_so_far" />} position="right center" />
+            {t('progress.vested')}
+            <Info message={t('helper.vesting_so_far')} position="right center" />
           </Header>
           <div className="amount">
             <Header style={{ display: 'inline-block' }}>
-              <FormattedNumber value={Math.round(contract.vestedAmount)} /> {contract.symbol}
+              {formatNumber(Math.round(contract.vestedAmount), 0)} {contract.symbol}
             </Header>
             <span className="percentage vested">{vestedPercentage}%</span>
           </div>
         </Grid.Column>
         <Grid.Column floated="right" textAlign="right">
           <Header sub>
-            <Info message={<FormattedMessage id="helper.total_vesting" />} position="left center" />
-            <FormattedMessage id="progress.total" />
+            <Info message={t('helper.total_vesting')} position="left center" />
+            {t('progress.total')}
           </Header>
           <Header style={{ display: 'inline-block' }}>
-            <FormattedNumber value={Math.round(contract.total)} /> {contract.symbol}
+            {formatNumber(Math.round(contract.total), 0)} {contract.symbol}
           </Header>
         </Grid.Column>
       </Grid>
       <Bar vested={vestedPercentage} released={releasedPercentage} />
       <div>
-        <FormattedMessage
-          id="progress.released"
-          values={{
-            b: (chunks) => <b>{chunks}</b>,
-            amount: <FormattedNumber value={Math.round(contract.released)} />,
-            token: contract.symbol,
-          }}
-        />
+        {t('progress.released', {
+          b: (chunks) => <b>{chunks}</b>,
+          amount: formatNumber(Math.round(contract.released), 0),
+          token: contract.symbol,
+        })}
         <span className="percentage released">{releasedPercentage}%</span>
       </div>
     </div>

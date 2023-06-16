@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet'
 import { Grid } from 'semantic-ui-react'
 import { Logo, Header, Popup } from 'decentraland-ui'
-import { FormattedMessage, FormattedPlural, FormattedNumber, useIntl } from 'react-intl'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
+import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import { copyToClipboard, getMonthDiff } from '../../../utils'
 import ManaWidget from '../../ManaWidget'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
@@ -32,12 +33,10 @@ export default function Overview(props) {
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
-  const intl = useIntl()
-
   return (
     <>
       <Helmet>
-        <title>{intl.formatMessage({ id: 'global.title' }, { token: symbol })}</title>
+        <title>{t('global.title', { token: symbol })}</title>
       </Helmet>
       <Grid columns={symbol === 'MANA' && !isMobile ? 2 : 1} className="overview">
         <Grid.Row>
@@ -56,7 +55,7 @@ export default function Overview(props) {
               )}
               <Grid.Column className="Info">
                 <Header size="large" className={`TokenContract ${symbol}`}>
-                  <FormattedMessage id="overview.title" values={{ token: symbol }} />
+                  {t('overview.title', { token: symbol })}
                 </Header>
                 <Header sub>
                   {address}{' '}
@@ -64,7 +63,7 @@ export default function Overview(props) {
                     <img src={Link} alt="" />
                   </a>
                   <Popup
-                    content={<FormattedMessage id="global.copied" />}
+                    content={t('global.copied')}
                     position="bottom center"
                     trigger={<img src={Copy} alt="" onClick={() => copyToClipboard(address)} />}
                     on="click"
@@ -73,29 +72,14 @@ export default function Overview(props) {
               </Grid.Column>
             </Grid>
             <Header style={(symbol === 'MANA' && !isMobile && { maxWidth: '500px' }) || {}}>
-              <FormattedMessage
-                id="overview.details"
-                values={{
-                  amount: <FormattedNumber value={Math.round(total)} />,
-                  token: symbol,
-                  months: vestingMonths,
-                  monthsPl: (
-                    <FormattedPlural
-                      value={vestingMonths}
-                      one={<FormattedMessage id="global.month" />}
-                      other={<FormattedMessage id="global.month.plural" />}
-                    />
-                  ),
-                  cliff: vestingCliff,
-                  monthsCliffPl: (
-                    <FormattedPlural
-                      value={vestingCliff}
-                      one={<FormattedMessage id="global.month" />}
-                      other={<FormattedMessage id="global.month.plural" />}
-                    />
-                  ),
-                }}
-              />
+              {t('overview.details', {
+                amount: formatNumber(Math.round(total), 0),
+                token: symbol,
+                months: vestingMonths,
+                monthsPl: vestingMonths === 1 ? t('global.month') : t('global.month.plural'),
+                cliff: vestingCliff,
+                monthsCliffPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+              })}
             </Header>
           </Grid.Column>
           {symbol === 'MANA' && !isMobile && (
