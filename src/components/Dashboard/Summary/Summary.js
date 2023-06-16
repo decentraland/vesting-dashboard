@@ -4,6 +4,7 @@ import { getMonthDiff } from '../../../utils'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
 import useReviewUrl from '../../../hooks/useReviewUrl'
+import { DATE_FORMAT_LONG } from '../../../utils'
 
 function Summary(props) {
   const { address, contract, ticker } = props
@@ -26,7 +27,7 @@ function Summary(props) {
         br: <br />,
         cliff: vestingCliff,
         monthPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
-        cliffEnd: formatDate(new Date(cliff * 1000), 'MMMM D, YYYY'),
+        cliffEnd: formatDate(new Date(cliff * 1000), DATE_FORMAT_LONG),
         nearly: percentage > 0 ? `, ${t('summary.nearly')} ` : ' ',
         percentage: formatNumber(percentage, 0),
         amount: formatNumber(symbol === 'MANA' ? total * ticker : total, 0),

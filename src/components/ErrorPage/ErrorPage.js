@@ -6,10 +6,12 @@ import { Container } from 'semantic-ui-react'
 function ErrorPage(props) {
   const { connectionError } = props
 
-  let errorText = t('helper.error_page', { error: connectionError || 'null' })
-  if (connectionError && connectionError.indexOf('Failed to fetch') !== -1) {
-    errorText = <p className="error">{t('helper.error_page.no_internet')}</p>
-  }
+  const isFailedToFetchError = connectionError && connectionError.indexOf('Failed to fetch') !== -1
+  const errorText = isFailedToFetchError ? (
+    t('helper.error_page', { error: connectionError || 'null' })
+  ) : (
+    <p className="error">{t('helper.error_page.no_internet')}</p>
+  )
 
   return (
     <Container className="Error">

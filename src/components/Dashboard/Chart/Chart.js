@@ -25,6 +25,7 @@ import {
   toDataArray,
   emptyDataArray,
 } from './utils'
+import { DATE_FORMAT_SHORT } from '../../../utils'
 
 function getRevokedData(revokeLog, start) {
   const isRevoked = revokeLog.length > 0
@@ -41,7 +42,7 @@ function getXAxisData(start, duration) {
   const durationInDays = getDurationInDays(duration)
 
   const xData = toDataArray(durationInDays, (x, i) =>
-    formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), 'MMM D, YYYY')
+    formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), DATE_FORMAT_SHORT)
   )
 
   return xData

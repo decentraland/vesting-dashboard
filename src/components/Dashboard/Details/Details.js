@@ -8,6 +8,7 @@ import AddressIcon from '../../../images/address_icon.svg'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
+import { DATE_FORMAT_LONG } from '../../../utils'
 import './Details.css'
 
 function addressShortener(address) {
@@ -36,7 +37,7 @@ function getDate(id, date) {
   return (
     <div className="item">
       <Header sub>{t(id)}</Header>
-      <Header>{formatDate(new Date(date * 1000), 'MMMM D, YYYY')}</Header>
+      <Header>{formatDate(new Date(date * 1000), DATE_FORMAT_LONG)}</Header>
     </div>
   )
 }
