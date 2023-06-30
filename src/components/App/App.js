@@ -105,11 +105,11 @@ class App extends Component {
   }
 
   render() {
-    const { loadingMessage, connectionError, contractError, showPrompt, isLoaded } = this.props
+    const { loadingMessage, contractError, showPrompt, isLoaded } = this.props
     if (loadingMessage) {
       return this.renderLoading()
     }
-    if (connectionError || contractError) {
+    if (contractError) {
       return this.renderError()
     }
     if (showPrompt) {
