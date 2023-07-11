@@ -24,7 +24,7 @@
   "helper.error_page.message": "Uh-oh... something went wrong.",
   "landing_page.title": "Contract Address",
   "overview.title": "{token} Vesting Contract",
-  "overview.details": "This is a contract for {amount} {token} to be vested in {months} {monthsPl}, after a {cliff}-{monthsCliffPl} cliff.",
+  "overview.details": "This is a contract for {amount} {token} to be vested in {months} {months, plural, one {month} other {months}}{days, plural, =0 {} other { and {days} {days, plural, one {day} other {days}}}}, {showCliff, plural, =0 {no } other {after a {cliff}-{cliff, plural, one {month} other {months}}{cliffDays, plural, =0 {} other { and {cliffDays} {cliffDays, plural, one {day} other {days}}}}}} cliff.",
   "beneficiary.title": "Grant beneficiary",
   "beneficiary.subtitle": "Enabled by the community participating in the Decentraland DAO",
   "beneficiary.button": "View dao proposal",

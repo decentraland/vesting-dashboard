@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet'
 import { Grid } from 'semantic-ui-react'
-import { Logo, Header, Popup } from 'decentraland-ui'
+import { Header, Logo, Popup } from 'decentraland-ui'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
-import { copyToClipboard, getMonthDiff } from '../../../utils'
+import { copyToClipboard, getPreciseDiff } from '../../../utils'
 import ManaWidget from '../../ManaWidget'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import Copy from '../../../images/copy.svg'
@@ -25,13 +25,14 @@ export default function Overview(props) {
   const { address, contract } = props
 
   const { symbol, start, cliff, duration, total } = contract
-  const vestingMonths = getMonthDiff(start, start + duration)
-  const vestingCliff = getMonthDiff(start, cliff)
+  const vestingDuration = getPreciseDiff(start, start + duration)
+  const vestingCliff = getPreciseDiff(start, cliff)
 
   const [reviewUrl, handleClick] = useReviewUrl(address)
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
+  const showCliff = vestingCliff.months + vestingCliff.extraDays
 
   return (
     <>
@@ -75,10 +76,11 @@ export default function Overview(props) {
               {t('overview.details', {
                 amount: formatNumber(Math.round(total), 0),
                 token: symbol,
-                months: vestingMonths,
-                monthsPl: vestingMonths === 1 ? t('global.month') : t('global.month.plural'),
-                cliff: vestingCliff,
-                monthsCliffPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+                months: vestingDuration.months,
+                days: vestingDuration.extraDays,
+                cliff: vestingCliff.months,
+                cliffDays: vestingCliff.extraDays,
+                showCliff,
               })}
             </Header>
           </Grid.Column>
