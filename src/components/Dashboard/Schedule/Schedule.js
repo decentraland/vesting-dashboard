@@ -67,7 +67,7 @@ function Schedule(props) {
         message={t('schedule.cliff_started', {
           cliff: t('cliff.duration', {
             months: vestingCliff.months,
-            days: vestingCliff.extraDays,
+            days: vestingCliff.days,
           }),
         })}
         timestamp={start}

@@ -46,7 +46,7 @@ function getCliffPeriod(vestingCliff) {
     <div className="item">
       <Header sub>{t('details.cliff_period')}</Header>
       <Header>
-        {t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays })}
+        {t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.days })}
         <Info message={t('helper.cliff_period')} position="left center" />
       </Header>
     </div>

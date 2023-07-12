@@ -32,7 +32,7 @@ export default function Overview(props) {
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-  const showCliff = vestingCliff.months + vestingCliff.extraDays
+  const showCliff = vestingCliff.months + vestingCliff.days
 
   return (
     <>
@@ -77,8 +77,8 @@ export default function Overview(props) {
                 amount: formatNumber(Math.round(total), 0),
                 token: symbol,
                 months: t('global.amount.months', { amount: vestingDuration.months }),
-                days: vestingDuration.extraDays && t('global.amount.days', { amount: vestingDuration.extraDays }),
-                cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays }),
+                days: vestingDuration.days && t('global.amount.days', { amount: vestingDuration.days }),
+                cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.days }),
                 showCliff,
               })}
             </Header>

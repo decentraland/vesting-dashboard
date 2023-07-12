@@ -13,7 +13,7 @@ export function getPreciseDiff(start, finish) {
   const diff = moment.preciseDiff(moment(start * 1000), moment(finish * 1000), true)
   return {
     months: diff.years * 12 + diff.months,
-    extraDays: diff.days,
+    days: diff.days,
   }
 }
 

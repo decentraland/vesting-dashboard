@@ -24,7 +24,7 @@ function Summary(props) {
       {t('summary.text', {
         b: (chunks) => <b>{chunks}</b>,
         br: <br />,
-        cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays }),
+        cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.days }),
         cliffEnd: formatDate(new Date(cliff * 1000), DATE_FORMAT_LONG),
         nearly: percentage > 0 ? `, ${t('summary.nearly')} ` : ' ',
         percentage: formatNumber(percentage, 0),
