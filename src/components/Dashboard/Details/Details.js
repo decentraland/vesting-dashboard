@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
-import { Header, Popup, Button } from 'decentraland-ui'
+import { Button, Header, Popup } from 'decentraland-ui'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
-import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
-import { copyToClipboard, getMonthDiff } from '../../../utils'
+import { formatDate, formatNumber } from 'decentraland-dapps/dist/lib/utils'
+import { copyToClipboard, DATE_FORMAT_LONG, getPreciseDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
-import { DATE_FORMAT_LONG } from '../../../utils'
 import './Details.css'
 
 function addressShortener(address) {
@@ -47,10 +46,7 @@ function getCliffPeriod(vestingCliff) {
     <div className="item">
       <Header sub>{t('details.cliff_period')}</Header>
       <Header>
-        {t('details.cliff_period.time', {
-          cliff: vestingCliff,
-          monthPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
-        })}
+        {t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.days })}
         <Info message={t('helper.cliff_period')} position="left center" />
       </Header>
     </div>
@@ -99,7 +95,7 @@ function Details(props) {
   const { contract, isBeneficiary, onRelease } = props
   const { version, symbol, released, start, cliff, duration, releasableAmount, revocable, pausable, total } = contract
 
-  const vestingCliff = getMonthDiff(start, cliff)
+  const vestingCliff = getPreciseDiff(start, cliff)
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
