@@ -1,10 +1,10 @@
 import './Schedule.css'
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Header } from 'decentraland-ui'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import Info from '../../Info/Info'
-import { getMonthDiff } from '../../../utils'
+import { getPreciseDiff } from '../../../utils'
 import FutureIcon from '../../../images/future_events_icon.svg'
 import ScheduleEvent from './ScheduleEvent'
 import ShowMore from './ShowMore'
@@ -47,7 +47,7 @@ function addUnpausedEvent(eventList, timestamp) {
 function Schedule(props) {
   const { contract } = props
   const { symbol, start, cliff, duration, logs, version } = contract
-  const vestingCliff = getMonthDiff(start, cliff)
+  const vestingCliff = getPreciseDiff(start, cliff)
 
   const filteredLogs = useMemo(
     () => logs.filter((log) => log.topic !== TopicByVersion[version].TRANSFER_OWNERSHIP),
@@ -65,8 +65,10 @@ function Schedule(props) {
     eventList.push(
       <ScheduleEvent
         message={t('schedule.cliff_started', {
-          months: vestingCliff,
-          monthsPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+          cliff: t('cliff.duration', {
+            months: vestingCliff.months,
+            days: vestingCliff.extraDays,
+          }),
         })}
         timestamp={start}
         key={'cliff_started'}
