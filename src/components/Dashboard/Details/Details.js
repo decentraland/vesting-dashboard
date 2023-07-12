@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Header, Popup, Button } from 'decentraland-ui'
+import { Button, Header, Popup } from 'decentraland-ui'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
-import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
+import { formatDate, formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import { copyToClipboard, DATE_FORMAT_LONG, getPreciseDiff } from '../../../utils'
 import Info from '../../Info/Info'
 import AddressIcon from '../../../images/address_icon.svg'
@@ -46,8 +46,7 @@ function getCliffPeriod(vestingCliff) {
     <div className="item">
       <Header sub>{t('details.cliff_period')}</Header>
       <Header>
-        {t('global.amount.months', { amount: vestingCliff.months })}
-        {vestingCliff.extraDays > 0 && ' ' + t('global.amount.days', { amount: vestingCliff.extraDays })}
+        {t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays })}
         <Info message={t('helper.cliff_period')} position="left center" />
       </Header>
     </div>
