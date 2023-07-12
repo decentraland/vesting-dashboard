@@ -9,11 +9,6 @@ export function isValidAddress(address) {
   return /^(0x)?[0-9a-f]{40}$/i.test(address)
 }
 
-export function getMonthDiff(start, finish) {
-  const getDate = (date) => moment(date * 1000).startOf('month')
-  return Math.abs(getDate(finish).diff(getDate(start), 'months'))
-}
-
 export function getPreciseDiff(start, finish) {
   const diff = moment.preciseDiff(moment(start * 1000), moment(finish * 1000), true)
   return {
