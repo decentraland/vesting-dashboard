@@ -76,10 +76,9 @@ export default function Overview(props) {
               {t('overview.details', {
                 amount: formatNumber(Math.round(total), 0),
                 token: symbol,
-                months: vestingDuration.months,
-                days: vestingDuration.extraDays,
-                cliff: vestingCliff.months,
-                cliffDays: vestingCliff.extraDays,
+                months: t('global.amount.months', { amount: vestingDuration.months }),
+                days: vestingDuration.extraDays && t('global.amount.days', { amount: vestingDuration.extraDays }),
+                cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays }),
                 showCliff,
               })}
             </Header>
