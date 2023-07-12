@@ -78,7 +78,7 @@ export default function Overview(props) {
                 token: symbol,
                 months: t('global.amount.months', { amount: vestingDuration.months }),
                 days: vestingDuration.days && t('global.amount.days', { amount: vestingDuration.days }),
-                cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.days }),
+                cliff: t('overview.details.cliff', { months: vestingCliff.months, days: vestingCliff.days }),
                 showCliff,
               })}
             </Header>
