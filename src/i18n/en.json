@@ -25,6 +25,7 @@
   "landing_page.title": "Contract Address",
   "overview.title": "{token} Vesting Contract",
   "overview.details": "This is a contract for {amount} {token} to be vested in {months}{days, plural, =0 {} other { and {days}}}, {showCliff, plural, =0 {no cliff} other {after a {cliff}}}.",
+  "overview.details.cliff": "{months, plural, =0 {} other {{months} {months, plural, one {month} other {months}}}}{days, plural, =0 {} other {{days} {days, plural, one {day} other {days}}}} cliff",
   "beneficiary.title": "Grant beneficiary",
   "beneficiary.subtitle": "Enabled by the community participating in the Decentraland DAO",
   "beneficiary.button": "View dao proposal",
