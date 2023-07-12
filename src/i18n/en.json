@@ -3,6 +3,8 @@
   "global.copied": "Copied!",
   "global.month": "month",
   "global.month.plural": "months",
+  "global.amount.months": "{amount} {amount, plural, one {month} other {months}}",
+  "global.amount.days": "{amount} {amount, plural, one {day} other {days}}",
   "global.yes": "Yes",
   "global.no": "No",
   "error.dao_proposal_url": "DAO Proposal URL not found",
