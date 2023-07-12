@@ -1,10 +1,9 @@
 import './Summary.css'
 import React from 'react'
-import { getMonthDiff } from '../../../utils'
+import { DATE_FORMAT_LONG, getPreciseDiff } from '../../../utils'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
-import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
+import { formatDate, formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import useReviewUrl from '../../../hooks/useReviewUrl'
-import { DATE_FORMAT_LONG } from '../../../utils'
 
 function Summary(props) {
   const { address, contract, ticker } = props
@@ -16,7 +15,7 @@ function Summary(props) {
     percentage = 0
   }
 
-  const vestingCliff = getMonthDiff(start, cliff)
+  const vestingCliff = getPreciseDiff(start, cliff)
 
   const [reviewUrl, handleClick] = useReviewUrl(address)
 
@@ -25,8 +24,7 @@ function Summary(props) {
       {t('summary.text', {
         b: (chunks) => <b>{chunks}</b>,
         br: <br />,
-        cliff: vestingCliff,
-        monthPl: vestingCliff === 1 ? t('global.month') : t('global.month.plural'),
+        cliff: t('cliff.duration', { months: vestingCliff.months, days: vestingCliff.extraDays }),
         cliffEnd: formatDate(new Date(cliff * 1000), DATE_FORMAT_LONG),
         nearly: percentage > 0 ? `, ${t('summary.nearly')} ` : ' ',
         percentage: formatNumber(percentage, 0),
