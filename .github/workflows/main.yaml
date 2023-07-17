@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: Set package.json version
         uses: menduz/oddish-action@master
         with:
@@ -29,14 +29,3 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
         run: npm run build
-      - name: Publish
-        uses: menduz/oddish-action@master
-        with:
-          cwd: './build'
-          deterministic-snapshot: true
-          registry-url: 'https://registry.npmjs.org'
-          access: public
-          gitlab-token: ${{ secrets.GITLAB_CDN_DEPLOYER_TOKEN }}
-          gitlab-pipeline-url: ${{ secrets.GITLAB_CDN_DEPLOYER_URL }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

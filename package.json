@@ -7,7 +7,6 @@
     "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
-    "postinstall": "node ./scripts/prebuild.js",
     "prepare": "husky install"
   },
   "dependencies": {
