@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { release } from '../../../modules/contract/actions'
 import { getContract } from '../../../modules/contract/selectors'
 import { getAddress } from 'decentraland-dapps/dist/modules/wallet/selectors'
-import { areSameAddress } from '../../../modules/ethereum/utils'
+import { isSameAddress } from '../../../modules/ethereum/utils'
 import Details from './Details'
 
 export const mapState = (state) => {
@@ -10,7 +10,7 @@ export const mapState = (state) => {
   const address = getAddress(state)
   return {
     contract,
-    isBeneficiary: areSameAddress(contract.beneficiary, address),
+    isBeneficiary: isSameAddress(contract.beneficiary, address),
   }
 }
 
