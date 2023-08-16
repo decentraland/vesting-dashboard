@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react'
-import { areSameAddresses } from '../../../modules/ethereum/utils'
+import { isSameAddress } from '../../../modules/ethereum/utils'
 import { Grid } from 'semantic-ui-react'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import Icon from '../../../images/grant_icon.svg'
@@ -23,7 +23,7 @@ function Beneficiary(props) {
       const vestings = await (await fetch(process.env.REACT_APP_VESTINGS_API_URL)).json()
 
       if (vestings) {
-        let vesting = vestings.filter((p) => areSameAddresses(p['vesting_address'], address))
+        let vesting = vestings.filter((p) => isSameAddress(p['vesting_address'], address))
         if (vesting.length === 1) {
           vesting = vesting[0]
           const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
