@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react'
-import { areSameAddress } from '../../../modules/ethereum/utils'
+import { areSameAddresses } from '../../../modules/ethereum/utils'
 import { Grid } from 'semantic-ui-react'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import Icon from '../../../images/grant_icon.svg'
@@ -19,15 +19,15 @@ function Beneficiary(props) {
   const { proposalUrl, setProposalUrl } = useContext(DaoInitiativeContext)
 
   useEffect(() => {
-    const getProposal = async () => {
-      const proposals = await (await fetch(process.env.REACT_APP_GRANT_PROPOSALS_API_URL)).json()
+    const getVestings = async () => {
+      const vestings = await (await fetch(process.env.REACT_APP_VESTINGS_API_URL)).json()
 
-      if (proposals) {
-        let proposal = proposals.filter((p) => areSameAddress(p['vesting_address'], address))
-        if (proposal.length === 1) {
-          proposal = proposal[0]
+      if (vestings) {
+        let vesting = vestings.filter((p) => areSameAddresses(p['vesting_address'], address))
+        if (vesting.length === 1) {
+          vesting = vesting[0]
           const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
-          proposalUrl.searchParams.append('id', proposal.id)
+          proposalUrl.searchParams.append('id', vesting.proposal_id)
           setProposalUrl(proposalUrl)
         } else {
           console.error(t('error.dao_proposal_url'))
@@ -35,7 +35,7 @@ function Beneficiary(props) {
       }
     }
 
-    getProposal()
+    getVestings()
     // eslint-disable-next-line
   }, [address, isMobile])
 
