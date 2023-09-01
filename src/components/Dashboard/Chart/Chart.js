@@ -113,7 +113,7 @@ function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPerio
   return vestingData
 }
 
-function getReleaseData(start, cliff, releaseLogs, revokeLog) {
+function getReleaseData(start, cliff, releaseLogs, revokeLog, version) {
   if (new Date() < new Date(cliff * 1000)) {
     return []
   }
@@ -133,7 +133,15 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog) {
     }
 
     const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
-    const finalDataPoint = isRevoked ? revokedDay + 1 : today
+    const getFinalDataPoint = (isRevoked) => {
+      if (isRevoked) {
+        if (version === ContractVersion.V1) {
+          return revokedDay + 1
+        }
+      }
+      return today
+    }
+    const finalDataPoint = getFinalDataPoint(isRevoked)
 
     const { acum } = releaseLogs[releaseLogs.length - 1]
     releaseData = releaseData.concat(
@@ -327,7 +335,7 @@ function Chart(props) {
       {
         name: t('chart.released'),
         type: 'line',
-        data: getReleaseData(start, cliff, releaseLogs, revokeLog),
+        data: getReleaseData(start, cliff, releaseLogs, revokeLog, version),
         symbol: 'none',
       },
     ],
