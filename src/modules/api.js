@@ -10,6 +10,7 @@ import usdcAbi from '../abi/usdc.json'
 import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
 import { ContractVersion, TokenAddressByChainId, TopicByVersion } from './constants'
+import { getDaysFromRevoke, getDurationInDays } from '../components/Dashboard/Chart/utils'
 
 let vesting, tokenContracts
 export default class API {
@@ -209,10 +210,25 @@ export default class API {
       linear,
     }
 
-    contract.total =
-      version === ContractVersion.V1
-        ? contract.balance + contract.released
-        : contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
+    const getTotal = () => {
+      if (version === ContractVersion.V1) {
+        if (contract.revoked) {
+          const revokeLog = contract.logs.find((log) => log.topic === TopicByVersion[version].REVOKE)
+          const { timestamp } = revokeLog.data
+          const daysFromRevoke = getDaysFromRevoke(timestamp, contract.start)
+          const durationInDays = getDurationInDays(contract.duration)
+
+          const projectedTotal = (contract.vestedAmount / daysFromRevoke) * durationInDays
+
+          return Math.ceil(projectedTotal / 1000) * 1000
+        }
+        return contract.balance + contract.released
+      }
+
+      return contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
+    }
+
+    contract.total = getTotal()
 
     return contract
   }
