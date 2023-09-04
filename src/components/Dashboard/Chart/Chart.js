@@ -347,7 +347,7 @@ function Chart(props) {
       pieces: [
         {
           lte: isRevoked || isPaused ? revokeOrPauseDay : daysFromStart,
-          gt: -1,
+          gt: -1000,
           color: '#44B600',
         },
         {
