@@ -7,7 +7,7 @@ import useReviewUrl from '../../../hooks/useReviewUrl'
 
 function Summary(props) {
   const { address, contract, ticker } = props
-  const { symbol, released, start, cliff, vestedAmount, total } = contract
+  const { symbol, released, start, cliff, vestedAmount, total, linear } = contract
 
   let percentage = Math.round((released / vestedAmount) * 100)
 
@@ -29,6 +29,9 @@ function Summary(props) {
         nearly: percentage > 0 ? `, ${t('summary.nearly')} ` : ' ',
         percentage: formatNumber(percentage, 0),
         amount: formatNumber(symbol === 'MANA' ? total * ticker : total, 0),
+        version_description: t(linear ? 'summary.linear_version_description' : 'summary.periodic_version_description', {
+          b: (chunks) => <b>{chunks}</b>,
+        }),
       })}
       <a href={reviewUrl} onClick={handleClick}>
         {t('summary.review_contract')}

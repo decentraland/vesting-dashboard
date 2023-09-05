@@ -122,7 +122,7 @@ export default class API {
         paused: () => Promise.resolve(false),
         pausable: () => Promise.resolve(false),
         stop: () => Promise.resolve('0'),
-        linear: () => Promise.resolve(false),
+        linear: () => Promise.resolve(true),
       },
       v2: {
         duration: () => Promise.resolve('0'),
