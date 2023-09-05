@@ -1,7 +1,6 @@
 .timeline {
   width: 100%;
   --future-color: rgba(115, 110, 125, 0.5);
-  --rovoked-color: #ff2d55;
   margin-bottom: 30px;
 }
 
@@ -17,6 +16,10 @@
 
 .timeline ul li.more .ui.header {
   color: var(--green);
+}
+
+.timeline.paused ul li.more .ui.header {
+  color: var(--paused-color);
 }
 
 .timeline.revoked ul li.more .ui.header {
@@ -45,6 +48,11 @@
   margin-top: 10px;
 }
 
+.timeline.paused ul li::before {
+  border: 0.33em solid var(--paused-color);
+  background-color: var(--paused-color);
+}
+
 .timeline.revoked ul li::before {
   border: 0.33em solid var(--rovoked-color);
   background-color: var(--rovoked-color);
@@ -68,6 +76,10 @@
   bottom: 0;
   z-index: -1;
   height: 100%;
+}
+
+.timeline.paused ul li div.timeline__event::before {
+  border-left: 2px solid var(--paused-color);
 }
 
 .timeline.revoked ul li div.timeline__event::before {

@@ -37,6 +37,7 @@
   "chart.vested": "Vested",
   "chart.released": "Released",
   "chart.to_be_vested": "To be vested",
+  "chart.unvested": "Unvested",
   "chart.revoked": "REVOKED",
   "chart.paused": "PAUSED",
   "chart.today": "TODAY",

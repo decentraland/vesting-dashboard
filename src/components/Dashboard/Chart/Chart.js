@@ -48,28 +48,12 @@ function getXAxisData(start, duration) {
   return xData
 }
 
-function getVestingData(start, cliff, duration, total, revokeLog) {
+function getVestingData(start, cliff, duration, total) {
   const cliffEndDay = getCliffEndDay(start, cliff)
   const vestingDays = getDurationInDays(duration)
   const vestedPerDay = total / vestingDays
 
-  const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
-
-  let vestingData = new Array(cliffEndDay).fill(0)
-
-  if (isRevoked) {
-    if (revokedDay <= cliffEndDay) {
-      vestingData = new Array(revokedDay).fill(0)
-    } else {
-      vestingData = vestingData.concat(
-        toDataArray(revokedDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
-      )
-    }
-
-    vestingData[vestingData.length - 1] = total
-
-    return vestingData
-  }
+  const vestingData = new Array(cliffEndDay).fill(0)
 
   return vestingData.concat(
     toDataArray(vestingDays - cliffEndDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
@@ -113,7 +97,7 @@ function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPerio
   return vestingData
 }
 
-function getReleaseData(start, cliff, releaseLogs, revokeLog, version) {
+function getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay, version) {
   if (new Date() < new Date(cliff * 1000)) {
     return []
   }
@@ -132,16 +116,15 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog, version) {
       )
     }
 
-    const [isRevoked, revokedDay] = getRevokedData(revokeLog, start)
-    const getFinalDataPoint = (isRevoked) => {
-      if (isRevoked) {
+    const getFinalDataPoint = (isRevokedOrPaused) => {
+      if (isRevokedOrPaused) {
         if (version === ContractVersion.V1) {
-          return revokedDay + 1
+          return revokeOrPauseDay + 1
         }
       }
       return today
     }
-    const finalDataPoint = getFinalDataPoint(isRevoked)
+    const finalDataPoint = getFinalDataPoint(isRevokedOrPaused)
 
     const { acum } = releaseLogs[releaseLogs.length - 1]
     releaseData = releaseData.concat(
@@ -150,7 +133,7 @@ function getReleaseData(start, cliff, releaseLogs, revokeLog, version) {
     return releaseData
   }
 
-  return emptyDataArray(today)
+  return emptyDataArray(isRevokedOrPaused ? revokeOrPauseDay + 1 : today)
 }
 
 function getLabelInterval(duration, isMobile) {
@@ -170,10 +153,11 @@ function getTooltipFormatter(today, newName, args, symbol, ticker) {
   const getFormattedValue = (value) => (isNaN(value) ? value : formatNumber(Math.round(value), 0))
 
   args.forEach(({ marker, seriesName, value }) => {
+    const keepSeriesName = args[0].dataIndex < today || seriesName === t('chart.released')
     // prettier-ignore
     tooltip += `
     <tr>
-      <td>${marker} ${args[0].dataIndex < today ? seriesName : newName}</td>
+      <td>${marker} ${keepSeriesName ? seriesName : newName}</td>
       <td>
         <div>
           <strong>${getFormattedValue(value)} ${symbol}</strong>
@@ -229,9 +213,20 @@ function Chart(props) {
     ;[isRevoked, revokeOrPauseDay, isPaused] = getPausedAndRevokedData(start, paused, revoked, stop)
   }
 
+  const isRevokedOrPaused = isRevoked || isPaused
+
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-  const toBeVestedLabel = t('chart.to_be_vested')
+  const tooltipLabel = isRevoked || isPaused ? t('chart.unvested') : t('chart.to_be_vested')
+  const tooltipDay = isRevoked || isPaused ? revokeOrPauseDay : daysFromStart
+  const getTodayMarkerColor = () => {
+    if (revoked) {
+      return 'var(--rovoked-color)'
+    } else if (paused) {
+      return 'var(--paused-color)'
+    }
+    return 'var(--today-color)'
+  }
 
   const option = {
     title: {
@@ -244,7 +239,7 @@ function Chart(props) {
     tooltip: {
       trigger: 'axis',
       formatter: (args) =>
-        getTooltipFormatter(getDaysFromStart(start) + 1, toBeVestedLabel, args, symbol, symbol === 'MANA' ? ticker : 0),
+        getTooltipFormatter(tooltipDay + 1, tooltipLabel, args, symbol, symbol === 'MANA' ? ticker : 0),
     },
     legend: {
       data: [t('chart.vested'), t('chart.released')],
@@ -307,7 +302,7 @@ function Chart(props) {
         type: 'line',
         data:
           version === ContractVersion.V1
-            ? getVestingData(start, cliff, duration, total, revokeLog)
+            ? getVestingData(start, cliff, duration, total)
             : getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear),
         symbol: 'none',
         markLine: {
@@ -320,13 +315,13 @@ function Chart(props) {
                 formatter: '{b}',
                 show: true,
                 color: 'white',
-                backgroundColor: '#ff2d55',
+                backgroundColor: getTodayMarkerColor(),
                 padding: [3, 6],
                 borderRadius: 5,
               },
               lineStyle: {
                 type: 'solid',
-                color: '#ff2d55',
+                color: getTodayMarkerColor(),
               },
             },
           ],
@@ -335,7 +330,7 @@ function Chart(props) {
       {
         name: t('chart.released'),
         type: 'line',
-        data: getReleaseData(start, cliff, releaseLogs, revokeLog, version),
+        data: getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay, version),
         symbol: 'none',
       },
     ],

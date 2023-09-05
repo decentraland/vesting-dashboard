@@ -17,7 +17,7 @@ export function getDaysFromRevoke(revokeTs, start) {
 }
 
 export function toDataArray(length, callback) {
-  return Array.from(new Array(length), callback)
+  return Array.from(new Array(length >= 0 ? length : 0), callback)
 }
 
 export function emptyDataArray(length) {

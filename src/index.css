@@ -16,11 +16,11 @@ h3 {
 :root {
   --light-gray: #dadce5;
   --gray: #4f4f4f;
-  --dark-gray: #222222;
-  --light-blue: #ff2d55;
-  --dark-purple: #16141a;
   --green: #44b600;
   --orange: #ff7439;
+  --rovoked-color: #ff2d55;
+  --paused-color: #ffc95b;
+  --today-color: #736e7d;
 }
 
 h1,

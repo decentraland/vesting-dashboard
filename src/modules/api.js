@@ -220,7 +220,7 @@ export default class API {
 
           const projectedTotal = (contract.vestedAmount / daysFromRevoke) * durationInDays
 
-          return Math.ceil(projectedTotal / 1000) * 1000
+          return Math.floor(projectedTotal / 100) * 100
         }
         return contract.balance + contract.released
       }
