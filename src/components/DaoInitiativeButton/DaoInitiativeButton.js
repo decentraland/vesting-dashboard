@@ -6,6 +6,8 @@ import ButtonIcon from '../../images/proposal_button_icon.svg'
 import { openInNewTab } from '../../utils'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 
+import './DaoInitiativeButton.css'
+
 function DaoInitiativeButton() {
   const { proposalUrl } = useContext(DaoInitiativeContext)
   const responsive = useResponsive()
