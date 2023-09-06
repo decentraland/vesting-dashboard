@@ -15,7 +15,7 @@ function PendingFunds(props) {
   const total = revoked ? vestedAmount : contractTotal
   const diff = total - (balance + released)
 
-  if (!diff) {
+  if (-1 < diff && diff < 1) {
     return null
   }
 

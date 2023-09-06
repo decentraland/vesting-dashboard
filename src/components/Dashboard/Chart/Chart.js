@@ -48,21 +48,30 @@ function getXAxisData(start, duration) {
   return xData
 }
 
-function getVestingData(start, cliff, duration, total) {
+function getVestingData(start, cliff, duration, total, isRevoked, revokeDay) {
   const cliffEndDay = getCliffEndDay(start, cliff)
-  const vestingDays = getDurationInDays(duration)
-  const vestedPerDay = total / vestingDays
+  const durationInDays = getDurationInDays(duration)
+  const vestingDays = isRevoked ? (revokeDay >= 0 ? revokeDay : 0) : durationInDays
+  const totalVested = isRevoked && revokeDay > 0 ? (total / durationInDays) * revokeDay : total
+  const vestedPerDay = totalVested / vestingDays
 
-  const vestingData = new Array(cliffEndDay).fill(0)
+  let vestingData = new Array(cliffEndDay).fill(0)
 
-  return vestingData.concat(
-    toDataArray(vestingDays - cliffEndDay, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+  vestingData = vestingData.concat(
+    toDataArray(vestingDays - cliffEndDay + 1, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
   )
+
+  if (isRevoked && revokeDay > 0) {
+    vestingData = vestingData.concat(toDataArray(durationInDays - revokeDay, () => '-'))
+  }
+
+  return vestingData
 }
 
-function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear) {
+function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear, isRevoked, revokeDay) {
   const cliffEndDay = getCliffEndDay(start, cliff)
-  const vestingDays = getDurationInDays(duration)
+  const durationInDays = getDurationInDays(duration)
+  const vestingDays = isRevoked ? (revokeDay >= 0 ? revokeDay + 1 : 0) : durationInDays
 
   let vestingData = []
 
@@ -92,6 +101,10 @@ function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPerio
     }
 
     vestingData.push(vestedThatDay)
+  }
+
+  if (isRevoked && revokeDay > 0) {
+    vestingData = vestingData.concat(toDataArray(durationInDays - revokeDay, () => '-'))
   }
 
   return vestingData
@@ -217,7 +230,6 @@ function Chart(props) {
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-  const tooltipLabel = isRevoked || isPaused ? t('chart.unvested') : t('chart.to_be_vested')
   const tooltipDay = isRevoked || isPaused ? revokeOrPauseDay : daysFromStart
   const getTodayMarkerColor = () => {
     if (revoked) {
@@ -239,7 +251,7 @@ function Chart(props) {
     tooltip: {
       trigger: 'axis',
       formatter: (args) =>
-        getTooltipFormatter(tooltipDay + 1, tooltipLabel, args, symbol, symbol === 'MANA' ? ticker : 0),
+        getTooltipFormatter(tooltipDay + 1, t('chart.to_be_vested'), args, symbol, symbol === 'MANA' ? ticker : 0),
     },
     legend: {
       data: [t('chart.vested'), t('chart.released')],
@@ -289,7 +301,7 @@ function Chart(props) {
 
           return `${formatNumber(value / lookup[idx].magnitude, 0)}${lookup[idx].abv} ${symbol}`
         },
-        inside: true,
+        inside: false,
         margin: 0,
         verticalAlign: 'bottom',
         showMinLabel: false,
@@ -302,8 +314,17 @@ function Chart(props) {
         type: 'line',
         data:
           version === ContractVersion.V1
-            ? getVestingData(start, cliff, duration, total)
-            : getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPeriod, linear),
+            ? getVestingData(start, cliff, duration, total, isRevoked, revokeOrPauseDay)
+            : getVestingDataV2(
+                start,
+                cliff,
+                duration,
+                periodDuration,
+                vestedPerPeriod,
+                linear,
+                isRevoked,
+                revokeOrPauseDay
+              ),
         symbol: 'none',
         markLine: {
           symbol: 'none',
