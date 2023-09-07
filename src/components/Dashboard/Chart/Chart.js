@@ -62,7 +62,7 @@ function getVestingData(start, cliff, duration, total, isRevoked, revokeDay) {
   )
 
   if (isRevoked && revokeDay > 0) {
-    vestingData = vestingData.concat(toDataArray(durationInDays - revokeDay, () => '-'))
+    vestingData = vestingData.concat(emptyDataArray(durationInDays - revokeDay))
   }
 
   return vestingData
@@ -104,7 +104,7 @@ function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPerio
   }
 
   if (isRevoked && revokeDay > 0) {
-    vestingData = vestingData.concat(toDataArray(durationInDays - revokeDay, () => '-'))
+    vestingData = vestingData.concat(emptyDataArray(durationInDays - revokeDay))
   }
 
   return vestingData
