@@ -130,10 +130,8 @@ function getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPa
     }
 
     const getFinalDataPoint = (isRevokedOrPaused) => {
-      if (isRevokedOrPaused) {
-        if (version === ContractVersion.V1) {
-          return revokeOrPauseDay + 1
-        }
+      if (isRevokedOrPaused && version === ContractVersion.V1) {
+        return revokeOrPauseDay + 1
       }
       return today
     }
@@ -233,7 +231,7 @@ function Chart(props) {
   const tooltipDay = isRevoked || isPaused ? revokeOrPauseDay : daysFromStart
   const getTodayMarkerColor = () => {
     if (revoked) {
-      return 'var(--rovoked-color)'
+      return 'var(--revoked-color)'
     } else if (paused) {
       return 'var(--paused-color)'
     }
