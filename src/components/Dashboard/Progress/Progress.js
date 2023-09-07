@@ -8,6 +8,7 @@ import './Progress.css'
 
 function Progress(props) {
   const { contract } = props
+  const { revoked } = contract
   const vestedPercentage = Math.round((contract.vestedAmount / contract.total) * 100)
   const releasedPercentage = Math.round((contract.released / contract.total) * 100)
 
@@ -16,7 +17,7 @@ function Progress(props) {
       <Grid>
         <Grid.Column floated="left">
           <Header sub>
-            {t('progress.vested')}
+            {t(revoked ? 'chart.vested' : 'progress.vested')}
             <Info message={t('helper.vesting_so_far')} position="right center" />
           </Header>
           <div className="amount">
