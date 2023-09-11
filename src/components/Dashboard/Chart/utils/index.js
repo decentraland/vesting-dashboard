@@ -1,7 +1,7 @@
 export const DAY_IN_SECONDS = 86400
 
 export function getDurationInDays(duration) {
-  return Math.floor(duration / DAY_IN_SECONDS) + 1
+  return Math.ceil(duration / DAY_IN_SECONDS) + 1
 }
 
 export function getCliffEndDay(start, cliff) {
@@ -17,7 +17,7 @@ export function getDaysFromRevoke(revokeTs, start) {
 }
 
 export function toDataArray(length, callback) {
-  return Array.from(new Array(length), callback)
+  return Array.from(new Array(length >= 0 ? length : 0), callback)
 }
 
 export function emptyDataArray(length) {

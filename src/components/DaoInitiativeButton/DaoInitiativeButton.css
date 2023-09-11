@@ -1,0 +1,9 @@
+.ui.button.daoProposal__button img {
+  margin-left: 8px;
+}
+
+@media screen and (max-width: 767px) {
+  .ui.button.daoProposal__button {
+    padding: 10px;
+  }
+}

@@ -46,7 +46,7 @@ function addUnpausedEvent(eventList, timestamp) {
 
 function Schedule(props) {
   const { contract } = props
-  const { symbol, start, cliff, duration, logs, version } = contract
+  const { symbol, start, cliff, duration, logs, version, paused, revoked } = contract
   const vestingCliff = getPreciseDiff(start, cliff)
 
   const filteredLogs = useMemo(
@@ -55,7 +55,7 @@ function Schedule(props) {
   )
 
   const [scheduleEvents, setScheduleEvents] = useState([])
-  const [revokedOrPaused, setRevokedOrPaused] = useState(false)
+  const revokedOrPaused = revoked || paused
 
   const Topic = TopicByVersion[version]
 
@@ -157,30 +157,11 @@ function Schedule(props) {
     // eslint-disable-next-line
   }, [revokedOrPaused])
 
-  useEffect(() => {
-    const cpLogs = [...filteredLogs]
-
-    cpLogs.sort((a, b) => a.data.timestamp - b.data.timestamp)
-
-    for (const log of cpLogs) {
-      switch (log.topic) {
-        case Topic.REVOKE:
-        case Topic.PAUSED:
-          setRevokedOrPaused(true)
-          break
-        case Topic.UNPAUSED:
-          setRevokedOrPaused(false)
-          break
-        default:
-      }
-    }
-  }, [Topic, filteredLogs])
-
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   return (
-    <div className={`timeline ${revokedOrPaused && 'revoked'}`}>
+    <div className={`timeline ${revoked ? 'revoked' : paused ? 'paused' : ''}`}>
       <Header sub>
         {t('schedule.title')}
         <Info message={t('helper.vesting_schedule')} position={`${isMobile ? 'right' : 'top'} center`} />

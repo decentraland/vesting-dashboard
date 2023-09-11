@@ -1,20 +1,15 @@
 import { useEffect, useContext } from 'react'
 import { isSameAddress } from '../../../modules/ethereum/utils'
-import { Grid } from 'semantic-ui-react'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import Icon from '../../../images/grant_icon.svg'
-import { Header } from 'decentraland-ui'
-import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { DaoInitiativeContext } from '../../../context/DaoInitiativeContext'
 import DaoInitiativeButton from '../../DaoInitiativeButton/DaoInitiativeButton'
+import Banner from '../../Banner/Banner'
 
 import './Beneficiary.css'
 
 function Beneficiary(props) {
   const { address } = props
-
-  const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
   const { proposalUrl, setProposalUrl } = useContext(DaoInitiativeContext)
 
@@ -37,26 +32,17 @@ function Beneficiary(props) {
 
     getVestings()
     // eslint-disable-next-line
-  }, [address, isMobile])
+  }, [address])
 
   return (
     proposalUrl && (
-      <div id="beneficiary">
-        <Grid verticalAlign="middle">
-          <Grid.Column className="beneficiaryContainer">
-            <Grid.Column style={{ width: 'fit-content' }}>
-              <img src={Icon} alt="" style={{ marginTop: '5px' }} />
-            </Grid.Column>
-            <Grid.Column className="beneficiaryText" width={isMobile ? 12 : 9}>
-              <Header>{t('beneficiary.title')}</Header>
-              <Header sub>{t('beneficiary.subtitle')}</Header>
-            </Grid.Column>
-          </Grid.Column>
-          <Grid.Column className="button__column" floated="right" textAlign="right">
-            <DaoInitiativeButton />
-          </Grid.Column>
-        </Grid>
-      </div>
+      <Banner
+        className="beneficiary"
+        icon={Icon}
+        title={t('beneficiary.title')}
+        subtitle={t('beneficiary.subtitle')}
+        action={<DaoInitiativeButton />}
+      />
     )
   )
 }
