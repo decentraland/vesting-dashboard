@@ -129,13 +129,7 @@ function getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPa
       )
     }
 
-    const getFinalDataPoint = (isRevokedOrPaused) => {
-      if (isRevokedOrPaused && version === ContractVersion.V1) {
-        return revokeOrPauseDay + 1
-      }
-      return today
-    }
-    const finalDataPoint = getFinalDataPoint(isRevokedOrPaused)
+    const finalDataPoint = isRevokedOrPaused && version === ContractVersion.V1 ? revokeOrPauseDay + 1 : today
 
     const { acum } = releaseLogs[releaseLogs.length - 1]
     releaseData = releaseData.concat(
