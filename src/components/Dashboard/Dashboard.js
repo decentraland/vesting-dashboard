@@ -10,6 +10,7 @@ import Summary from './Summary'
 import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import PendingFunds from './PendingFunds'
 import RevokedBanner from './RevokedBanner'
+import PausedBanner from './PausedBanner'
 
 function Dashboard() {
   const responsive = useResponsive()
@@ -20,6 +21,7 @@ function Dashboard() {
       <Overview />
       <Beneficiary />
       <RevokedBanner />
+      <PausedBanner />
       <Grid stackable columns={2} padded style={{ width: '100%' }}>
         <Grid.Column width={12} style={{ paddingLeft: 0 }}>
           <PendingFunds />
