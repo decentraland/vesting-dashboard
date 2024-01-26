@@ -32,6 +32,8 @@
   "beneficiary.button.mobile": "Dao initiative",
   "revoked_banner.title": "Contract revoked",
   "revoked_banner.subtitle": "The Decentraland DAO Revocations Committee has ceased funding for this initiative",
+  "paused_banner.title": "Contract paused",
+  "paused_banner.subtitle": "The Decentraland DAO Revocations Committee has paused funding for this initiative",
   "progress.total": "Total vesting",
   "progress.vested": "Vested so far",
   "progress.released": "<b>{amount} {token}</b> released",

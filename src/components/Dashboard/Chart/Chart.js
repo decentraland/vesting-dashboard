@@ -110,7 +110,7 @@ function getVestingDataV2(start, cliff, duration, periodDuration, vestedPerPerio
   return vestingData
 }
 
-function getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay, version) {
+function getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay) {
   if (new Date() < new Date(cliff * 1000)) {
     return []
   }
@@ -343,7 +343,7 @@ function Chart(props) {
       {
         name: t('chart.released'),
         type: 'line',
-        data: getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay, version),
+        data: getReleaseData(start, cliff, releaseLogs, isRevokedOrPaused, revokeOrPauseDay),
         symbol: 'none',
       },
     ],
