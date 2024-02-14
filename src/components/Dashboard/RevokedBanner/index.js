@@ -1,2 +1,2 @@
-import RevokedBanner from './RevokedBanner.container'
+import RevokedBanner from './RevokedBanner'
 export default RevokedBanner

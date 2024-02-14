@@ -1,2 +1,2 @@
-import PausedBanner from './PausedBanner.container'
+import PausedBanner from './PausedBanner'
 export default PausedBanner

@@ -3,19 +3,9 @@ import Banner from '../../Banner/Banner'
 import Icon from '../../../images/pause_icon.svg'
 import './PausedBanner.css'
 
-function PausedBanner({ contract }) {
-  const { paused } = contract
+function PausedBanner() {
   return (
-    <>
-      {paused && (
-        <Banner
-          className="paused"
-          icon={Icon}
-          title={t('paused_banner.title')}
-          subtitle={t('paused_banner.subtitle')}
-        />
-      )}
-    </>
+    <Banner className="paused" icon={Icon} title={t('paused_banner.title')} subtitle={t('paused_banner.subtitle')} />
   )
 }
 
