@@ -5,8 +5,6 @@ import WalletSelector from '../WalletSelector'
 import { getDclProfile } from './utils'
 
 import { Navbar as BaseNavbar } from 'decentraland-dapps/dist/containers'
-import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
-import DaoInitiativeButton from '../DaoInitiativeButton/DaoInitiativeButton'
 
 import './Header.css'
 
@@ -27,24 +25,17 @@ function Header(props) {
     }
   }, [address, fetchProfile])
 
-  const responsive = useResponsive()
-  const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-
   return (
     <>
       <BaseNavbar
         isSignIn={!isSignedIn}
         rightMenu={
-          isMobile ? (
-            <DaoInitiativeButton />
-          ) : (
-            <UserMenu
-              onSignIn={() => setIsSignInModalOpen(true)}
-              isSignedIn={isSignedIn}
-              avatar={profile}
-              onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
-            />
-          )
+          <UserMenu
+            onSignIn={() => setIsSignInModalOpen(true)}
+            isSignedIn={isSignedIn}
+            avatar={profile}
+            onClickProfile={() => openInNewTab(`https://governance.decentraland.org/profile/?address=${address}`)}
+          />
         }
       />
       <WalletSelector open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)} />

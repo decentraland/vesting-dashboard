@@ -12,7 +12,8 @@ import PendingFunds from './PendingFunds'
 import RevokedBanner from './RevokedBanner'
 import PausedBanner from './PausedBanner'
 
-function Dashboard() {
+function Dashboard({ contract }) {
+  const { paused, revoked } = contract
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
@@ -20,8 +21,8 @@ function Dashboard() {
     <Container className="dashboard">
       <Overview />
       <Beneficiary />
-      <RevokedBanner />
-      <PausedBanner />
+      {revoked && <RevokedBanner />}
+      {paused && <PausedBanner />}
       <Grid stackable columns={2} padded style={{ width: '100%' }}>
         <Grid.Column width={12} style={{ paddingLeft: 0 }}>
           <PendingFunds />

@@ -1,8 +1,7 @@
-import { useEffect, useContext } from 'react'
+import { useEffect, useState } from 'react'
 import { isSameAddress } from '../../../modules/ethereum/utils'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import Icon from '../../../images/grant_icon.svg'
-import { DaoInitiativeContext } from '../../../context/DaoInitiativeContext'
 import DaoInitiativeButton from '../../DaoInitiativeButton/DaoInitiativeButton'
 import Banner from '../../Banner/Banner'
 
@@ -11,7 +10,7 @@ import './Beneficiary.css'
 function Beneficiary(props) {
   const { address } = props
 
-  const { proposalUrl, setProposalUrl } = useContext(DaoInitiativeContext)
+  const [proposalUrl, setProposalUrl] = useState('')
 
   useEffect(() => {
     const getVestings = async () => {
@@ -31,17 +30,16 @@ function Beneficiary(props) {
     }
 
     getVestings()
-    // eslint-disable-next-line
-  }, [address])
+  }, [address, setProposalUrl])
 
   return (
-    proposalUrl && (
+    !!proposalUrl && (
       <Banner
         className="beneficiary"
         icon={Icon}
         title={t('beneficiary.title')}
         subtitle={t('beneficiary.subtitle')}
-        action={<DaoInitiativeButton />}
+        action={<DaoInitiativeButton proposalUrl={proposalUrl} />}
       />
     )
   )

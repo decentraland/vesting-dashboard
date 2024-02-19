@@ -1,9 +1,20 @@
 .banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   box-sizing: border-box;
   border-radius: 8px;
   padding: 10px 15px;
   margin-bottom: 20px;
+  gap: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .banner {
+    flex-direction: row;
+  }
 }
 
 .banner .ui.header {
@@ -21,10 +32,14 @@
   padding-right: 0 !important;
 }
 
-.banner .bannerAction {
-  width: fit-content !important;
-  padding-right: 14px !important;
-  padding-left: 0 !important;
+@media screen and (max-width: 767px) {
+  .banner .bannerAction {
+    width: 100% !important;
+  }
+
+  .banner .bannerAction .button {
+    width: 100% !important;
+  }
 }
 
 .banner .bannerContainer {
@@ -39,10 +54,4 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-@media screen and (max-width: 767px) {
-  .banner .bannerAction {
-    display: none !important;
-  }
 }
