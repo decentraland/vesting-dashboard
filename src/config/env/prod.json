@@ -1,0 +1,7 @@
+{
+  "NETWORK": "mainnet",
+  "CHAIN_ID": "1",
+  "SEGMENT_API_KEY": "TODO",
+  "ENVIRONMENT": "production",
+  "AUTH_URL": "/auth"
+}
