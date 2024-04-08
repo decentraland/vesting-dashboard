@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Navbar from '../Navbar'
 import Dashboard from '../Dashboard'
@@ -12,11 +12,11 @@ import useContract from '../../hooks/useContract'
 
 import './App.css'
 
-function App({ network, connectionError, isConnecting }) {
+function App({ network, isConnecting }) {
   const [address, setAddress] = useState()
 
   const { contract, error: contractError, isLoading: isLoadingContract } = useContract(address)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   // useEffect(() => {
   //   // onConnect()
@@ -34,7 +34,7 @@ function App({ network, connectionError, isConnecting }) {
     const address = e.target.value.trim()
     if (isValidAddress(address)) {
       setAddress(address)
-      history.push(address, { shallow: true })
+      navigate(address)
     }
   }
 
@@ -49,7 +49,7 @@ function App({ network, connectionError, isConnecting }) {
   if (contractError) {
     return (
       <div className="app start">
-        <ErrorPage connectionError={connectionError} />
+        <ErrorPage connectionError={contractError} />
       </div>
     )
   }

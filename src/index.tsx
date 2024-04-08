@@ -1,11 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route } from 'react-router'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import TranslationProvider from 'decentraland-dapps/dist/providers/TranslationProvider'
 import WalletProvider from 'decentraland-dapps/dist/providers/WalletProvider'
-import { createHashHistory } from 'history'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 import { initStore } from './modules/store'
@@ -15,7 +13,6 @@ import './index.css'
 import 'decentraland-ui/lib/styles.css'
 
 const queryClient = new QueryClient()
-const history = createHashHistory(window.history)
 const basename = /^decentraland.(zone|org|today)$/.test(window.location.host) ? '/profile' : '/'
 
 ReactDOM.render(
@@ -25,11 +22,9 @@ ReactDOM.render(
         <Provider store={initStore()}>
           <WalletProvider>
             <TranslationProvider locales={['en']}>
-              <Router history={history}>
-                <Route path="*">
-                  <App />
-                </Route>
-              </Router>
+              <Routes>
+                <Route path="*" element={<App />} />
+              </Routes>
             </TranslationProvider>
           </WalletProvider>
         </Provider>

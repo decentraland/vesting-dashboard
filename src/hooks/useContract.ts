@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router'
+import { useParams } from 'react-router-dom'
 import { fetchContract, fetchTokenContracts } from '../modules/api'
 import { useEffect, useState } from 'react'
 import { isValidAddress } from '../utils'
@@ -16,12 +16,12 @@ function useTokenContracts() {
 export default function useContract(address?: string) {
   const { tokenContracts } = useTokenContracts()
 
-  const [paramAddress, setParamAddress] = useState()
+  const [paramAddress, setParamAddress] = useState('')
 
   const params = useParams()
   useEffect(() => {
     if (params) {
-      const addressParam = params[0].slice(1)
+      const addressParam = params['*']
       if (isValidAddress(addressParam)) {
         setParamAddress(addressParam)
       }
