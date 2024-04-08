@@ -22,7 +22,6 @@ export default function useContract(address?: string) {
   useEffect(() => {
     if (params) {
       const addressParam = params[0].slice(1)
-      console.log('a', addressParam)
       if (isValidAddress(addressParam)) {
         setParamAddress(addressParam)
       }
@@ -30,8 +29,6 @@ export default function useContract(address?: string) {
   }, [params])
 
   const contractAddress = paramAddress || address
-
-  console.log('c', contractAddress)
 
   const {
     data: contract,
@@ -42,8 +39,6 @@ export default function useContract(address?: string) {
     queryFn: () => fetchContract(contractAddress, tokenContracts),
     enabled: !!contractAddress && !!tokenContracts,
   })
-
-  console.log('c', contract)
 
   return {
     contract,

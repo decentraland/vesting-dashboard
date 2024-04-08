@@ -14,8 +14,6 @@ function Beneficiary({ address }) {
     const getVestings = async () => {
       const vestings = await (await fetch(import.meta.env.VITE_REACT_APP_VESTINGS_API_URL)).json()
 
-      console.log('v', vestings)
-
       if (vestings) {
         let vesting = vestings.filter((p) => isSameAddress(p['vesting_address'], address))
         if (vesting.length === 1) {
