@@ -11,41 +11,45 @@ import useResponsive, { onlyMobileMaxWidth } from '../../hooks/useResponsive'
 import PendingFunds from './PendingFunds'
 import RevokedBanner from './RevokedBanner'
 import PausedBanner from './PausedBanner'
+import useContract from '../../hooks/useContract'
 
-function Dashboard({ contract }) {
+function Dashboard({ contractAddress }) {
+  const { contract } = useContract(contractAddress)
   const { paused, revoked } = contract
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
 
+  // TODO: useTicker()
+
   return (
     <Container className="dashboard">
-      <Overview />
-      <Beneficiary />
+      <Overview address={contract?.address} contract={contract} />
+      <Beneficiary address={contract?.address} />
       {revoked && <RevokedBanner />}
       {paused && <PausedBanner />}
       <Grid stackable columns={2} padded style={{ width: '100%' }}>
         <Grid.Column width={12} style={{ paddingLeft: 0 }}>
-          <PendingFunds />
-          <Progress />
-          <Chart />
-          <Summary />
+          <PendingFunds contract={contract} />
+          <Progress contract={contract} />
+          <Chart contract={contract} />
+          <Summary address={contract.address} contract={contract} />
         </Grid.Column>
         <Grid.Column width={4} style={{ paddingRight: 0, paddingLeft: '41px' }}>
           {isMobile ? (
             <Grid>
               <Grid.Row columns={1}>
                 <Grid.Column>
-                  <Schedule />
+                  <Schedule contract={contract} />
                 </Grid.Column>
                 <Grid.Column className="detailsMobile">
-                  <Details />
+                  <Details address={'0xuseraddress'} contract={contract} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           ) : (
             <>
-              <Schedule />
-              <Details />
+              <Schedule contract={contract} />
+              <Details address={'0xuseraddress'} contract={contract} />
             </>
           )}
         </Grid.Column>

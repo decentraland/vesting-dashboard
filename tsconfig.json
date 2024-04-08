@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
+    "strict": false,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -19,5 +19,5 @@
     "jsx": "react-jsx",
     "types": ["jest"]
   },
-  "include": ["src", "scripts/prebuild.js"]
+  "include": ["src", "vite.config.ts", "scripts/prebuild.js"]
 }

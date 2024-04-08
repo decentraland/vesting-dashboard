@@ -9,6 +9,7 @@ import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
 import './Details.css'
+import { isSameAddress } from '../../../modules/ethereum/utils'
 
 function addressShortener(address) {
   return address.substring(0, 6) + '...' + address.substring(38, 42)
@@ -92,7 +93,8 @@ function getActionButton(text, onClick) {
 }
 
 function Details(props) {
-  const { contract, isBeneficiary, onRelease } = props
+  const { contract, onRelease, address } = props
+  const isBeneficiary = isSameAddress(address, contract.beneficiary)
   const { version, symbol, released, start, cliff, duration, releasableAmount, revocable, pausable, total } = contract
 
   const vestingCliff = getPreciseDiff(start, cliff)

@@ -1,12 +1,18 @@
 import { FETCH_CONTRACT_REQUEST, FETCH_CONTRACT_SUCCESS, FETCH_CONTRACT_FAILURE } from './actions'
 
+export type ContractState = {
+  data: any
+  loading: boolean
+  error: string
+}
+
 export const INITIAL_STATE = {
   data: null,
   loading: false,
   error: null,
 }
 
-export default function reducer(state = INITIAL_STATE, action) {
+export function contractReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case FETCH_CONTRACT_REQUEST: {
       return {

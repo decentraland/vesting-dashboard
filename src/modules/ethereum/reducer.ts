@@ -1,5 +1,13 @@
 import { CONNECT_REQUEST, CONNECT_SUCCESS, CONNECT_FAILURE } from './actions'
 
+export type EthereumState = {
+  data: {
+    address: string
+  }
+  loading: boolean
+  error: string
+}
+
 export const INITIAL_STATE = {
   data: {
     address: null,
@@ -8,7 +16,7 @@ export const INITIAL_STATE = {
   error: null,
 }
 
-export default function reducer(state = INITIAL_STATE, action) {
+export function ethereumReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case CONNECT_REQUEST: {
       return {

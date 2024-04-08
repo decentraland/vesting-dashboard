@@ -6,7 +6,7 @@ import { isValidAddress } from '../../utils'
 import Input from '../Input'
 
 function LandingPage(props) {
-  const { stateAddress, isNotFound, address, network, handleAddressChange } = props
+  const { stateAddress, isNotFound, address, network, onAddressChange } = props
 
   let helpText = t('helper.landing_page.continue')
   if (!stateAddress) {
@@ -23,7 +23,7 @@ function LandingPage(props) {
     <Container className="Landing">
       <Logo />
       <h3>{t('landing_page.title')}</h3>
-      <Input value={stateAddress} placeholder="0x..." onChange={handleAddressChange} />
+      <Input value={stateAddress} placeholder="0x..." onChange={onAddressChange} />
       <p className="help">{helpText}</p>
     </Container>
   )

@@ -1,12 +1,18 @@
 import { FETCH_TICKER_REQUEST, FETCH_TICKER_SUCCESS, FETCH_TICKER_FAILURE } from './actions'
 
+export type TickerState = {
+  data: any
+  loading: boolean
+  error: string
+}
+
 export const INITIAL_STATE = {
   data: null,
   loading: false,
   error: null,
 }
 
-export default function reducer(state = INITIAL_STATE, action) {
+export function tickerReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case FETCH_TICKER_REQUEST: {
       return {

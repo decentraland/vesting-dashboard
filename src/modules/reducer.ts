@@ -1,6 +1,4 @@
 import { configureStore, Reducer, Middleware, AnyAction, combineReducers, Store } from '@reduxjs/toolkit'
-import { FeaturesState, featuresReducer as features } from 'decentraland-dapps/dist/modules/features/reducer'
-import { ModalState, modalReducer as modal } from 'decentraland-dapps/dist/modules/modal/reducer'
 import {
   StorageState,
   storageReducer as storage,
@@ -16,24 +14,20 @@ import {
 } from 'decentraland-dapps/dist/modules/translation/reducer'
 import { WalletState, walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
 
-import contract from './contract/reducer'
-import ethereum from './ethereum/reducer'
-import ticker from './ticker/reducer'
+import { contractReducer as contract, ContractState } from './contract/reducer'
+import { ethereumReducer as ethereum, EthereumState } from './ethereum/reducer'
+import { tickerReducer as ticker, TickerState } from './ticker/reducer'
 import { identityReducer as identity, IdentityState } from './identity/reducer'
-export default combineReducers({
-  contract,
-  ethereum,
-  ticker,
-})
 
 export const createRootReducer = (middlewares: Middleware[], preloadedState = {}) =>
   configureStore({
     reducer: storageReducerWrapper(
       combineReducers<RootState>({
+        contract,
+        ethereum,
+        ticker,
         wallet,
         storage,
-        modal: modal as Reducer<ModalState, AnyAction>,
-        features: features as Reducer<FeaturesState, AnyAction>,
         translation: translation as Reducer<TranslationState, AnyAction>,
         identity,
         transaction,
@@ -42,7 +36,7 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        thunk: false,
+        thunk: true,
         serializableCheck: {
           // Ignore these action types
           ignoredActions: [
@@ -59,12 +53,13 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
 
 // We need to build the Store type manually due to the storageReducerWrapper function not propagating the type correctly
 export type RootState = {
+  contract: ContractState
+  ethereum: EthereumState
+  ticker: TickerState
   identity: IdentityState
-  modal: ModalState
   storage: StorageState
   translation: TranslationState
   wallet: WalletState
-  features: FeaturesState
   transaction: TransactionState
 }
 

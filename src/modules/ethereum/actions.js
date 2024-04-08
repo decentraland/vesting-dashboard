@@ -1,6 +1,5 @@
 import { fetchContract } from '../contract/actions'
 import { fetchTicker } from '../ticker/actions'
-import { getAddress as getContractAddress } from '../contract/selectors'
 import { isValidAddress } from '../../utils'
 
 export const CONNECT_REQUEST = '[Request] Connect'
@@ -29,19 +28,16 @@ export function connectFailure(error) {
   }
 }
 
-export function connect() {
-  return async (dispatch, getState, api) => {
-    const contractAddress = getContractAddress(getState())
+export function connect(contractAddress) {
+  return async (dispatch) => {
     if (!contractAddress || !isValidAddress(contractAddress)) {
       return
     }
     dispatch(connectRequest())
     try {
-      const { address, network, chainId } = await api.connect()
-      dispatch(connectSuccess(address, network, chainId))
-      dispatch(fetchContract())
-      dispatch(fetchTicker())
-      return address
+      // dispatch(connectSuccess(address, network, chainId))
+      // dispatch(fetchTicker())
+      return contractAddress
     } catch (e) {
       dispatch(connectFailure(e.message))
     }

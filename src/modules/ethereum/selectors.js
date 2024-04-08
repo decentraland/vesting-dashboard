@@ -1,4 +1,4 @@
-export const getState = (state) => state.app.ethereum
+export const getState = (state) => state.ethereum
 export const getAddress = (state) => getState(state).data.address
 export const getNetwork = (state) => getState(state).data.network
 export const getChainId = (state) => getState(state).data.chainId

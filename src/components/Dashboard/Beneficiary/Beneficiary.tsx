@@ -7,20 +7,20 @@ import Banner from '../../Banner/Banner'
 
 import './Beneficiary.css'
 
-function Beneficiary(props) {
-  const { address } = props
-
-  const [proposalUrl, setProposalUrl] = useState('')
+function Beneficiary({ address }) {
+  const [proposalUrl, setProposalUrl] = useState<URL>()
 
   useEffect(() => {
     const getVestings = async () => {
-      const vestings = await (await fetch(process.env.REACT_APP_VESTINGS_API_URL)).json()
+      const vestings = await (await fetch(import.meta.env.VITE_REACT_APP_VESTINGS_API_URL)).json()
+
+      console.log('v', vestings)
 
       if (vestings) {
         let vesting = vestings.filter((p) => isSameAddress(p['vesting_address'], address))
         if (vesting.length === 1) {
           vesting = vesting[0]
-          const proposalUrl = new URL(process.env.REACT_APP_PROPOSALS_URL)
+          const proposalUrl = new URL(import.meta.env.VITE_REACT_APP_PROPOSALS_URL)
           proposalUrl.searchParams.append('id', vesting.proposal_id)
           setProposalUrl(proposalUrl)
         } else {

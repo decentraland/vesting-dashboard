@@ -1,13 +1,12 @@
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
 import { connect as connectToEthereum } from '../../modules/ethereum/actions'
 import { getNetwork, getChainId, getError, isConnecting } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import {
   isLoading as isFetchingContract,
   getError as getContractError,
-  getAddress,
   getContract,
+  getAddress,
 } from '../../modules/contract/selectors'
 import App from './App'
 
@@ -35,15 +34,15 @@ export const mapState = (state) => {
     contractError,
     showPrompt,
     isNotFound,
-    isLoaded: !!contract,
     network,
     chainId,
   }
 }
 
 export const mapDispatch = (dispatch) => ({
-  onConnect: () => dispatch(connectToEthereum()),
-  onAccess: (address) => dispatch(push(address)),
+  onConnect: () => {
+    dispatch(connectToEthereum())
+  },
 })
 
 export default withRouter(connect(mapState, mapDispatch)(App))
