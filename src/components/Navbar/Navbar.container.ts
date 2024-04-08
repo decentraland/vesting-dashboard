@@ -1,11 +1,11 @@
 import { connect } from 'react-redux'
 import { getPendingTransactions } from 'decentraland-dapps/dist/modules/transaction/selectors'
 import { getAddress, isConnected } from 'decentraland-dapps/dist/modules/wallet/selectors'
-import Header from './Header'
+import Navbar from './Navbar'
 
 import { RootState } from '../../modules/reducer'
 import { getCurrentIdentity } from '../../modules/identity/selector'
-import { MapStateProps } from './Header.types'
+import { MapStateProps } from './Navbar.types'
 
 const mapState = (state: RootState): MapStateProps => {
   const address = getAddress(state)
@@ -17,4 +17,4 @@ const mapState = (state: RootState): MapStateProps => {
   }
 }
 
-export default connect(mapState)(Header)
+export default connect(mapState)(Navbar)

@@ -1,3 +1,3 @@
-import ChangeBeneficiaryModal from './ChangeBeneficiaryModal.container'
+import ChangeBeneficiaryModal from './ChangeBeneficiaryModal'
 
 export default ChangeBeneficiaryModal

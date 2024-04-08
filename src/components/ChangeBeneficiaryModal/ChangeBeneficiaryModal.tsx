@@ -5,7 +5,9 @@ import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
 
 function ChangeBeneficiaryModal(props) {
-  const { open, onClose, onSubmit } = props
+  const { open, onClose } = props
+
+  const onChangeBeneficiary = async (address: string) => console.log('address', address) // TODO: use function from api module
 
   const [state, setState] = useState({
     address: '',
@@ -24,7 +26,7 @@ function ChangeBeneficiaryModal(props) {
     if (isValidAddress(state.address)) {
       setLoading(true)
       setError(false)
-      onSubmit(state.address)
+      onChangeBeneficiary(state.address)
         .then((addr) => {
           setLoading(false)
           setSuccess(

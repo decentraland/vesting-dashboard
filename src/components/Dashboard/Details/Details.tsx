@@ -34,10 +34,12 @@ function getBeneficiary(addr) {
 }
 
 function getDate(id, date) {
+  // TODO: Check if date is correct
+
   return (
     <div className="item">
       <Header sub>{t(id)}</Header>
-      <Header>{formatDate(new Date(date * 1000), DATE_FORMAT_LONG)}</Header>
+      <Header>{formatDate(new Date(date * 1000).toString(), DATE_FORMAT_LONG)}</Header>
     </div>
   )
 }
@@ -93,7 +95,9 @@ function getActionButton(text, onClick) {
 }
 
 function Details(props) {
-  const { contract, onRelease, address } = props
+  const { contract, address } = props
+
+  const onRelease = () => null // TODO: Use release from api module
   const isBeneficiary = isSameAddress(address, contract.beneficiary)
   const { version, symbol, released, start, cliff, duration, releasableAmount, revocable, pausable, total } = contract
 

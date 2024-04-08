@@ -14,8 +14,6 @@ import {
 } from 'decentraland-dapps/dist/modules/translation/reducer'
 import { WalletState, walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
 
-import { contractReducer as contract, ContractState } from './contract/reducer'
-import { ethereumReducer as ethereum, EthereumState } from './ethereum/reducer'
 import { tickerReducer as ticker, TickerState } from './ticker/reducer'
 import { identityReducer as identity, IdentityState } from './identity/reducer'
 
@@ -23,8 +21,6 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
   configureStore({
     reducer: storageReducerWrapper(
       combineReducers<RootState>({
-        contract,
-        ethereum,
         ticker,
         wallet,
         storage,
@@ -36,7 +32,7 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
     preloadedState,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
-        thunk: true,
+        thunk: false,
         serializableCheck: {
           // Ignore these action types
           ignoredActions: [
@@ -53,8 +49,6 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
 
 // We need to build the Store type manually due to the storageReducerWrapper function not propagating the type correctly
 export type RootState = {
-  contract: ContractState
-  ethereum: EthereumState
   ticker: TickerState
   identity: IdentityState
   storage: StorageState

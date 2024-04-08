@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
-import './App.css'
-import Header from '../Header'
+import Navbar from '../Navbar'
 import Dashboard from '../Dashboard'
 import Footer from '../Footer'
 import { isValidAddress } from '../../utils'
@@ -11,7 +10,9 @@ import ErrorPage from '../ErrorPage/ErrorPage'
 import LoadingPage from '../LoadingPage/LoadingPage'
 import useContract from '../../hooks/useContract'
 
-function App({ onConnect, isNotFound, network, connectionError }) {
+import './App.css'
+
+function App({ network, connectionError, isConnecting }) {
   const [address, setAddress] = useState()
 
   const { contract, error: contractError, isLoading: isLoadingContract } = useContract(address)
@@ -22,16 +23,6 @@ function App({ onConnect, isNotFound, network, connectionError }) {
   //   document.addEventListener('keydown', handleKeyDown)
   // }, [])
 
-  const handleAddressChange = (e) => {
-    const address = e.target.value.trim()
-    // localStorage.setItem('address', address)
-    if (isValidAddress(address)) {
-      setAddress(address)
-      history.push(address, { shallow: true })
-      onConnect(address)
-    }
-  }
-
   // const handleKeyDown = (e) => {
   //   const isEnterKey = e.which === 13 || e.which === 32
   //   if (isEnterKey && showPrompt && address && isValidAddress(address) && address !== address) {
@@ -39,10 +30,18 @@ function App({ onConnect, isNotFound, network, connectionError }) {
   //   }
   // }
 
-  if (isLoadingContract) {
+  const handleAddressChange = (e) => {
+    const address = e.target.value.trim()
+    if (isValidAddress(address)) {
+      setAddress(address)
+      history.push(address, { shallow: true })
+    }
+  }
+
+  if (isConnecting || isLoadingContract) {
     return (
       <div className="app start">
-        <LoadingPage msg="Loading data..." />
+        <LoadingPage msg={isConnecting ? 'Loading...' : 'Loading data...'} />
       </div>
     )
   }
@@ -60,7 +59,6 @@ function App({ onConnect, isNotFound, network, connectionError }) {
       <div className="app start">
         <LandingPage
           stateAddress={address}
-          isNotFound={isNotFound}
           address={address}
           network={network}
           onAddressChange={(e) => handleAddressChange(e)}
@@ -71,7 +69,7 @@ function App({ onConnect, isNotFound, network, connectionError }) {
 
   return (
     <div className="app">
-      <Header />
+      <Navbar />
       <Dashboard contractAddress={contract.address} />
       <Footer />
     </div>

@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import { getContract } from './contract/selectors'
 import { getAddress as getFrom } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import Web3 from 'web3'
 import Big from 'big.js'
@@ -340,7 +339,7 @@ function getUnpausedLog(timestamp, Topic) {
 
 export async function release() {
   const state = this.store.getState()
-  const contract = getContract(state)
+  const contract = null // TODO: Receive contract as function argument
   const from = getFrom(state)
 
   if (contract.version === ContractVersion.V1) {
@@ -354,7 +353,7 @@ export async function release() {
 
 export function changeBeneficiary(address) {
   const state = this.store.getState()
-  const contract = getContract(state)
+  const contract = null // TODO: Receive contract as function argument
   const from = getFrom(state)
 
   return contract.version === ContractVersion.V1

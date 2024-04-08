@@ -5,6 +5,7 @@ import { Container } from 'semantic-ui-react'
 import { isValidAddress } from '../../utils'
 import Input from '../Input'
 
+// TODO: Remove is not found, check other props
 function LandingPage(props) {
   const { stateAddress, isNotFound, address, network, onAddressChange } = props
 

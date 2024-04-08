@@ -1,5 +1,4 @@
 import React from 'react'
-import 'babel-polyfill'
 import ReactDOM from 'react-dom'
 import { Router, Route } from 'react-router'
 import { BrowserRouter } from 'react-router-dom'
@@ -24,15 +23,15 @@ ReactDOM.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter basename={basename}>
         <Provider store={initStore()}>
-          <TranslationProvider locales={['en']}>
-            <WalletProvider>
+          <WalletProvider>
+            <TranslationProvider locales={['en']}>
               <Router history={history}>
                 <Route path="*">
                   <App />
                 </Route>
               </Router>
-            </WalletProvider>
-          </TranslationProvider>
+            </TranslationProvider>
+          </WalletProvider>
         </Provider>
       </BrowserRouter>
     </QueryClientProvider>

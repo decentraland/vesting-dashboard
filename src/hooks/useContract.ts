@@ -34,6 +34,7 @@ export default function useContract(address?: string) {
     data: contract,
     isLoading,
     error,
+    fetchStatus,
   } = useQuery({
     queryKey: [`contract-${contractAddress}`],
     queryFn: () => fetchContract(contractAddress, tokenContracts),
@@ -42,7 +43,7 @@ export default function useContract(address?: string) {
 
   return {
     contract,
-    isLoading,
+    isLoading: isLoading && fetchStatus === 'fetching',
     error,
   }
 }

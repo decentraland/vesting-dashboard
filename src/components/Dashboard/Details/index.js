@@ -1,2 +1,3 @@
-import Details from './Details.container'
+import Details from './Details'
+
 export default Details

@@ -3,63 +3,12 @@ import { createRootReducer } from './reducer'
 import createSagasMiddleware from 'redux-saga'
 import { createStorageMiddleware } from 'decentraland-dapps/dist/modules/storage/middleware'
 import { rootSaga } from './saga'
-
-// export default function configureStore(history, initialState) {
-//   // reducer
-//   const reducer = combineReducers({
-//     app: appReducer,
-//     routing: routerReducer,
-//     wallet,
-//     profile,
-//     transaction,
-//     translation,
-//     storage,
-//   })
-
-//   // middleware
-//   const api = new API()
-//   const router = routerMiddleware(history)
-//   const logger = createLogger({
-//     predicate: () => true,
-//     collapsed: () => true,
-//   })
-
-//   // create the saga middleware
-//   const sagaMiddleware = createSagasMiddleware()
-//   const transactionMiddleware = createTransactionMiddleware()
-//   const { storageMiddleware, loadStorageMiddleware } = createStorageMiddleware({
-//     storageKey: 'dcl-vesting-dashboard',
-//   })
-
-//   const middleware = applyMiddleware(
-//     thunk.withExtraArgument(api),
-//     router,
-//     logger,
-//     sagaMiddleware,
-//     transactionMiddleware,
-//     storageMiddleware
-//   )
-
-//   // enhancer
-//   const devtools = window.devToolsExtension ? window.devToolsExtension() : (f) => f
-//   const enhancer = compose(middleware, devtools)
-
-//   // store
-//   const store = createStore(reducer, initialState, enhancer)
-//   api.setStore(store)
-
-//   // then run the saga
-//   sagaMiddleware.run(rootSaga)
-
-//   loadStorageMiddleware(store)
-
-//   return store
-// }
+import { config } from '../config/config'
+import { Env } from '@dcl/ui-env'
 
 export function initStore() {
   const sagasMiddleware = createSagasMiddleware()
-  // const isDev = config.is(Env.DEVELOPMENT)
-  const isDev = true // Add ui-env
+  const isDev = config.is(Env.DEVELOPMENT)
   const loggerMiddleware = createLogger({
     collapsed: () => true,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
