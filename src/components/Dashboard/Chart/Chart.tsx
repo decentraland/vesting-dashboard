@@ -184,8 +184,7 @@ function resizeHandler(chart) {
   }
 }
 
-function Chart(props) {
-  const { contract, ticker } = props
+function Chart({ contract, ticker }) {
   const {
     version,
     symbol,

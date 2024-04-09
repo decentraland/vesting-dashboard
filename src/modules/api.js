@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import { getAddress as getFrom } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import Web3 from 'web3'
 import Big from 'big.js'
 import manaAbi from '../abi/mana.json'
@@ -12,36 +11,17 @@ import { ContractVersion, TokenAddressByChainId, TopicByVersion } from './consta
 import { getDaysFromRevoke, getDurationInDays } from '../components/Dashboard/Chart/utils'
 
 let vesting
-export default class API {
-  store = null
-  web3 = null
-  localWallet = null
 
-  async logIn() {
-    const ethereum = window.ethereum
-    const accounts = await ethereum.request({ method: 'eth_accounts' })
-
-    if (accounts.length > 0) {
-      this.localWallet = accounts[0]
-      this.web3 = new Web3(ethereum)
-    }
-  }
-
-  async connect() {
-    try {
-      await this.logIn()
-    } catch {
-      console.error('Wallet not found')
-    }
-
-    const eth = getEth()
-    const chainId = await eth.getChainId()
-
-    return {
-      address: this.localWallet,
-      network: { name: chainId === 1 ? 'mainnet' : 'unknown', chainId },
-      chainId,
-    }
+export async function fetchTicker(ticker = 'decentraland') {
+  try {
+    const resp = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ticker}&vs_currencies=usd`, {
+      mode: 'cors',
+    })
+    const json = await resp.json()
+    const { usd } = json[ticker]
+    return usd
+  } catch (e) {
+    return 0
   }
 }
 
@@ -353,17 +333,4 @@ export function changeBeneficiary(from, contract) {
   return version === ContractVersion.V1
     ? vesting.methods.changeBeneficiary(address).send({ from })
     : vesting.methods.setBeneficiary(address).send({ from })
-}
-
-export async function fetchTicker(ticker = 'decentraland') {
-  try {
-    const resp = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ticker}&vs_currencies=usd`, {
-      mode: 'cors',
-    })
-    const json = await resp.json()
-    const { usd } = json[ticker]
-    return usd
-  } catch (e) {
-    return 0
-  }
 }

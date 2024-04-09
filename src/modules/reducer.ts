@@ -15,14 +15,12 @@ import {
 import { WalletState, walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
 import { profileReducer as profile, ProfileState } from 'decentraland-dapps/dist/modules/profile/reducer'
 
-import { tickerReducer as ticker, TickerState } from './ticker/reducer'
 import { identityReducer as identity, IdentityState } from './identity/reducer'
 
 export const createRootReducer = (middlewares: Middleware[], preloadedState = {}) =>
   configureStore({
     reducer: storageReducerWrapper(
       combineReducers<RootState>({
-        ticker,
         wallet,
         storage,
         profile,
@@ -51,7 +49,6 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
 
 // We need to build the Store type manually due to the storageReducerWrapper function not propagating the type correctly
 export type RootState = {
-  ticker: TickerState
   identity: IdentityState
   storage: StorageState
   profile: ProfileState

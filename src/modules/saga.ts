@@ -10,7 +10,8 @@ import { createProfileSaga } from 'decentraland-dapps/dist/modules/profile/sagas
 
 const analyticsSaga = createAnalyticsSaga()
 const translationSaga = createTranslationSaga({
-  translations,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  translations: translations as any,
 })
 
 const profileSaga = () => createProfileSaga({ getIdentity: () => undefined, peerUrl: config.get('PEER_URL') })

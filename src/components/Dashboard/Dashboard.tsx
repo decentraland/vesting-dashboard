@@ -12,14 +12,14 @@ import PendingFunds from './PendingFunds'
 import RevokedBanner from './RevokedBanner'
 import PausedBanner from './PausedBanner'
 import useContract from '../../hooks/useContract'
+import useTicker from '../../hooks/useTicker'
 
 function Dashboard({ contractAddress }) {
   const { contract } = useContract(contractAddress)
   const { paused, revoked } = contract
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
-
-  // TODO: useTicker()
+  const { ticker } = useTicker()
 
   return (
     <Container className="dashboard">
@@ -31,8 +31,8 @@ function Dashboard({ contractAddress }) {
         <Grid.Column width={12} style={{ paddingLeft: 0 }}>
           <PendingFunds contract={contract} />
           <Progress contract={contract} />
-          <Chart contract={contract} />
-          <Summary address={contract.address} contract={contract} />
+          <Chart contract={contract} ticker={ticker} />
+          <Summary address={contract.address} contract={contract} ticker={ticker} />
         </Grid.Column>
         <Grid.Column width={4} style={{ paddingRight: 0, paddingLeft: '41px' }}>
           {isMobile ? (

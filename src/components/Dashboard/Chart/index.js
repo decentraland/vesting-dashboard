@@ -1,2 +1,3 @@
-import Chart from './Chart.container'
+import Chart from './Chart'
+
 export default Chart
