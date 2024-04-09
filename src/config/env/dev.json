@@ -2,6 +2,7 @@
   "NETWORK": "sepolia",
   "CHAIN_ID": "11155111",
   "SEGMENT_API_KEY": "TODO",
+  "PEER_URL": "https://peer.decentraland.zone",
   "ENVIRONMENT": "development",
   "AUTH_URL": "/auth"
 }

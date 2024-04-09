@@ -13,6 +13,7 @@ import {
   translationReducer as translation,
 } from 'decentraland-dapps/dist/modules/translation/reducer'
 import { WalletState, walletReducer as wallet } from 'decentraland-dapps/dist/modules/wallet/reducer'
+import { profileReducer as profile, ProfileState } from 'decentraland-dapps/dist/modules/profile/reducer'
 
 import { tickerReducer as ticker, TickerState } from './ticker/reducer'
 import { identityReducer as identity, IdentityState } from './identity/reducer'
@@ -24,6 +25,7 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
         ticker,
         wallet,
         storage,
+        profile,
         translation: translation as Reducer<TranslationState, AnyAction>,
         identity,
         transaction,
@@ -52,6 +54,7 @@ export type RootState = {
   ticker: TickerState
   identity: IdentityState
   storage: StorageState
+  profile: ProfileState
   translation: TranslationState
   wallet: WalletState
   transaction: TransactionState
