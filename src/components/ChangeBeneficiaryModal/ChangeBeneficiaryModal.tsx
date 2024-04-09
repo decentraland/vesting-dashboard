@@ -3,12 +3,9 @@ import { useState } from 'react'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
+import { changeBeneficiary } from '../../modules/api'
 
-function ChangeBeneficiaryModal(props) {
-  const { open, onClose } = props
-
-  const onChangeBeneficiary = async (address: string) => console.log('address', address) // TODO: use function from api module
-
+function ChangeBeneficiaryModal({ open, onClose, contract }) {
   const [state, setState] = useState({
     address: '',
     error: false,
@@ -26,7 +23,7 @@ function ChangeBeneficiaryModal(props) {
     if (isValidAddress(state.address)) {
       setLoading(true)
       setError(false)
-      onChangeBeneficiary(state.address)
+      changeBeneficiary(state.address, contract)
         .then((addr) => {
           setLoading(false)
           setSuccess(

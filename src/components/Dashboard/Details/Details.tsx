@@ -10,21 +10,22 @@ import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
 import './Details.css'
 import { isSameAddress } from '../../../modules/ethereum/utils'
+import { release } from '../../../modules/api'
 
 function addressShortener(address) {
   return address.substring(0, 6) + '...' + address.substring(38, 42)
 }
 
-function getBeneficiary(addr) {
+function getBeneficiary(address) {
   return (
     <div className="item beneficiary">
       <Header sub>{t('details.beneficiary')}</Header>
-      <Header onClick={() => copyToClipboard(addr)} style={{ cursor: 'pointer' }}>
+      <Header onClick={() => copyToClipboard(address)} style={{ cursor: 'pointer' }}>
         <img src={AddressIcon} alt="" />
         <Popup
           content={t('global.copied')}
           position="bottom center"
-          trigger={<span>{addressShortener(addr)}</span>}
+          trigger={<span>{addressShortener(address)}</span>}
           on="click"
         />
         <Info message={t('helper.beneficiary')} position="left center" />
@@ -94,12 +95,23 @@ function getActionButton(text, onClick) {
   )
 }
 
-function Details(props) {
-  const { contract, address } = props
+function Details({ contract, address }) {
+  const {
+    version,
+    symbol,
+    released,
+    start,
+    cliff,
+    duration,
+    releasableAmount,
+    revocable,
+    pausable,
+    total,
+    beneficiary,
+  } = contract
 
-  const onRelease = () => null // TODO: Use release from api module
-  const isBeneficiary = isSameAddress(address, contract.beneficiary)
-  const { version, symbol, released, start, cliff, duration, releasableAmount, revocable, pausable, total } = contract
+  const handleRelease = () => release(address, contract)
+  const isBeneficiary = isSameAddress(address, beneficiary)
 
   const vestingCliff = getPreciseDiff(start, cliff)
   const responsive = useResponsive()
@@ -111,7 +123,7 @@ function Details(props) {
   return (
     <div id="details" className={(isMobile && 'mobile') || ''}>
       <div className="divToStyle">
-        {getBeneficiary(contract.beneficiary)}
+        {getBeneficiary(beneficiary)}
         {!isMobile && isBeneficiary && getActionButton(t('details.change_beneficiary'), () => setIsModalOpen(true))}
         <div className="dates">
           {getDate('details.start', start)}
@@ -122,10 +134,10 @@ function Details(props) {
       {getAmount('details.total_vesting', total, symbol, 'helper.total_vesting')}
       {getAmount('details.released', released, symbol, 'helper.released')}
       {getAmount('details.releasable', releasableAmount, symbol, 'helper.releasable')}
-      {!isMobile && isBeneficiary && releasableAmount > 0 && getActionButton(t('details.release_funds'), onRelease)}
+      {!isMobile && isBeneficiary && releasableAmount > 0 && getActionButton(t('details.release_funds'), handleRelease)}
       {getRevocable(revocable)}
       {version === ContractVersion.V2 && getPausable(pausable)}
-      <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} />
+      <ChangeBeneficiaryModal open={isModalOpen} onClose={closeModalHandler} contract={contract} />
     </div>
   )
 }

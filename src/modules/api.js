@@ -337,11 +337,7 @@ function getUnpausedLog(timestamp, Topic) {
   }
 }
 
-export async function release() {
-  const state = this.store.getState()
-  const contract = null // TODO: Receive contract as function argument
-  const from = getFrom(state)
-
+export async function release(from, contract) {
   if (contract.version === ContractVersion.V1) {
     return vesting.methods.release().send({ from })
   }
@@ -351,12 +347,10 @@ export async function release() {
   return vesting.methods.release(from, releasableAmount).send({ from })
 }
 
-export function changeBeneficiary(address) {
-  const state = this.store.getState()
-  const contract = null // TODO: Receive contract as function argument
-  const from = getFrom(state)
+export function changeBeneficiary(from, contract) {
+  const { version, address } = contract
 
-  return contract.version === ContractVersion.V1
+  return version === ContractVersion.V1
     ? vesting.methods.changeBeneficiary(address).send({ from })
     : vesting.methods.setBeneficiary(address).send({ from })
 }
