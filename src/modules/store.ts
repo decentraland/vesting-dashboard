@@ -14,6 +14,7 @@ export function initStore() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     predicate: (_: any, action: any) => isDev || action.type.includes('Failure'),
   })
+  // TODO: Add analytics
   // const analyticsMiddleware = createAnalyticsMiddleware(config.get('SEGMENT_API_KEY'))
   const { storageMiddleware, loadStorageMiddleware } = createStorageMiddleware({
     storageKey: 'dcl-vesting-dashboard', // this is the key used to save the state in localStorage (required)
