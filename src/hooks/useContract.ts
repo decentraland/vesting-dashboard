@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { fetchContract, fetchTokenContracts } from '../modules/api'
 import { useEffect, useState } from 'react'
 import { isValidAddress } from '../utils'
@@ -18,15 +18,15 @@ export default function useContract(address?: string) {
 
   const [paramAddress, setParamAddress] = useState('')
 
-  const params = useParams()
+  const location = useLocation()
   useEffect(() => {
-    if (params) {
-      const addressParam = params['*']
+    if (location) {
+      const addressParam = location.hash.split('#/')[1]
       if (isValidAddress(addressParam)) {
         setParamAddress(addressParam)
       }
     }
-  }, [params])
+  }, [location])
 
   const contractAddress = paramAddress || address
 

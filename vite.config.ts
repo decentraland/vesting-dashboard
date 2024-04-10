@@ -12,9 +12,10 @@ export default defineConfig(({ command, mode }) => {
   const buildOptions = {
     base: envVariables.VITE_BASE_URL,
   }
+  const isBuildCommand = command === 'build'
 
   return {
-    plugins: [react(), nodePolyfills()],
+    plugins: [react(), isBuildCommand ? nodePolyfills() : undefined],
     build: {
       outDir: 'build',
     },
@@ -38,6 +39,6 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     },
-    ...(command === 'build' ? buildOptions : undefined),
+    ...(isBuildCommand ? buildOptions : undefined),
   }
 })

@@ -34,7 +34,7 @@ function App({ network, isConnecting }) {
     const address = e.target.value.trim()
     if (isValidAddress(address)) {
       setAddress(address)
-      navigate(address)
+      navigate(`#/${address}`)
     }
   }
 
