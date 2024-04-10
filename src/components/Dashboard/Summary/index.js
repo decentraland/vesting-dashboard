@@ -1,2 +1,3 @@
-import Summary from './Summary.container'
+import Summary from './Summary'
+
 export default Summary

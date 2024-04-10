@@ -28,7 +28,7 @@ export default function Overview(props) {
   const vestingDuration = getPreciseDiff(start, start + duration)
   const vestingCliff = getPreciseDiff(start, cliff)
 
-  const [reviewUrl, handleClick] = useReviewUrl(address)
+  const { reviewUrl, onReviewUrlClick } = useReviewUrl(address)
 
   const responsive = useResponsive()
   const isMobile = responsive({ maxWidth: onlyMobileMaxWidth })
@@ -60,7 +60,7 @@ export default function Overview(props) {
                 </Header>
                 <Header sub>
                   {address}{' '}
-                  <a href={reviewUrl} onClick={handleClick}>
+                  <a href={reviewUrl} onClick={onReviewUrlClick}>
                     <img src={Link} alt="" />
                   </a>
                   <Popup

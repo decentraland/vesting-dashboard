@@ -8,7 +8,7 @@ function Banner(props) {
     <div className={`banner ${className ? className : ''}`}>
       <div className="bannerContainer">
         <div style={{ width: 'fit-content' }}>{icon && <img src={icon} alt="" style={{ marginTop: '5px' }} />}</div>
-        <div className="bannerText" width={9}>
+        <div className="bannerText">
           <Header>{title}</Header>
           <Header sub>{subtitle}</Header>
         </div>

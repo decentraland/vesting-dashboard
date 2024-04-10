@@ -40,7 +40,7 @@ function getDate(id, date) {
   return (
     <div className="item">
       <Header sub>{t(id)}</Header>
-      <Header>{formatDate(new Date(date * 1000).toString(), DATE_FORMAT_LONG)}</Header>
+      <Header>{formatDate(new Date(date * 1000).getTime(), DATE_FORMAT_LONG)}</Header>
     </div>
   )
 }

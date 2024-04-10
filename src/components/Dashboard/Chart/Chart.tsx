@@ -1,6 +1,6 @@
 import './Chart.css'
 import React, { useEffect, useState } from 'react'
-import * as echarts from 'echarts/core'
+import { LineChart } from 'echarts/charts'
 import {
   TitleComponent,
   TooltipComponent,
@@ -9,13 +9,14 @@ import {
   VisualMapComponent,
   MarkLineComponent,
 } from 'echarts/components'
-import { LineChart } from 'echarts/charts'
+import * as echarts from 'echarts/core'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
-import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
+import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { ContractVersion, TopicByVersion } from '../../../modules/constants'
+import { DATE_FORMAT_SHORT } from '../../../utils'
 import {
   DAY_IN_SECONDS,
   getDurationInDays,
@@ -25,7 +26,6 @@ import {
   toDataArray,
   emptyDataArray,
 } from './utils'
-import { DATE_FORMAT_SHORT } from '../../../utils'
 
 function getRevokedData(revokeLog, start) {
   const isRevoked = revokeLog.length > 0
@@ -41,8 +41,8 @@ function getPausedAndRevokedData(start, paused, revoked, stop) {
 function getXAxisData(start, duration) {
   const durationInDays = getDurationInDays(duration)
 
-  const xData = toDataArray(durationInDays, (x, i) =>
-    formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000), DATE_FORMAT_SHORT)
+  const xData = toDataArray(durationInDays, (_x, i) =>
+    formatDate(new Date((start + i * DAY_IN_SECONDS) * 1000).getTime(), DATE_FORMAT_SHORT)
   )
 
   return xData
@@ -58,7 +58,7 @@ function getVestingData(start, cliff, duration, total, isRevoked, revokeDay) {
   let vestingData = new Array(cliffEndDay).fill(0)
 
   vestingData = vestingData.concat(
-    toDataArray(vestingDays - cliffEndDay + 1, (x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
+    toDataArray(vestingDays - cliffEndDay + 1, (_x, i) => Math.round(vestedPerDay * (cliffEndDay + i + 1) * 100) / 100)
   )
 
   if (isRevoked && revokeDay > 0) {
@@ -391,10 +391,10 @@ function Chart({ contract, ticker }) {
   useEffect(() => {
     if (fundsChart) {
       if (isMobile) {
-        option.legend.top = 'bottom'
+        option.legend['top'] = 'bottom'
         option.grid.bottom = '10%'
       } else {
-        option.legend.top = 'top'
+        option.legend['top'] = 'top'
         option.grid.bottom = '3%'
       }
 

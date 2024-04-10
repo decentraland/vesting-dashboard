@@ -3,9 +3,9 @@ import React from 'react'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { Container } from 'semantic-ui-react'
 import { isValidAddress } from '../../utils'
-import Input from '../Input'
 
-// TODO: Remove is not found, check other props
+import './Input.css'
+
 function LandingPage(props) {
   const { stateAddress, isNotFound, address, network, onAddressChange } = props
 
@@ -24,7 +24,7 @@ function LandingPage(props) {
     <Container className="Landing">
       <Logo />
       <h3>{t('landing_page.title')}</h3>
-      <Input value={stateAddress} placeholder="0x..." onChange={onAddressChange} />
+      <input className="Input" value={stateAddress} placeholder="0x..." onChange={onAddressChange} />
       <p className="help">{helpText}</p>
     </Container>
   )

@@ -11,7 +11,7 @@ function ScheduleEvent(props) {
       <div className="timeline__event">
         {!future && (
           <Header sub style={{ textTransform: 'none', margin: 0 }}>
-            {formatDate(new Date(timestamp * 1000), DATE_FORMAT_LONG)}
+            {formatDate(new Date(timestamp * 1000).getTime(), DATE_FORMAT_LONG)}
           </Header>
         )}
         <Header style={{ fontSize: '15px', margin: 0 }}>{message}</Header>

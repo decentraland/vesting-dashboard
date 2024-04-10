@@ -49,7 +49,7 @@ function App({ network, isConnecting }) {
   if (contractError) {
     return (
       <div className="app start">
-        <ErrorPage connectionError={contractError} />
+        <ErrorPage connectionError={`${contractError}`} />
       </div>
     )
   }

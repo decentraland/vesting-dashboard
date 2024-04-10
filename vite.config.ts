@@ -33,7 +33,6 @@ const buildOptions = (envVariables) => ({
   },
 })
 
-// https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const envVariables = loadEnv(mode, process.cwd())
   return {
