@@ -18,18 +18,6 @@ function App({ network, isConnecting }) {
   const { contract, error: contractError, isLoading: isLoadingContract } = useContract(address)
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   // onConnect()
-  //   document.addEventListener('keydown', handleKeyDown)
-  // }, [])
-
-  // const handleKeyDown = (e) => {
-  //   const isEnterKey = e.which === 13 || e.which === 32
-  //   if (isEnterKey && showPrompt && address && isValidAddress(address) && address !== address) {
-  //     onConnect(address)
-  //   }
-  // }
-
   const handleAddressChange = (e) => {
     const address = e.target.value.trim()
     if (isValidAddress(address)) {

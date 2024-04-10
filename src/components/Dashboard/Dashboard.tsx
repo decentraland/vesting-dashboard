@@ -14,7 +14,7 @@ import PausedBanner from './PausedBanner'
 import useContract from '../../hooks/useContract'
 import useTicker from '../../hooks/useTicker'
 
-function Dashboard({ contractAddress }) {
+function Dashboard({ address, contractAddress }) {
   const { contract } = useContract(contractAddress)
   const { paused, revoked } = contract
   const responsive = useResponsive()
@@ -42,14 +42,14 @@ function Dashboard({ contractAddress }) {
                   <Schedule contract={contract} />
                 </Grid.Column>
                 <Grid.Column className="detailsMobile">
-                  <Details address={'0xuseraddress'} contract={contract} />
+                  <Details address={address} contract={contract} />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           ) : (
             <>
               <Schedule contract={contract} />
-              <Details address={'0xuseraddress'} contract={contract} />
+              <Details address={address} contract={contract} />
             </>
           )}
         </Grid.Column>
