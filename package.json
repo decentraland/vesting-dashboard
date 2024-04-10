@@ -60,9 +60,6 @@
     "vite": "^4.4.9",
     "vite-plugin-node-polyfills": "^0.21.0"
   },
-  "files": [
-    "dist"
-  ],
   "homepage": "",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",

@@ -15,6 +15,9 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     plugins: [react(), nodePolyfills()],
+    build: {
+      outDir: 'build',
+    },
     // Required because the CatalystClient tries to access it
     define: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
