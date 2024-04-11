@@ -1,9 +1,10 @@
 {
   "name": "@dcl/vesting-dashboard",
   "version": "0.1.0",
-  "private": true,
+  "description": "Static website for the vesting dashboard",
   "scripts": {
     "start": "vite",
+    "prebuild": "node scripts/prebuild.js",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "jest",
@@ -56,6 +57,18 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.9",
     "vite-plugin-node-polyfills": "^0.21.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "decentraland",
+    "vesting-dashboard",
+    "site"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentraland/vesting-dashboard.git"
   },
   "homepage": "",
   "lint-staged": {
