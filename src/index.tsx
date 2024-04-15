@@ -13,7 +13,7 @@ import './index.css'
 import 'decentraland-ui/lib/styles.css'
 
 const queryClient = new QueryClient()
-const basename = /^decentraland.(zone|org|today)$/.test(window.location.host) ? '/profile' : '/'
+const basename = /^decentraland.(zone|org|today)$/.test(window.location.host) ? '/vesting' : '/'
 
 ReactDOM.render(
   <React.StrictMode>
