@@ -1,2 +1,3 @@
-import Schedule from './Schedule.container'
+import Schedule from './Schedule'
+
 export default Schedule

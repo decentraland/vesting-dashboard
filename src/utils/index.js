@@ -1,6 +1,7 @@
 import moment from 'moment'
 
-require('moment-precise-range-plugin')
+import momentPreciseRangePlugin from './moment-precise-range-plugin'
+momentPreciseRangePlugin(moment)
 
 export const DATE_FORMAT_LONG = 'MMMM D, YYYY'
 export const DATE_FORMAT_SHORT = 'MMM D, YYYY'

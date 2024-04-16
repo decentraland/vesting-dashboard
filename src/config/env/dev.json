@@ -1,0 +1,7 @@
+{
+  "NETWORK": "mainnet",
+  "CHAIN_ID": "1",
+  "PEER_URL": "https://peer.decentraland.zone",
+  "ENVIRONMENT": "development",
+  "AUTH_URL": "/auth"
+}

@@ -1,2 +1,3 @@
-import Progress from './Progress.container'
+import Progress from './Progress'
+
 export default Progress

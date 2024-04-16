@@ -1,2 +1,3 @@
-import PendingFunds from './PendingFunds.container'
+import PendingFunds from './PendingFunds'
+
 export default PendingFunds
