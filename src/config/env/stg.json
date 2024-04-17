@@ -1,7 +1,0 @@
-{
-  "NETWORK": "mainnet",
-  "CHAIN_ID": "1",
-  "PEER_URL": "https://peer.decentraland.org",
-  "ENVIRONMENT": "staging",
-  "AUTH_URL": "/auth"
-}

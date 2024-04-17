@@ -3,5 +3,8 @@
   "CHAIN_ID": "1",
   "PEER_URL": "https://peer.decentraland.org",
   "ENVIRONMENT": "production",
-  "AUTH_URL": "/auth"
+  "AUTH_URL": "/auth",
+  "VESTINGS_API_URL": "https://data.decentraland.vote/vestings.json",
+  "PROPOSALS_URL": "https://decentraland.org/proposal/",
+  "REVIEW_CONTRACT_URL": "https://etherscan.io/address/"
 }
