@@ -4,6 +4,7 @@ import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
 import { changeBeneficiary } from '../../modules/api'
+import { getEth } from '../../modules/ethereum/utils'
 
 function ChangeBeneficiaryModal({ open, onClose, contract }) {
   const [state, setState] = useState({
@@ -19,11 +20,12 @@ function ChangeBeneficiaryModal({ open, onClose, contract }) {
   const setLoading = (isLoading) => setState((prev) => ({ ...prev, loading: isLoading }))
   const setSuccess = (msg = '') => setState((prev) => ({ ...prev, successMessage: msg }))
 
-  const transfer = () => {
+  const transfer = async () => {
     if (isValidAddress(state.address)) {
       setLoading(true)
       setError(false)
-      changeBeneficiary(state.address, contract)
+      const provider = await getEth()
+      changeBeneficiary(contract, provider)
         .then((addr) => {
           setLoading(false)
           setSuccess(

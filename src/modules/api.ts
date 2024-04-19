@@ -1,5 +1,4 @@
 /* eslint-disable no-case-declarations */
-import Web3 from 'web3'
 import Big from 'big.js'
 import manaAbi from '../abi/mana.json'
 import daiAbi from '../abi/dai.json'
@@ -9,8 +8,8 @@ import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
 import { ContractVersion, TokenAddressByChainId, TopicByVersion } from './constants'
 import { getDaysFromRevoke, getDurationInDays } from '../components/Dashboard/Chart/utils'
-
-let vesting
+import { JsonRpcProvider } from 'ethers'
+import { Contract } from 'ethers'
 
 export async function fetchTicker(ticker = 'decentraland') {
   try {
@@ -24,47 +23,47 @@ export async function fetchTicker(ticker = 'decentraland') {
     return 0
   }
 }
+function getEth() {
+  return new JsonRpcProvider('https://rpc.decentraland.org/mainnet')
+}
 
 export async function fetchTokenContracts(chainId = 1) {
   if (chainId !== 1) {
     throw new Error(`Unsupported chain id ${chainId}`)
   }
 
-  const eth = getEth()
+  const provider = getEth()
   const TokenAddress = TokenAddressByChainId[chainId]
 
   return {
-    [TokenAddress.MANA]: new eth.Contract(manaAbi, TokenAddress.MANA),
-    [TokenAddress.DAI]: new eth.Contract(daiAbi, TokenAddress.DAI),
-    [TokenAddress.USDT]: new eth.Contract(usdtAbi, TokenAddress.USDT),
-    [TokenAddress.USDC]: new eth.Contract(usdcAbi, TokenAddress.USDC),
+    [TokenAddress.MANA]: new Contract(TokenAddress.MANA, manaAbi, provider),
+    [TokenAddress.DAI]: new Contract(TokenAddress.DAI, daiAbi, provider),
+    [TokenAddress.USDT]: new Contract(TokenAddress.USDT, usdtAbi, provider),
+    [TokenAddress.USDC]: new Contract(TokenAddress.USDC, usdcAbi, provider),
   }
 }
 
-function getEth() {
-  return new Web3(new Web3.providers.HttpProvider('https://rpc.decentraland.org/mainnet')).eth
-}
-
 export async function fetchContract(address, tokenContracts) {
-  const eth = getEth()
+  const provider = getEth()
 
   let version
+  let vesting
 
   try {
-    vesting = new eth.Contract(periodicTokenVestingAbi, address)
-    await vesting.methods.getIsLinear().call()
+    vesting = new Contract(address, periodicTokenVestingAbi, provider)
+    await vesting.getIsLinear()
     version = ContractVersion.V2
   } catch (e) {
-    vesting = new eth.Contract(vestingAbi, address)
+    vesting = new Contract(address, vestingAbi, provider)
     version = ContractVersion.V1
   }
 
   let tokenContractAddress
 
   if (version === ContractVersion.V1) {
-    tokenContractAddress = await vesting.methods.token().call()
+    tokenContractAddress = await vesting.token()
   } else {
-    tokenContractAddress = await vesting.methods.getToken().call()
+    tokenContractAddress = await vesting.getToken()
   }
 
   tokenContractAddress = tokenContractAddress.toLowerCase()
@@ -73,19 +72,19 @@ export async function fetchContract(address, tokenContracts) {
     throw new Error('Token not supported')
   }
 
-  const decimals = await tokenContracts[tokenContractAddress].methods.decimals().call()
+  const decimals = await tokenContracts[tokenContractAddress].decimals()
 
   const promises = {
     v1: {
-      duration: () => vesting.methods.duration().call(),
-      cliff: () => vesting.methods.cliff().call(),
-      beneficiary: () => vesting.methods.beneficiary().call(),
-      vestedAmount: () => vesting.methods.vestedAmount().call(),
-      releasableAmount: () => vesting.methods.releasableAmount().call(),
-      revoked: () => vesting.methods.revoked().call(),
-      revocable: () => vesting.methods.revocable().call(),
-      released: () => vesting.methods.released().call(),
-      start: () => vesting.methods.start().call(),
+      duration: () => vesting.duration(),
+      cliff: () => vesting.cliff(),
+      beneficiary: () => vesting.beneficiary(),
+      vestedAmount: () => vesting.vestedAmount(),
+      releasableAmount: () => vesting.releasableAmount(),
+      revoked: () => vesting.revoked(),
+      revocable: () => vesting.revocable(),
+      released: () => vesting.released(),
+      start: () => vesting.start(),
       periodDuration: () => Promise.resolve('0'),
       vestedPerPeriod: () => Promise.resolve([]),
       paused: () => Promise.resolve(false),
@@ -95,20 +94,20 @@ export async function fetchContract(address, tokenContracts) {
     },
     v2: {
       duration: () => Promise.resolve('0'),
-      cliff: () => vesting.methods.getCliff().call(),
-      beneficiary: () => vesting.methods.getBeneficiary().call(),
-      vestedAmount: () => vesting.methods.getVested().call(),
-      releasableAmount: () => vesting.methods.getReleasable().call(),
-      revoked: () => vesting.methods.getIsRevoked().call(),
-      revocable: () => vesting.methods.getIsRevocable().call(),
-      released: () => vesting.methods.getReleased().call(),
-      start: () => vesting.methods.getStart().call(),
-      periodDuration: () => vesting.methods.getPeriod().call(),
-      vestedPerPeriod: () => vesting.methods.getVestedPerPeriod().call(),
-      paused: () => vesting.methods.paused().call(),
-      pausable: () => vesting.methods.getIsPausable().call(),
-      stop: () => vesting.methods.getStop().call(),
-      linear: () => vesting.methods.getIsLinear().call(),
+      cliff: () => vesting.getCliff(),
+      beneficiary: () => vesting.getBeneficiary(),
+      vestedAmount: () => vesting.getVested(),
+      releasableAmount: () => vesting.getReleasable(),
+      revoked: () => vesting.getIsRevoked(),
+      revocable: () => vesting.getIsRevocable(),
+      released: () => vesting.getReleased(),
+      start: () => vesting.getStart(),
+      periodDuration: () => vesting.getPeriod(),
+      vestedPerPeriod: () => vesting.getVestedPerPeriod(),
+      paused: () => vesting.paused(),
+      pausable: () => vesting.getIsPausable(),
+      stop: () => vesting.getStop(),
+      linear: () => vesting.getIsLinear(),
     },
   }
 
@@ -133,10 +132,10 @@ export async function fetchContract(address, tokenContracts) {
     stop,
     linear,
   ] = await Promise.all([
-    tokenContracts[tokenContractAddress].methods.symbol().call(),
-    tokenContracts[tokenContractAddress].methods.balanceOf(address).call(),
+    tokenContracts[tokenContractAddress].symbol(),
+    tokenContracts[tokenContractAddress].balanceOf(address),
     getLogs(address, decimals, version),
-    vesting.methods.owner().call(),
+    vesting.owner(),
     promises[version].duration(),
     promises[version].cliff(),
     promises[version].beneficiary(),
@@ -154,29 +153,32 @@ export async function fetchContract(address, tokenContracts) {
     promises[version].linear(),
   ])
 
+  const formattedDecimals = Number(decimals)
+
   const contract = {
     version,
     symbol,
     address,
-    balance: parseInt(balance, 10) / 10 ** decimals,
+    balance: Number(balance) / 10 ** formattedDecimals,
     duration:
       version === ContractVersion.V1 ? parseInt(duration, 10) : vestedPerPeriod.length * parseInt(periodDuration, 10),
     cliff: version === ContractVersion.V1 ? parseInt(cliff, 10) : parseInt(cliff, 10) + parseInt(start, 10),
     beneficiary,
-    vestedAmount: parseInt(vestedAmount, 10) / 10 ** decimals,
-    releasableAmount: parseInt(releasableAmount, 10) / 10 ** decimals,
+    vestedAmount: Number(vestedAmount) / 10 ** formattedDecimals,
+    releasableAmount: Number(releasableAmount) / 10 ** formattedDecimals,
     revoked,
     revocable,
     owner,
-    released: parseInt(released, 10) / 10 ** decimals,
+    released: Number(released) / 10 ** formattedDecimals,
     start: parseInt(start, 10),
     logs,
     periodDuration,
-    vestedPerPeriod: vestedPerPeriod.map((amount) => parseInt(amount, 10) / 10 ** decimals),
+    vestedPerPeriod: vestedPerPeriod.map((amount) => parseInt(amount, 10) / 10 ** formattedDecimals),
     paused,
     pausable,
     stop: parseInt(stop, 10),
     linear,
+    total: undefined,
   }
 
   const getTotal = () => {
@@ -197,21 +199,21 @@ export async function fetchContract(address, tokenContracts) {
     return contract.vestedPerPeriod.reduce((a, b) => a + b, 0)
   }
 
-  contract.total = getTotal()
+  contract.total = Number(getTotal())
 
   return contract
 }
 
 async function getLogs(address, decimals, version) {
-  const eth = getEth()
+  const provider = getEth()
 
-  const web3Logs = await eth.getPastLogs({
+  const web3Logs = await provider.getLogs({
     address: address,
     fromBlock: 0,
     toBlock: 'latest',
   })
 
-  const blocks = await Promise.all(web3Logs.map((log) => eth.getBlock(log.blockNumber)))
+  const blocks = await Promise.all(web3Logs.map((log) => provider.getBlock(log.blockNumber)))
   const logs = []
   let cumulativeReleased = 0
 
@@ -233,7 +235,7 @@ async function getLogs(address, decimals, version) {
         )
         logs.push(log)
         cumulativeReleased = Big(log.data.acum)
-          .mul(10 ** decimals)
+          .mul(Big(10) ** Big(decimals))
           .toNumber()
         break
       case Topic.REVOKE:
@@ -265,18 +267,18 @@ function getTransferOwnershipLog(topics, timestamp, Topic) {
 }
 
 function getReleaseLog(decimals, data, cumulativeReleased, timestamp, version, Topic) {
-  const cumulative = Big(Number(cumulativeReleased) || 0).div(10 ** decimals)
+  const cumulative = Big(Number(cumulativeReleased) || 0).div(Big(10) ** Big(decimals))
 
   let totalReleased
   let currentReleased
 
   if (version === ContractVersion.V1) {
-    totalReleased = Big(Number(data) || 0).div(10 ** decimals)
+    totalReleased = Big(Number(data) || 0).div(Big(10) ** Big(decimals))
     currentReleased = totalReleased.minus(cumulative)
   } else {
-    currentReleased = Big(Number(data) || 0).div(10 ** decimals)
+    currentReleased = Big(Number(data) || 0).div(Big(10) ** Big(decimals))
     totalReleased = Big(Number(cumulativeReleased) || 0)
-      .div(10 ** decimals)
+      .div(Big(10) ** Big(decimals))
       .add(currentReleased)
   }
 
@@ -285,7 +287,7 @@ function getReleaseLog(decimals, data, cumulativeReleased, timestamp, version, T
     data: {
       amount: currentReleased.toNumber(),
       acum: totalReleased.toNumber(),
-      timestamp: timestamp,
+      timestamp,
     },
   }
 }
@@ -317,20 +319,23 @@ function getUnpausedLog(timestamp, Topic) {
   }
 }
 
-export async function release(from, contract) {
+export async function release(from, contract, provider) {
+  const signer = await provider.getSigner()
   if (contract.version === ContractVersion.V1) {
-    return vesting.methods.release().send({ from })
+    return await new Contract(contract.address, vestingAbi, signer).release()
   }
 
-  const releasableAmount = await vesting.methods.getReleasable().call()
+  const ethContract = new Contract(contract.address, periodicTokenVestingAbi, signer)
+  const releasableAmount = await ethContract.getReleasable()
 
-  return vesting.methods.release(from, releasableAmount).send({ from })
+  return await ethContract.release(from, releasableAmount)
 }
 
-export function changeBeneficiary(from, contract) {
+export async function changeBeneficiary(contract, provider) {
+  const signer = await provider.getSigner()
   const { version, address } = contract
 
   return version === ContractVersion.V1
-    ? vesting.methods.changeBeneficiary(address).send({ from })
-    : vesting.methods.setBeneficiary(address).send({ from })
+    ? new Contract(contract.address, vestingAbi, signer).changeBeneficiary(address)
+    : new Contract(contract.address, periodicTokenVestingAbi, signer).setBeneficiary(address)
 }

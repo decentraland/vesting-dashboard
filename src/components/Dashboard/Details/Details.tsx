@@ -9,7 +9,7 @@ import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import ChangeBeneficiaryModal from '../../ChangeBeneficiaryModal'
 import { ContractVersion } from '../../../modules/constants'
 import './Details.css'
-import { isSameAddress } from '../../../modules/ethereum/utils'
+import { getEth, isSameAddress } from '../../../modules/ethereum/utils'
 import { release } from '../../../modules/api'
 
 function addressShortener(address) {
@@ -110,7 +110,11 @@ function Details({ contract, address }) {
     beneficiary,
   } = contract
 
-  const handleRelease = () => release(address, contract)
+  const handleRelease = async () => {
+    const provider = await getEth()
+    await release(address, contract, provider)
+  }
+
   const isBeneficiary = isSameAddress(address, beneficiary)
 
   const vestingCliff = getPreciseDiff(start, cliff)
