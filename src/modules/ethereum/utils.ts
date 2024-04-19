@@ -6,7 +6,7 @@ export function isSameAddress(a, b) {
   return a && b && a.toLowerCase() === b.toLowerCase()
 }
 
-export async function getEth(): Promise<ethers.BrowserProvider> {
+export async function getEthProvider(): Promise<ethers.BrowserProvider> {
   const provider: Provider | null = await getConnectedProvider()
 
   if (!provider) {

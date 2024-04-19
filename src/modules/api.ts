@@ -331,11 +331,10 @@ export async function release(from, contract, provider) {
   return await ethContract.release(from, releasableAmount)
 }
 
-export async function changeBeneficiary(contract, provider) {
+export async function changeBeneficiary(newBeneficiary, contract, provider) {
   const signer = await provider.getSigner()
-  const { version, address } = contract
 
-  return version === ContractVersion.V1
-    ? new Contract(contract.address, vestingAbi, signer).changeBeneficiary(address)
-    : new Contract(contract.address, periodicTokenVestingAbi, signer).setBeneficiary(address)
+  return contract.version === ContractVersion.V1
+    ? new Contract(contract.address, vestingAbi, signer).changeBeneficiary(newBeneficiary)
+    : new Contract(contract.address, periodicTokenVestingAbi, signer).setBeneficiary(newBeneficiary)
 }
