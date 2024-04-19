@@ -5,6 +5,6 @@
   "ENVIRONMENT": "development",
   "AUTH_URL": "/auth",
   "VESTINGS_API_URL": "https://data.decentraland.vote/vestings.json",
-  "PROPOSALS_URL": "https://decentraland.org/proposal/",
+  "PROPOSALS_URL": "https://decentraland.org/governance/proposal/",
   "REVIEW_CONTRACT_URL": "https://etherscan.io/address/"
 }
