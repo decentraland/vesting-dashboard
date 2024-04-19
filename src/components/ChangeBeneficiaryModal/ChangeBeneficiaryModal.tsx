@@ -26,11 +26,11 @@ function ChangeBeneficiaryModal({ open, onClose, contract }) {
       setError(false)
       try {
         const provider = await getEthProvider()
-        const addr = await changeBeneficiary(state.address, contract, provider)
+        await changeBeneficiary(state.address, contract, provider)
         setLoading(false)
         setSuccess(
           t('modal.success', {
-            address: addr,
+            address: state.address,
             br: <br />,
           })
         )
