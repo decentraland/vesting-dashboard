@@ -4,6 +4,7 @@ import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import { isValidAddress } from '../../utils'
 import './ChangeBeneficiaryModal.css'
 import { changeBeneficiary } from '../../modules/api'
+import { getEthProvider } from '../../modules/ethereum/utils'
 
 function ChangeBeneficiaryModal({ open, onClose, contract }) {
   const [state, setState] = useState({
@@ -19,24 +20,24 @@ function ChangeBeneficiaryModal({ open, onClose, contract }) {
   const setLoading = (isLoading) => setState((prev) => ({ ...prev, loading: isLoading }))
   const setSuccess = (msg = '') => setState((prev) => ({ ...prev, successMessage: msg }))
 
-  const transfer = () => {
+  const transfer = async () => {
     if (isValidAddress(state.address)) {
       setLoading(true)
       setError(false)
-      changeBeneficiary(state.address, contract)
-        .then((addr) => {
-          setLoading(false)
-          setSuccess(
-            t('modal.success', {
-              address: addr,
-              br: <br />,
-            })
-          )
-        })
-        .catch((e) => {
-          setLoading(false)
-          setError(true, e.message)
-        })
+      try {
+        const provider = await getEthProvider()
+        await changeBeneficiary(state.address, contract, provider)
+        setLoading(false)
+        setSuccess(
+          t('modal.success', {
+            address: state.address,
+            br: <br />,
+          })
+        )
+      } catch (e) {
+        setLoading(false)
+        setError(true, e.message)
+      }
     } else {
       setError(true, t('modal.error'))
     }
