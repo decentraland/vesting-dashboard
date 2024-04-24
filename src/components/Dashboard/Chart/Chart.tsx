@@ -2,29 +2,29 @@ import './Chart.css'
 import React, { useEffect, useState } from 'react'
 import { LineChart } from 'echarts/charts'
 import {
-  TitleComponent,
-  TooltipComponent,
   GridComponent,
   LegendComponent,
-  VisualMapComponent,
   MarkLineComponent,
+  TitleComponent,
+  TooltipComponent,
+  VisualMapComponent,
 } from 'echarts/components'
 import * as echarts from 'echarts/core'
 import { UniversalTransition } from 'echarts/features'
 import { SVGRenderer } from 'echarts/renderers'
-import { formatNumber, formatDate } from 'decentraland-dapps/dist/lib/utils'
+import { formatDate, formatNumber } from 'decentraland-dapps/dist/lib/utils'
 import { t } from 'decentraland-dapps/dist/modules/translation/utils'
 import useResponsive, { onlyMobileMaxWidth } from '../../../hooks/useResponsive'
 import { ContractVersion, TopicByVersion } from '../../../modules/constants'
 import { DATE_FORMAT_SHORT } from '../../../utils'
 import {
   DAY_IN_SECONDS,
-  getDurationInDays,
-  getDaysFromStart,
+  emptyDataArray,
   getCliffEndDay,
   getDaysFromRevoke,
+  getDaysFromStart,
+  getDurationInDays,
   toDataArray,
-  emptyDataArray,
 } from './utils'
 
 function getRevokedData(revokeLog, start) {
@@ -181,6 +181,12 @@ function getTooltipFormatter(today, newName, args, symbol, ticker) {
 function resizeHandler(chart) {
   if (chart) {
     chart.resize()
+  }
+}
+
+function getFormatterFn(tooltipDay, symbol, ticker) {
+  return (args) => {
+    return getTooltipFormatter(tooltipDay + 1, t('chart.to_be_vested'), args, symbol, symbol === 'MANA' ? ticker : 0)
   }
 }
 
@@ -398,10 +404,12 @@ function Chart({ contract, ticker }) {
         option.grid.bottom = '3%'
       }
 
-      fundsChart.setOption(option)
+      option.tooltip.formatter = getFormatterFn(tooltipDay, symbol, ticker)
+
+      fundsChart.setOption(option, true)
     }
     // eslint-disable-next-line
-  }, [isMobile, fundsChart])
+  }, [isMobile, fundsChart, ticker])
 
   return <div id="chart" />
 }
