@@ -6,7 +6,6 @@ export default function useTicker() {
     data: ticker,
     isLoading,
     error,
-    fetchStatus,
   } = useQuery({
     queryKey: [`ticker`],
     queryFn: () => fetchTicker('decentraland'),
@@ -14,7 +13,7 @@ export default function useTicker() {
 
   return {
     ticker,
-    isLoading: isLoading && fetchStatus === 'fetching',
+    isLoading: isLoading,
     error,
   }
 }
