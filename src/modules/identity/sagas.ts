@@ -14,7 +14,7 @@ import {
   EnableWalletSuccessAction,
   CHANGE_ACCOUNT,
   enableWalletRequest,
-  DISCONNECT_WALLET,
+  DISCONNECT_WALLET_SUCCESS,
 } from 'decentraland-dapps/dist/modules/wallet/actions'
 import { isConnected } from 'decentraland-dapps/dist/modules/wallet/selectors'
 import { config } from '../../config/config'
@@ -26,7 +26,7 @@ export function* identitySaga() {
   yield takeEvery(loginRequest.type, handleLogin)
   yield takeEvery(CHANGE_ACCOUNT, handleChangeAccount)
   yield takeEvery(CONNECT_WALLET_SUCCESS, handleConnectWalletSuccess)
-  yield takeEvery(DISCONNECT_WALLET, handleDisconnectWallet)
+  yield takeEvery(DISCONNECT_WALLET_SUCCESS, handleDisconnectWallet)
 
   function* handleLogin(action: LoginRequestAction) {
     const providerType = action.payload
