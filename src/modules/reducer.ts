@@ -16,6 +16,7 @@ import { WalletState, walletReducer as wallet } from 'decentraland-dapps/dist/mo
 import { profileReducer as profile, ProfileState } from 'decentraland-dapps/dist/modules/profile/reducer'
 
 import { identityReducer as identity, IdentityState } from './identity/reducer'
+import { FeaturesState, featuresReducer as features } from 'decentraland-dapps/dist/modules/features'
 
 export const createRootReducer = (middlewares: Middleware[], preloadedState = {}) =>
   configureStore({
@@ -27,6 +28,7 @@ export const createRootReducer = (middlewares: Middleware[], preloadedState = {}
         translation: translation as Reducer<TranslationState, AnyAction>,
         identity,
         transaction,
+        features,
       })
     ),
     preloadedState,
@@ -55,6 +57,7 @@ export type RootState = {
   translation: TranslationState
   wallet: WalletState
   transaction: TransactionState
+  features: FeaturesState
 }
 
 export type RootStore = Store<RootState>
