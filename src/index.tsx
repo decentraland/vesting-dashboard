@@ -11,6 +11,7 @@ import App from './components/App'
 
 import './index.css'
 import 'decentraland-ui/lib/styles.css'
+import { DclThemeProvider, lightTheme } from 'decentraland-ui2'
 
 const queryClient = new QueryClient()
 const basename = /^decentraland.(zone|org|today)$/.test(window.location.host) ? '/vesting' : '/'
@@ -22,9 +23,11 @@ ReactDOM.render(
         <Provider store={initStore()}>
           <WalletProvider>
             <TranslationProvider locales={['en']}>
-              <Routes>
-                <Route path="*" element={<App />} />
-              </Routes>
+              <DclThemeProvider theme={lightTheme}>
+                <Routes>
+                  <Route path="*" element={<App />} />
+                </Routes>
+              </DclThemeProvider>
             </TranslationProvider>
           </WalletProvider>
         </Provider>
