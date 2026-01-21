@@ -8,8 +8,7 @@ import vestingAbi from '../abi/vesting.json'
 import periodicTokenVestingAbi from '../abi/periodicTokenVesting.json'
 import { ContractVersion, TokenAddressByChainId, TopicByVersion } from './constants'
 import { getDaysFromRevoke, getDurationInDays } from '../components/Dashboard/Chart/utils'
-import { JsonRpcProvider } from 'ethers'
-import { Contract } from 'ethers'
+import { ethers } from 'ethers'
 
 export async function fetchTicker(ticker = 'decentraland') {
   try {
@@ -23,8 +22,9 @@ export async function fetchTicker(ticker = 'decentraland') {
     return 0
   }
 }
+
 function getEth() {
-  return new JsonRpcProvider('https://rpc.decentraland.org/mainnet')
+  return new ethers.providers.JsonRpcProvider('https://rpc.decentraland.org/mainnet')
 }
 
 export async function fetchTokenContracts(chainId = 1) {
@@ -36,10 +36,10 @@ export async function fetchTokenContracts(chainId = 1) {
   const TokenAddress = TokenAddressByChainId[chainId]
 
   return {
-    [TokenAddress.MANA]: new Contract(TokenAddress.MANA, manaAbi, provider),
-    [TokenAddress.DAI]: new Contract(TokenAddress.DAI, daiAbi, provider),
-    [TokenAddress.USDT]: new Contract(TokenAddress.USDT, usdtAbi, provider),
-    [TokenAddress.USDC]: new Contract(TokenAddress.USDC, usdcAbi, provider),
+    [TokenAddress.MANA]: new ethers.Contract(TokenAddress.MANA, manaAbi, provider),
+    [TokenAddress.DAI]: new ethers.Contract(TokenAddress.DAI, daiAbi, provider),
+    [TokenAddress.USDT]: new ethers.Contract(TokenAddress.USDT, usdtAbi, provider),
+    [TokenAddress.USDC]: new ethers.Contract(TokenAddress.USDC, usdcAbi, provider),
   }
 }
 
@@ -50,11 +50,11 @@ export async function fetchContract(address, tokenContracts) {
   let vesting
 
   try {
-    vesting = new Contract(address, periodicTokenVestingAbi, provider)
+    vesting = new ethers.Contract(address, periodicTokenVestingAbi, provider)
     await vesting.getIsLinear()
     version = ContractVersion.V2
   } catch (e) {
-    vesting = new Contract(address, vestingAbi, provider)
+    vesting = new ethers.Contract(address, vestingAbi, provider)
     version = ContractVersion.V1
   }
 
@@ -322,10 +322,10 @@ function getUnpausedLog(timestamp, Topic) {
 export async function release(from, contract, provider) {
   const signer = await provider.getSigner()
   if (contract.version === ContractVersion.V1) {
-    return await new Contract(contract.address, vestingAbi, signer).release()
+    return await new ethers.Contract(contract.address, vestingAbi, signer).release()
   }
 
-  const ethContract = new Contract(contract.address, periodicTokenVestingAbi, signer)
+  const ethContract = new ethers.Contract(contract.address, periodicTokenVestingAbi, signer)
   const releasableAmount = await ethContract.getReleasable()
 
   return await ethContract.release(from, releasableAmount)
@@ -335,6 +335,6 @@ export async function changeBeneficiary(newBeneficiary, contract, provider) {
   const signer = await provider.getSigner()
 
   return contract.version === ContractVersion.V1
-    ? new Contract(contract.address, vestingAbi, signer).changeBeneficiary(newBeneficiary)
-    : new Contract(contract.address, periodicTokenVestingAbi, signer).setBeneficiary(newBeneficiary)
+    ? new ethers.Contract(contract.address, vestingAbi, signer).changeBeneficiary(newBeneficiary)
+    : new ethers.Contract(contract.address, periodicTokenVestingAbi, signer).setBeneficiary(newBeneficiary)
 }
