@@ -38,6 +38,14 @@ http://localhost:3000/#/0x92f08...6fb12
 
 ## Deployment
 
-Every commit to the `master` branch will deploy automatically to the dev (https://vesting.decentraland.zone) and staging https://vesting.decentraland.today) environments.
+Every commit to the `master` branch deploys automatically to the development environment (https://vesting.decentraland.zone). Staging and production are promoted manually through the [CDN deploy workflow](https://github.com/decentraland/vesting-dashboard/actions/workflows/cdn-deploy.yaml).
 
-To deploy to prod, you will need to first create a [Release](https://github.com/decentraland/vesting-dashboard/releases) and then run the rollout manually from [this action](https://github.com/decentraland/vesting-dashboard/actions/workflows/set-rollouts-manual.yaml). Input the version of the newly created release, select the `org` env and kick it 🚀
+To deploy to staging (https://vesting.decentraland.today), open **CDN deploy** → **Run workflow**, select environment `today`, enter a release version or the commit-build version from a successful deployment run, and set the rollout percentage (normally `100`).
+
+To deploy to production (https://vesting.decentraland.org):
+
+1. Publish a [Release](https://github.com/decentraland/vesting-dashboard/releases) that is not a prerelease.
+2. Wait for its **CDN deploy** `release` job to finish successfully. This builds and uploads the release and deploys it to development.
+3. Open **CDN deploy** → **Run workflow**, select environment `org`, enter the release version, and set the rollout percentage (normally `100`). Production requires a release version; commit builds are not accepted.
+
+Only versions successfully uploaded through the CDN deploy workflow can be promoted. Versions published before the migration cannot be promoted or used as rollback targets through this workflow.
